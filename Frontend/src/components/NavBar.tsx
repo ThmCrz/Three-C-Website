@@ -53,7 +53,7 @@ function CustomNavBar() {
              </Button>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link href="/home">Cart Hello</Nav.Link>
+              <Nav.Link href="/home">Cart hello</Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Link to={"Login"}>
