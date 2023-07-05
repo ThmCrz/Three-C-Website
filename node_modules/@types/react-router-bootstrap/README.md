@@ -1,0 +1,16 @@
+# Installation
+> `npm install --save @types/react-router-bootstrap`
+
+# Summary
+This package contains type definitions for react-router-bootstrap (https://github.com/react-bootstrap/react-router-bootstrap).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-router-bootstrap.
+
+### Additional Details
+ * Last updated: Thu, 16 Feb 2023 04:32:46 GMT
+ * Dependencies: [@types/react](https://npmjs.com/package/@types/react)
+ * Global values: none
+
+# Credits
+These definitions were written by [Vincent Lesierse](https://github.com/vlesierse), [Karol Janyst](https://github.com/LKay), [Olmo del Corral](https://github.com/olmobrutall), and [Max Erenberg](https://github.com/maxerenberg).

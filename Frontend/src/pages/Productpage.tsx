@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductDetailsBySlugQuery } from "../hooks/ProductHooks";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import { getError } from "../types/Utils";
-import { ApiError } from "../types/apiError";
+import { convertProductToCartItem, getError } from "../types/Utils";
+import { ApiError } from "../types/ApiError";
 import { Badge, Button, Card, Col, ListGroup, Row } from "react-bootstrap";
+import { Store } from "../Store";
+import { useContext } from "react";
+import { toast } from "react-toastify";
 
 export default function Productpage() {
   const params = useParams();
@@ -17,6 +21,25 @@ export default function Productpage() {
     isLoading,
     error,
   } = useGetProductDetailsBySlugQuery(slug!);
+
+  const {state, dispatch } = useContext(Store)
+  const { cart }= state
+  const navigate = useNavigate()
+
+  const addToCartHandler = () =>{
+    const existingItem = cart.cartItems.find((x) => x._id === product!._id)
+    const quantity = existingItem ? existingItem.quantity + 1 : 1
+    if (product!.countInStock < quantity){
+      toast.warn(`Sorry, The Product ${product!.name} is out of stock`)
+     return 
+    }
+    dispatch({
+      type: 'ADD_ITEM_TO_CART',
+      payload: {...convertProductToCartItem(product!), quantity},
+    })
+    toast.success(`Added ${product!.name} to cart`)
+   }
+   navigate('/cart')
 
   return isLoading ? (
     <LoadingBox />
@@ -77,7 +100,7 @@ export default function Productpage() {
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
                       <div className="d-grid">
-                        <Button variant="primary">Add to Cart</Button>
+                        <Button onClick={addToCartHandler} variant="primary" >Add to Cart</Button>
                       </div>
                     </ListGroup.Item>
                   )}

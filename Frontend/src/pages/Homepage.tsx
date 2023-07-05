@@ -4,7 +4,7 @@ import MessageBox from '../components/MessageBox';
 import { Helmet } from 'react-helmet-async';
 import { useGetProductsQuery } from '../hooks/ProductHooks';
 import { getError } from '../types/Utils';
-import { ApiError } from '../types/apiError';
+import { ApiError } from '../types/ApiError';
 import { Product } from '../types/Products';
 
 
