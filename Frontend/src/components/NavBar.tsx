@@ -2,15 +2,14 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
-import { Badge, Button } from "react-bootstrap";
+import { Badge, Button, NavDropdown } from "react-bootstrap";
 import { useContext, useEffect } from "react";
 import { Store } from "../Store";
-import { LinkContainer } from 'react-router-bootstrap'
 
 
 function CustomNavBar() {
   const {
-    state: { mode, cart },
+    state: { mode, cart, userInfo },
     dispatch,
   } = useContext(Store);
 
@@ -21,6 +20,17 @@ function CustomNavBar() {
   const switchModeHandler = () => {
     dispatch({ type: "SWITCH_MODE" });
   };
+
+  const signoutHandler = () => {
+   dispatch({ type: "USER_SIGNOUT" })
+   localStorage.removeItem('userInfo')
+   localStorage.removeItem('cartItems')
+   localStorage.removeItem('shippingAddress')
+   localStorage.removeItem('paymentMethod')
+   window.location.href =  '/signin'
+  }
+
+  
 
   return (
     <>
@@ -65,9 +75,15 @@ function CustomNavBar() {
               </Link>
             </Nav.Item>
             <Nav.Item>
-              <Link to={"Login"}>
-                <Nav.Link href="/home">Sign in</Nav.Link>
-              </Link>
+              {userInfo ? (
+                <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                  <Link className="dropdown-item" to="#signout" onClick={signoutHandler}>
+                    Sign Out
+                  </Link>
+                </NavDropdown>
+              ):( <Link to={"SignIn"}>
+              <Nav.Link href="/home">Sign in</Nav.Link>
+            </Link>)}
             </Nav.Item>
           </Nav>
         </Container>
