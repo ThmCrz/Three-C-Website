@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() { 
   return (
     <div className="d-flex flex-column min-vh-100 min-vw-100">
-      <ToastContainer position="bottom-center" limit={1}/>
+      <ToastContainer position="bottom-center" limit={1} autoClose={1000}/>
       <header>
         <CustomNavBar />
       </header>
