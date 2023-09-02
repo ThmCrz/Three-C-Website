@@ -12,7 +12,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-}
+ 
+  } 
 
 a {
   font-weight: 500;
@@ -70,4 +71,14 @@ button:focus-visible {
 .large{
     width: 500px;
     height: 500px;
+}
+
+.checkout-steps > div{
+ border-bottom: 1px #7a7a7a;
+ color: #7a7a7a;
+}
+
+.checkout-steps > div.active{
+  border-bottom: 1px rgb(255, 166, 0);
+  color: rgb(255, 166, 0);
 }

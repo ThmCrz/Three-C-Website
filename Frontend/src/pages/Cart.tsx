@@ -28,7 +28,7 @@ export default function CartPage() {
   };
 
   const CheckoutHandler = () => {
-    navigate("signin?redirect=/shipping");
+    navigate('/signin?redirect=/shipping');
   }
   
   const removeItemHandler = (item: CartItem) => {
