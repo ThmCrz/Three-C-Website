@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useGetProductDetailsBySlugQuery } from "../hooks/ProductHooks";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -24,7 +24,6 @@ export default function Productpage() {
 
   const {state, dispatch } = useContext(Store)
   const { cart }= state
-  const navigate = useNavigate()
 
   const addToCartHandler = () =>{
     const existingItem = cart.cartItems.find((x) => x._id === product!._id)
@@ -39,7 +38,6 @@ export default function Productpage() {
     })
     toast.success(`Added ${product!.name} to cart`)
    }
-   navigate('/cart')
 
   return isLoading ? (
     <LoadingBox />

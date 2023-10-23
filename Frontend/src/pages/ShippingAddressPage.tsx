@@ -58,12 +58,13 @@ export default function ShippingAddressPage() {
         </Helmet>
   
         <CheckoutGuide step1 step2></CheckoutGuide>
-        <div className="container small-container">
+        <div className="mx-auto w-50">
           <h1 className="my-3">Shipping Address</h1>
           <Form onSubmit={submitHandler}>
             <Form.Group className="mb-3" controlId="fullName">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
+                className="white"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required

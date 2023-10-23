@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
-import "./index.css";
 import Homepage from "./pages/Homepage.tsx";
 import Productpage from "./pages/Productpage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
@@ -18,6 +17,7 @@ import { StoreProvider } from "./Store.tsx";
 import CartPage from "./pages/Cart.tsx";
 import SigninPage from "./pages/SignInPage.tsx";
 import ShippingAddressPage from "./pages/ShippingAddressPage.tsx";
+import PaymentMethodPage from "./pages/PaymentMethodPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,8 +26,9 @@ const router = createBrowserRouter(
       <Route path="/SignIn" element={<SigninPage />} />
       <Route path="/Cart" element={<CartPage />} />
       <Route path="/signup" element={<SignUpPage />} />
-      <Route path="Product/:slug" element={<Productpage />} />
+      <Route path="/Product/:slug" element={<Productpage />} />
       <Route path="/shipping" element={<ShippingAddressPage />} />
+      <Route path="/payment" element={<PaymentMethodPage />} />
       {/* <Route path='home' element={<Homepage />} /> */}
       {/* <Route path="dashboard" element={<Dashboard />} /> */}
       {/* ... etc. */}

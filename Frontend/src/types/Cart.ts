@@ -16,8 +16,6 @@ export type ShippingAddress = {
     postalCode: string
   }
 
-
-
 export type Cart = {
     cartItems: CartItem[]
     shippingaddress: ShippingAddress

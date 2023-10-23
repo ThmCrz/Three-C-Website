@@ -17,11 +17,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: inherit;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #00ffea9d;
 }
 
 body {
@@ -30,6 +30,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -68,17 +69,69 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
 .large{
     width: 500px;
     height: 500px;
 }
 
-.checkout-steps > div{
- border-bottom: 1px #7a7a7a;
- color: #7a7a7a;
+.checkout-steps > .col {
+  /* box-shadow: 0px 1px 0px 0px gray; */
+  border-bottom: 1px solid #7a7a7a;
+  color: gray;
+  padding-bottom: 1px;
 }
 
-.checkout-steps > div.active{
-  border-bottom: 1px rgb(255, 166, 0);
-  color: rgb(255, 166, 0);
+.checkout-steps > .col.active{
+  /* box-shadow: 0px 1px 0px 0px orange; */
+  border-bottom: 1px solid orange;
+  color: orange;
+  padding-bottom: 1px;
+  
+}
+
+footer {
+  text-align: center;
+  }
+  
+  .ProductDesc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  max-height: 3.6em; /* Adjust the height based on your font size and line height */
+  }
+  
+  .Card{
+      margin-top: 1.75rem;
+  }
+  
+  .Category{
+      margin: 2rem;
+  }
+  
+  .ImageBox{
+      background: white;
+  }
+  .rounded{
+      border-radius: 1%;
+  
+  }
+  .CenterImage{
+      display: Flex;
+      justify-content: center;
+  }
+  .form-control{
+    background-color: whitesmoke;
+  }
+  .quantityInput::-webkit-inner-spin-button,
+.quantityInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.quantityInput{
+  text-align:center;
 }

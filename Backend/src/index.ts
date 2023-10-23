@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { productRouter } from "./routers/productRouter";
 import { userRouter } from "./routers/userRouter";
+import { orderRouter } from "./routers/orderRouter";
 // import { seedRouter } from "./routers/seedRouter";
 
 
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/products', productRouter)
 // app.use('/api/seed', seedRouter)
 app.use('/api/users', userRouter)
+app.use('/api/orders', orderRouter)
 
 const PORT = 4000;
 

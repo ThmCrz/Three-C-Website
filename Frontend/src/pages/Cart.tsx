@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Store } from "../Store";
 import { CartItem } from "../types/Cart";
@@ -28,11 +28,11 @@ export default function CartPage() {
   };
 
   const CheckoutHandler = () => {
-    navigate('/signin?redirect=/shipping');
-  }
-  
+    navigate("/signin?redirect=/shipping");
+  };
+
   const removeItemHandler = (item: CartItem) => {
-    dispatch({type: 'CART_REMOVE_ITEM', payload: item})
+    dispatch({ type: "CART_REMOVE_ITEM", payload: item });
   };
 
   return (
@@ -60,7 +60,7 @@ export default function CartPage() {
                       ></img>
                     </Col>
                     <Col md={2}>
-                      <Link to={`/products/${item.slug}`}>{item.name}</Link>
+                      <Link to={`/Product/${item.slug}`}>{item.name}</Link>
                     </Col>
                     <Col md={3}>
                       <Button
@@ -71,8 +71,26 @@ export default function CartPage() {
                         disabled={item.quantity === 1}
                       >
                         <i className="fas fa-minus-circle"></i>
-                      </Button>{" "}
-                      <span>{item.quantity}</span>
+                      </Button>
+                      <input
+                        className="quantityInput"
+                        title="quantityInput"
+                        type="number"
+                        min="1"
+                        max={item.countInStock}
+                        value={item.quantity}
+                        onChange={(e) => {
+                          let newQuantity = parseInt(e.target.value);
+                          if (isNaN(newQuantity) || newQuantity < 1) {
+                            newQuantity = 1;
+                          }
+                          if (newQuantity > item.countInStock) {
+                            newQuantity = item.countInStock;
+                          }
+                          updateCartHandler(item, newQuantity);
+                        }}
+                      />
+
                       <Button
                         onClick={() =>
                           updateCartHandler(item, item.quantity + 1)
@@ -81,11 +99,14 @@ export default function CartPage() {
                         disabled={item.quantity === item.countInStock}
                       >
                         <i className="fas fa-plus-circle"></i>
-                      </Button>{" "}
+                      </Button>
                     </Col>
                     <Col>{item.price}</Col>
                     <Col>
-                      <Button variant="light" onClick={()=>removeItemHandler(item)}>
+                      <Button
+                        variant="light"
+                        onClick={() => removeItemHandler(item)}
+                      >
                         <i className="fas fa-trash"></i>
                       </Button>
                     </Col>
@@ -103,7 +124,9 @@ export default function CartPage() {
                   <h3>
                     Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{" "}
                     items) : $
-                    {Number(cartItems.reduce((a, c) => a + c.quantity * c.price, 0)).toFixed(2)}
+                    {Number(
+                      cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
+                    ).toFixed(2)}
                   </h3>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -125,4 +148,4 @@ export default function CartPage() {
       </Row>
     </div>
   );
-                      }
+}

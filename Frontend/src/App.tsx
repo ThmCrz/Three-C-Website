@@ -1,4 +1,5 @@
-import "./App.css";
+// import "./App.css";
+import "./index.css";
 import CustomNavBar from "./components/NavBar";
 import { Container } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
