@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Store } from "../Store";
-import { CartItem } from "../types/Cart";
+import { cartItem } from "../types/Cart";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
@@ -16,7 +16,7 @@ export default function CartPage() {
     dispatch,
   } = useContext(Store);
 
-  const updateCartHandler = async (item: CartItem, quantity: number) => {
+  const updateCartHandler = async (item: cartItem, quantity: number) => {
     if (item.countInStock < quantity) {
       toast.warn("Sorry, Product is out of stock");
       return;
@@ -31,7 +31,7 @@ export default function CartPage() {
     navigate("/signin?redirect=/shipping");
   };
 
-  const removeItemHandler = (item: CartItem) => {
+  const removeItemHandler = (item: cartItem) => {
     dispatch({ type: "CART_REMOVE_ITEM", payload: item });
   };
 
@@ -49,14 +49,14 @@ export default function CartPage() {
             </MessageBox>
           ) : (
             <ListGroup>
-              {cartItems.map((item: CartItem) => (
+              {cartItems.map((item: cartItem) => (
                 <ListGroup.Item key={item._id}>
                   <Row className="align-items-center">
                     <Col md={4}>
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="rounded img-thumbnail"
+                        className="rounded img-thumbnail order-image"
                       ></img>
                     </Col>
                     <Col md={2}>

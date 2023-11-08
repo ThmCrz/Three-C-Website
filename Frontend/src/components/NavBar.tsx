@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Badge, Button, NavDropdown } from "react-bootstrap";
 import { useContext, useEffect } from "react";
 import { Store } from "../Store";
+import { LinkContainer } from "react-router-bootstrap";
 
 
 function CustomNavBar() {
@@ -80,6 +81,7 @@ function CustomNavBar() {
                   <Link className="dropdown-item" to="#signout" onClick={signoutHandler}>
                     Sign Out
                   </Link>
+                  <Link className="dropdown-item" to="/orderhistory">Order History</Link>
                 </NavDropdown>
               ):( <Link to={"SignIn"}>
               <Nav.Link href="/home">Sign in</Nav.Link>

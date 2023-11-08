@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from "react";
-import { Cart, CartItem, ShippingAddress } from "./types/Cart";
-import { UserInfo } from "./types/UserInfo";
+import { Cart, cartItem, shippingAddress } from "./types/Cart";
+import { UserInfo } from "./types/User";
 
 type AppState = {
   mode: string;
@@ -25,26 +25,28 @@ const initialState: AppState = {
     cartItems: localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems")!)
       : [],
-    shippingaddress: localStorage.getItem("shippingaddress")
-      ? JSON.parse(localStorage.getItem("shippingaddress")!)
+    shippingAddress: localStorage.getItem("shippingAddress")
+      ? JSON.parse(localStorage.getItem("shippingAddress")!)
       : {},
-    paymentmethod: localStorage.getItem("paymentmethod")
-      ? localStorage.getItem("paymentmethod")!
+    paymentMethod: localStorage.getItem("paymentMethod")
+      ? localStorage.getItem("paymentMethod")!
       : "Gcash",
     itemsPrice: 0,
-    ShippingPrice: 0,
+    shippingPrice: 0,
     taxPrice: 0,
     totalPrice: 0,
   },
 };
 type Action =
   | { type: "SWITCH_MODE" }
-  | { type: "ADD_ITEM_TO_CART"; payload: CartItem }
-  | { type: "CART_REMOVE_ITEM"; payload: CartItem }
+  | { type: "ADD_ITEM_TO_CART"; payload: cartItem }
+  | { type: "CART_REMOVE_ITEM"; payload: cartItem }
+  | { type: "CART_CLEAR";}
   | { type: "USER_SIGNIN"; payload: UserInfo }
   | { type: "USER_SIGNOUT" }
-  | { type: "SAVE_SHIPPING_ADDRESS"; payload: ShippingAddress }
-  | { type: "SAVE_PAYMENT_METHOD"; payload: string };
+  | { type: "SAVE_SHIPPING_ADDRESS"; payload: shippingAddress }
+  | { type: "SAVE_PAYMENT_METHOD"; payload: string }
+  ;
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -54,10 +56,10 @@ function reducer(state: AppState, action: Action): AppState {
     case "ADD_ITEM_TO_CART": {
       const newItem = action.payload;
       const existingItem = state.cart.cartItems.find(
-        (item: CartItem) => item._id === newItem._id
+        (item: cartItem) => item._id === newItem._id
       );
       const cartItems = existingItem
-        ? state.cart.cartItems.map((item: CartItem) =>
+        ? state.cart.cartItems.map((item: cartItem) =>
             item._id === existingItem._id ? newItem : item
           )
         : [...state.cart.cartItems, newItem];
@@ -69,11 +71,14 @@ function reducer(state: AppState, action: Action): AppState {
 
     case "CART_REMOVE_ITEM": {
       const cartItems = state.cart.cartItems.filter(
-        (item: CartItem) => item._id !== action.payload._id
+        (item: cartItem) => item._id !== action.payload._id
       );
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+
+    case "CART_CLEAR":
+      return { ...state, cart: { ...state.cart, cartItems: [] } };
 
     case "USER_SIGNIN":
       return { ...state, userInfo: action.payload };
@@ -88,16 +93,16 @@ function reducer(state: AppState, action: Action): AppState {
             : "light",
         cart: {
           cartItems: [],
-          shippingaddress: {
+          shippingAddress: {
             fullName: "",
             address: "",
             city: "",
             country: "",
             postalCode: "",
           },
-          paymentmethod: "",
+          paymentMethod: "",
           itemsPrice: 0,
-          ShippingPrice: 0,
+          shippingPrice: 0,
           taxPrice: 0,
           totalPrice: 0,
         },
@@ -107,14 +112,14 @@ function reducer(state: AppState, action: Action): AppState {
         ...state,
         cart: {
           ...state.cart,
-          shippingaddress: action.payload,
+          shippingAddress: action.payload,
         },
       };
 
     case "SAVE_PAYMENT_METHOD":
       return {
         ...state,
-        cart: { ...state.cart, paymentmethod: action.payload },
+        cart: { ...state.cart, paymentMethod: action.payload },
       };
 
     default:

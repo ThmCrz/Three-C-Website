@@ -10,18 +10,18 @@ export default function PaymentMethodPage() {
     const navigate = useNavigate()
     const { state, dispatch } = useContext(Store)
     const {
-      cart: { shippingaddress, paymentmethod },
+      cart: { shippingAddress, paymentMethod },
     } = state
   
     const [paymentMethodName, setPaymentMethod] = useState(
-      paymentmethod || 'PayPal'
+      paymentMethod || 'PayPal'
     )
   
     useEffect(() => {
-      if (!shippingaddress.address) {
+      if (!shippingAddress.address) {
         navigate('/shipping')
       }
-    }, [shippingaddress, navigate])
+    }, [shippingAddress, navigate])
     const submitHandler = (e: React.SyntheticEvent) => {
       e.preventDefault()
       dispatch({ type: 'SAVE_PAYMENT_METHOD', payload: paymentMethodName })

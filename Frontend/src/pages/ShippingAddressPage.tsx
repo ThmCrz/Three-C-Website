@@ -10,20 +10,20 @@ export default function ShippingAddressPage() {
     const { state, dispatch } = useContext(Store)
     const {
       userInfo,
-      cart: { shippingaddress },
+      cart: { shippingAddress },
     } = state
-    const [fullName, setFullName] = useState(shippingaddress.fullName || '')
-    const [address, setAddress] = useState(shippingaddress.address || '')
-    const [city, setCity] = useState(shippingaddress.city || '')
+    const [fullName, setFullName] = useState(shippingAddress.fullName || '')
+    const [address, setAddress] = useState(shippingAddress.address || '')
+    const [city, setCity] = useState(shippingAddress.city || '')
     const [postalCode, setPostalCode] = useState(
-        shippingaddress.postalCode || ''
+        shippingAddress.postalCode || ''
     )
     useEffect(() => {
       if (!userInfo) {
         navigate('/signin?redirect=/shipping')
       }
     }, [userInfo, navigate])
-    const [country, setCountry] = useState(shippingaddress.country || '')
+    const [country, setCountry] = useState(shippingAddress.country || '')
     const submitHandler = (e: React.SyntheticEvent) => {
       e.preventDefault()
       dispatch({
@@ -34,7 +34,6 @@ export default function ShippingAddressPage() {
           city,
           postalCode,
           country,
-          
         },
       })
       localStorage.setItem(

@@ -3,7 +3,7 @@ import { Card, Button } from "react-bootstrap";
 import { Product } from "../types/Products";
 import { Link } from "react-router-dom";
 import { Store } from "../Store";
-import { CartItem } from "../types/Cart";
+import { cartItem } from "../types/Cart";
 import { convertProductToCartItem } from "../types/Utils";
 import { toast } from "react-toastify";
 
@@ -17,7 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     cart: { cartItems },
   } = state;
 
-  const addToCartHandler = (item: CartItem) => {
+  const addToCartHandler = (item: cartItem) => {
     const existingItem = cartItems.find((x) => x._id === product._id);
     const quantity = existingItem ? existingItem.quantity + 1 : 1;
     if (product.countInStock < quantity) {

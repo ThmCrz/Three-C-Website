@@ -18,20 +18,29 @@ import CartPage from "./pages/Cart.tsx";
 import SigninPage from "./pages/SignInPage.tsx";
 import ShippingAddressPage from "./pages/ShippingAddressPage.tsx";
 import PaymentMethodPage from "./pages/PaymentMethodPage.tsx";
+import ProtectedRoute from "./components/protectedRoute.tsx";
+import PlaceOrderPage from "./pages/PlaceOrderPage.tsx";
+import OrderPage from "./pages/OrderPage.tsx";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import OrderHistoryPage from "./pages/OrderHistoryPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} element={<Homepage />} />
       <Route path="/SignIn" element={<SigninPage />} />
-      <Route path="/Cart" element={<CartPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
       <Route path="/Product/:slug" element={<Productpage />} />
-      <Route path="/shipping" element={<ShippingAddressPage />} />
-      <Route path="/payment" element={<PaymentMethodPage />} />
-      {/* <Route path='home' element={<Homepage />} /> */}
-      {/* <Route path="dashboard" element={<Dashboard />} /> */}
-      {/* ... etc. */}
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/Cart" element={<CartPage />} />
+      <Route path="" element={<ProtectedRoute />}>
+         <Route path="/shipping" element={<ShippingAddressPage />} />
+         <Route path="/payment" element={<PaymentMethodPage />} />
+         <Route path="/placeorder" element={<PlaceOrderPage />} />
+         <Route path="/order/:id" element={<OrderPage />} />
+         <Route path="/orderhistory" element={<OrderHistoryPage />} />
+         {/* <Route path='home' element={<Homepage />} /> */}
+         {/* <Route path="dashboard" element={<Dashboard />} /> */}
+      </Route>
     </Route>
   )
 );
@@ -40,6 +49,9 @@ const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
+    <PayPalScriptProvider
+      options={{ 'clientId': 'ARW-66Agk4xSL4xDNiMcsE5MV2Lgk6fNPZp7QZ17fvYPi9cta0XDY1Z5UTL2--gPu69rd1FWqLqs_xYh' }}
+      deferLoading={true}>
     <HelmetProvider>
     <StoreProvider>
       <QueryClientProvider client={queryClient}>
@@ -48,5 +60,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       </QueryClientProvider>
     </StoreProvider>
     </HelmetProvider>
+    </PayPalScriptProvider>
   </React.StrictMode>
 );

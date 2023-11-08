@@ -1,4 +1,4 @@
-export type CartItem = {
+export type cartItem = {
     image: string | undefined
     slug: string
     quantity: number
@@ -8,7 +8,7 @@ export type CartItem = {
     name: string
 }
 
-export type ShippingAddress = {
+export type shippingAddress = {
     fullName: string
     address: string
     city: string
@@ -17,11 +17,11 @@ export type ShippingAddress = {
   }
 
 export type Cart = {
-    cartItems: CartItem[]
-    shippingaddress: ShippingAddress
-    paymentmethod: string
+    cartItems: cartItem[]
+    shippingAddress: shippingAddress
+    paymentMethod: string
     itemsPrice: number
-    ShippingPrice: number
+    shippingPrice: number
     taxPrice: number
     totalPrice: number
 }

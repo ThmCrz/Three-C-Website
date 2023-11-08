@@ -135,3 +135,15 @@ footer {
 .quantityInput{
   text-align:center;
 }
+.order-image{ 
+  width: 10vw; 
+  height: 15vh; }
+
+.Bold{
+  font-weight: bold;
+  font-size: 3vh;
+}
+.white-BG{
+  background-color: white;
+  color: black;
+}
