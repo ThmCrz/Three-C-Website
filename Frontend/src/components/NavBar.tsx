@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { Badge, Button, NavDropdown } from "react-bootstrap";
 import { useContext, useEffect } from "react";
 import { Store } from "../Store";
-import { LinkContainer } from "react-router-bootstrap";
 
 
 function CustomNavBar() {
