@@ -16,7 +16,7 @@ import { PayPalButtons, PayPalButtonsComponentProps, SCRIPT_LOADING_STATE, usePa
 export default function OrderPage() {
     const { state } = useContext(Store)
     const { userInfo } = state
-
+    const { mutateAsync: payOrder, isLoading: loadingPay } = usePayOrderMutation()
     const params = useParams()
     const { id: orderId } = params
 
@@ -27,11 +27,11 @@ export default function OrderPage() {
       refetch,
     } = useGetOrderDetailsQuery(orderId!)
 
-    const testPayHandler = async () => {
-      await payOrder({ orderId: orderId! })
-      refetch()
-      toast.success('Order is paid')
-    }
+    // const testPayHandler = async () => {
+    //   await payOrder({ orderId: orderId! })
+    //   refetch()
+    //   toast.success('Order is paid')
+    // }
     const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
       style: { layout: 'vertical' },
       createOrder(data, actions) {
@@ -74,7 +74,7 @@ export default function OrderPage() {
             type: 'resetOptions',
             value: {
               'clientId': paypalConfig!.clientId,
-              currency: 'USD',
+              currency: 'PHP',
             },
           })
           paypalDispatch({
@@ -85,8 +85,7 @@ export default function OrderPage() {
         loadPaypalScript()
       }
     }, [paypalConfig])
-    const { mutateAsync: payOrder, isLoading: loadingPay } = usePayOrderMutation()
-
+    
 
     return isLoading ? (
       <LoadingBox></LoadingBox>
@@ -211,7 +210,7 @@ export default function OrderPage() {
                      <PayPalButtons
                        {...paypalbuttonTransactionProps}
                      ></PayPalButtons>
-                     <Button onClick={testPayHandler}>Test Pay</Button>
+                     {/* <Button onClick={testPayHandler}>Test Pay</Button> */}
                    </div>
                  )}
                  {loadingPay && <LoadingBox></LoadingBox>}

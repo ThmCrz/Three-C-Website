@@ -11,6 +11,10 @@ export class User {
   public password!: string;
   @prop({ required: true, default: false })
   public isAdmin!: boolean;
+  @prop({ type: () => Object })
+  public shippingAddress?: object;
+  @prop({ type: () => [[String, Number]] }) 
+  public cartItems?: [string, number][];
 }
 
 export const UserModel = getModelForClass(User);

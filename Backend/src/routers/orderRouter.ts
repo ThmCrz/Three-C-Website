@@ -59,7 +59,7 @@ orderRouter.put(
   '/:id/pay',
   isAuth,
   asyncHandler(async (req: Request, res: Response) => {
-    const order = await OrderModel.findById(req.params.id).populate('user')
+    const order = await OrderModel.findById(req.params.id)
 
     if (order) {
       order.isPaid = true
