@@ -49,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Card.Title>{product.name}</Card.Title>
           <Card.Text className="ProductDesc">{product.description}</Card.Text>
           <Card.Text>Stock: {product.countInStock}</Card.Text>
-          <Card.Text>Price: {product.price}</Card.Text>
+          <Card.Text>Price: ₱{product.price}</Card.Text>
         </Link>
         {product.countInStock === 0 ? (
           <Button variant="primary" disabled>

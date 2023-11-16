@@ -77,10 +77,10 @@ function CustomNavBar() {
             <Nav.Item>
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                  <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
                   <Link className="dropdown-item" to="#signout" onClick={signoutHandler}>
                     Sign Out
                   </Link>
-                  <Link className="dropdown-item" to="/orderhistory">Order History</Link>
                 </NavDropdown>
               ):( <Link to={"SignIn"}>
               <Nav.Link href="/home">Sign in</Nav.Link>

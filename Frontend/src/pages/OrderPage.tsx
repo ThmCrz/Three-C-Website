@@ -157,7 +157,7 @@ export default function OrderPage() {
                         <Col md={2}>
                           <span>{item.quantity}</span>
                         </Col>
-                        <Col md={3}>${item.price}</Col>
+                        <Col md={3}>₱{item.price}</Col>
                       </Row>
                     </ListGroup.Item>
                   ))}
@@ -173,19 +173,19 @@ export default function OrderPage() {
                   <ListGroup.Item  className="white-BG">
                     <Row className="white-BG">
                       <Col className="white-BG">Items</Col>
-                      <Col className="white-BG">${order.itemsPrice.toFixed(2)}</Col>
+                      <Col className="white-BG">₱{order.itemsPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item className="white-BG">
                     <Row className="white-BG">
                       <Col className="white-BG">Shipping</Col>
-                      <Col className="white-BG">${order.shippingPrice.toFixed(2)}</Col>
+                      <Col className="white-BG">₱{order.shippingPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item className="white-BG">
                     <Row className="white-BG">
                       <Col className="white-BG">Tax</Col>
-                      <Col className="white-BG">${order.taxPrice.toFixed(2)}</Col>
+                      <Col className="white-BG">₱{order.taxPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item className="white-BG">
@@ -194,7 +194,7 @@ export default function OrderPage() {
                         <strong> Order Total</strong>
                       </Col>
                       <Col className="white-BG">
-                        <strong>${order.totalPrice.toFixed(2)}</strong>
+                        <strong>₱{order.totalPrice.toFixed(2)}</strong>
                       </Col>
                     </Row>
                   </ListGroup.Item>

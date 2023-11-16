@@ -101,7 +101,7 @@ export default function CartPage() {
                         <i className="fas fa-plus-circle"></i>
                       </Button>
                     </Col>
-                    <Col>{item.price}</Col>
+                    <Col>₱{item.price}</Col>
                     <Col>
                       <Button
                         variant="light"
@@ -123,7 +123,7 @@ export default function CartPage() {
                 <ListGroup.Item>
                   <h3>
                     Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{" "}
-                    items) : $
+                    items) : ₱
                     {Number(
                       cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
                     ).toFixed(2)}

@@ -9,7 +9,7 @@ export const generateToken = (user: User) => {
         email: user.email,
         isAdmin: user.isAdmin,
       },
-      process.env.JWT_SECRET || 'amacccapstoneprojectsystem',
+      process.env.JWT_SECRET || '',
       {
         expiresIn: '30d',
       }
@@ -22,7 +22,7 @@ export const generateToken = (user: User) => {
       const token = authorization.slice(7, authorization.length)
       const decode = jwt.verify(
         token,
-        process.env.JWT_SECRET || 'amacccapstoneprojectsystem'
+        process.env.JWT_SECRET || ''
       )
         req.user = decode as {
           _id: string

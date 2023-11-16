@@ -107,7 +107,7 @@ export default function PlaceOrderPage() {
                         <Col md={3}>
                           <span>{item.quantity}</span>
                         </Col>
-                        <Col md={2}>{item.price}</Col>
+                        <Col md={2}>₱{item.price}</Col>
                       </Row>
                     </ListGroup.Item>
                   ))}
@@ -124,19 +124,19 @@ export default function PlaceOrderPage() {
                   <ListGroup.Item>
                     <Row>
                       <Col>Items</Col>
-                      <Col>${cart.itemsPrice.toFixed(2)}</Col>
+                      <Col>₱{cart.itemsPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <Row>
                       <Col>Shipping</Col>
-                      <Col>${cart.shippingPrice.toFixed(2)}</Col>
+                      <Col>₱{cart.shippingPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <Row>
                       <Col>Tax</Col>
-                      <Col>${cart.taxPrice.toFixed(2)}</Col>
+                      <Col>₱{cart.taxPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
@@ -145,7 +145,7 @@ export default function PlaceOrderPage() {
                         <strong> Order Total</strong>
                       </Col>
                       <Col>
-                        <strong>${cart.totalPrice.toFixed(2)}</strong>
+                        <strong>₱{cart.totalPrice.toFixed(2)}</strong>
                       </Col>
                     </Row>
                   </ListGroup.Item>

@@ -68,7 +68,7 @@ export default function Productpage() {
                 <h2>Brand: {product.brand}</h2>
                 
               </ListGroup.Item>
-              <ListGroup.Item>Price : ${product.price}</ListGroup.Item>
+              <ListGroup.Item>Price : ₱{product.price}</ListGroup.Item>
               <ListGroup.Item>
                 Description:
                 <p>{product.description}</p>
@@ -80,7 +80,7 @@ export default function Productpage() {
                   <ListGroup.Item>
                     <Row>
                       <Col>Price:</Col>
-                      <Col>${product.price}</Col>
+                      <Col>₱{product.price}</Col>
                     </Row>
                   </ListGroup.Item>
                   <ListGroup.Item>
