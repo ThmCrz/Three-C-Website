@@ -6,6 +6,8 @@ import { Store } from "../Store";
 import { cartItem } from "../types/Cart";
 import { convertProductToCartItem } from "../types/Utils";
 import { toast } from "react-toastify";
+import { useCartMutation } from "../hooks/UserHooks";
+import { ApiError } from "../types/ApiError";
 
 type ProductCardProps = {
   product: Product;
@@ -14,21 +16,36 @@ type ProductCardProps = {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { state, dispatch } = useContext(Store);
   const {
+    userInfo,
     cart: { cartItems },
   } = state;
 
-  const addToCartHandler = (item: cartItem) => {
+  const { mutateAsync: updateCart, isLoading } = useCartMutation();
+
+  const addToCartHandler = async (item: cartItem) => {
+    if (isLoading) {
+      return;
+    }
+
     const existingItem = cartItems.find((x) => x._id === product._id);
     const quantity = existingItem ? existingItem.quantity + 1 : 1;
     if (product.countInStock < quantity) {
       toast.warn(`Sorry, The Product ${product.name} is out of stock`);
       return;
     }
-      dispatch({
+    dispatch({
       type: "ADD_ITEM_TO_CART",
       payload: { ...item, quantity },
     });
+    try {
+      // Update shipping address and handle loading state
+      await updateCart({ user: userInfo._id, itemId: product._id });
+
       toast.success(`Product ${product.name} was added to cart`);
+    } catch (error) {
+      // Handle error, e.g., show an error toast
+      toast.error(`${error as ApiError}`);
+    }
   };
 
   return (
@@ -59,8 +76,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Button
             variant="primary"
             onClick={() => addToCartHandler(convertProductToCartItem(product))}
-          >
-            Add to Cart
+            disabled={isLoading}>
+            {isLoading ? "Adding to cart..." : "Add to Cart"}
           </Button>
         )}
       </Card.Body>

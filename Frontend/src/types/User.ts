@@ -1,5 +1,10 @@
 import { shippingAddress } from "./Cart"
 
+export type CurrentCart = {
+    itemId: string
+    quantity: number
+}
+
 export type UserInfo = {
     _id: string
     name: string
@@ -7,4 +12,5 @@ export type UserInfo = {
     token: string
     isAdmin: boolean
     shippingAddress: shippingAddress
+    currentCart: CurrentCart
 }

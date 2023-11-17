@@ -13,8 +13,8 @@ export class User {
   public isAdmin!: boolean;
   @prop({ type: () => Object })
   public shippingAddress?: object;
-  @prop({ type: () => [[String, Number]] }) 
-  public cartItems?: [string, number][];
+  @prop({ type: () => [Object] })
+  public currentCart?: { itemId: string; quantity: number }[];
 }
 
 export const UserModel = getModelForClass(User);
