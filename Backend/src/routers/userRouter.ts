@@ -18,6 +18,8 @@ userRouter.post(
           email: user.email,
           isAdmin: user.isAdmin,
           token: generateToken(user),
+          shippingAddress: user.shippingAddress,
+          currentCart: user.currentCart,
         });
         return;
       }
