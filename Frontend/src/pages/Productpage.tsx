@@ -41,7 +41,7 @@ export default function Productpage() {
     });
     try {
       // Update shipping address and handle loading state
-      await updateCart({ user: userInfo._id, itemId: product!._id });
+      await updateCart({ user: userInfo._id, cartItem: convertProductToCartItem(product!) });
 
       toast.success(`Product ${product!.name} was added to cart`);
     } catch (error) {

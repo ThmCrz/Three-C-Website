@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import apiClient from "../apiClient";
 import { UserInfo } from "../types/User";
-import { shippingAddress } from "../types/Cart";
+import { cartItem, shippingAddress } from "../types/Cart";
 
 export const useSigninMutation = () =>
   useMutation({
@@ -60,14 +60,14 @@ export const useCartMutation = () =>
   useMutation({
     mutationFn: async ({
       user,
-      itemId,
+      cartItem,
     }: {
       user: string;
-      itemId: string;
+      cartItem: cartItem;
     }) =>
       (
         await apiClient.put<UserInfo>(`api/users/${user}/Cart`, {
-          itemId,
+          cartItem,
         })
       ).data,
   });

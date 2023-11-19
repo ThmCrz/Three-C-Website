@@ -1,19 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../apiClient";
 import { Product } from "../types/Products"
- 
+
 export const  useGetProductsQuery = () =>
-useQuery({
+  useQuery({
     queryKey: ['products'],
-    queryFn: async () => (await apiClient.get<Product[]>('api/products')).data, 
-})
+    queryFn: async () => (await apiClient.get<Product[]>('api/products')).data,
+  })
 
 export const useGetProductDetailsBySlugQuery = (slug: string) =>
   useQuery({
     queryKey: ['products', slug],
     queryFn: async () => {
       const response = await apiClient.get<Product>(`api/products/${slug}`);
-      
+
       //to get correct path for product image
       const productData = response.data;
       const updatedProduct = {
@@ -25,4 +25,27 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
     },
   });
 
+  export const useGetMultipleProductDetailsByIdQuery = (currentCartItemIds: string[]) =>
+    useQuery({
+      queryKey: ["products", currentCartItemIds],
+      queryFn: async () => {
+        const updatedProducts: Product[] = [];
 
+        const apiCalls = currentCartItemIds.map((_id) =>
+          apiClient.get<Product>(`api/products/${_id}`)
+        );
+        const responses = await Promise.all(apiCalls);
+
+        for (const response of responses) {
+          const productData = response.data;
+          const updatedProduct = {
+            ...productData,
+            image: `http://localhost:5173/${productData.image}`,
+          };
+
+          updatedProducts.push(updatedProduct);
+        }
+
+        return updatedProducts;
+      },
+    });

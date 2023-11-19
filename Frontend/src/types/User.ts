@@ -1,8 +1,9 @@
-import { shippingAddress } from "./Cart"
+import { cartItem, shippingAddress } from "./Cart"
+
+
 
 export type CurrentCart = {
-    itemId: string
-    quantity: number
+    currentCartItems: cartItem[]
 }
 
 export type UserInfo = {

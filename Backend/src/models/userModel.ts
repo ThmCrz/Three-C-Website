@@ -14,7 +14,14 @@ export class User {
   @prop({ type: () => Object })
   public shippingAddress?: object;
   @prop({ type: () => [Object] })
-  public currentCart?: { itemId: string; quantity: number }[];
+  public currentCart?: {
+    image: string | undefined
+    slug: string
+    quantity: number
+    countInStock: number
+    price: number
+    _id: string
+    name: string }[];
 }
 
 export const UserModel = getModelForClass(User);

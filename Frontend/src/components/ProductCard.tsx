@@ -37,14 +37,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       type: "ADD_ITEM_TO_CART",
       payload: { ...item, quantity },
     });
+    
+    if(userInfo){
     try {
       // Update shipping address and handle loading state
-      await updateCart({ user: userInfo._id, itemId: product._id });
+      await updateCart({ user: userInfo._id, cartItem: item });
 
       toast.success(`Product ${product.name} was added to cart`);
     } catch (error) {
       // Handle error, e.g., show an error toast
       toast.error(`${error as ApiError}`);
+    }
+    }else{
+      toast.success(`Product ${product.name} was added to cart`);
     }
   };
 
