@@ -16,6 +16,7 @@ userRouter.post(
           _id: user._id,
           name: user.name,
           email: user.email,
+          phone: user.phone,
           isAdmin: user.isAdmin,
           token: generateToken(user),
           shippingAddress: user.shippingAddress,
@@ -116,5 +117,41 @@ userRouter.put(
     } else {
       res.status(404).send({ message: "User Not Found" });
     }
+  })
+);
+
+userRouter.put(
+  "/:id/Cart/Delete",
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    //Recieves the request
+    const userId = req.params.id;
+    const cartItem = req.body.cartItem;
+
+    //tries to find the user
+    const user = await UserModel.findById(userId);
+
+    //if user is found.
+    if (user) {
+      //checks if the cart Item exists in the cart
+      const existingCartItem = user.currentCart?.find(
+        (item) => item._id === cartItem._id
+      );
+
+      //if it exists, then remove it from the cart
+      if (existingCartItem) {
+        user.currentCart = user.currentCart?.filter(
+          (item) => item._id !== cartItem._id
+        );
+        //saves the user after deleting the item
+        await user.save();
+
+        //sends a response back
+        res.send({ message: "Cart Item Deleted" });
+        return;
+      }
+    }
+    //if the cart Item is not found.
+    res.status(404).send({ message: "Cart Item Not Found" });
   })
 );

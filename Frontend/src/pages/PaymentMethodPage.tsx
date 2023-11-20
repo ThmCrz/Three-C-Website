@@ -60,10 +60,20 @@ export default function PaymentMethodPage() {
             <div className="mb-4">
               <Form.Check
                 type="radio"
-                id="Paynamics"
-                label="Paynamics"
-                value="Paynamics"
-                checked={paymentMethodName === 'Paynamics'}
+                id="E-Wallet"
+                label="E-Wallet"
+                value="E-Wallet"
+                checked={paymentMethodName === 'E-Wallet'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <Form.Check
+                type="radio"
+                id="COD"
+                label="Cash On Delivery"
+                value="Cash On Delivery"
+                checked={paymentMethodName === 'Cash On Delivery'}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
             </div>

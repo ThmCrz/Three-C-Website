@@ -74,3 +74,21 @@ export const useCartMutation = () =>
         })
       ).data,
   });
+
+  export const useCartDeleteMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      user,
+      cartItem,
+      
+    }: {
+      user: string;
+      cartItem: cartItem;
+      
+    }) =>
+      (
+        await apiClient.put<UserInfo>(`api/users/${user}/Cart/Delete`, {
+          cartItem,
+        })
+      ).data,
+  });

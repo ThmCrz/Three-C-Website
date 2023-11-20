@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import MessageBox from "../components/MessageBox";
-import { useCartMutation } from "../hooks/UserHooks";
+import { useCartDeleteMutation, useCartMutation } from "../hooks/UserHooks";
 import { ApiError } from "../types/ApiError";
 export default function CartPage() {
   const navigate = useNavigate();
@@ -20,7 +20,9 @@ export default function CartPage() {
     dispatch,
   } = useContext(Store);
 
-  const { mutateAsync: updateCart, isLoading } = useCartMutation();
+  const { mutateAsync: updateCartQuantity, isLoading } = useCartMutation();
+  const { mutateAsync: DeleteCartItems } = useCartDeleteMutation();
+
 
   const memoizedCartItems = useMemo(() => cartItems, [cartItems]);
 
@@ -38,12 +40,12 @@ export default function CartPage() {
     });
 
     try {
-      await updateCart({
+      await updateCartQuantity({
         user: userInfo._id,
         cartItem: item,
         quantity: quantity,
       });
-      toast.success("Product Quantity updated successfully");
+      toast.success(`Product ${item.name} Quantity updated.`);
     } catch (error) {
       toast.error(`${error as ApiError}`);
     }
@@ -53,8 +55,19 @@ export default function CartPage() {
     navigate("/signin?redirect=/shipping");
   };
 
-  const removeItemHandler = (item: cartItem) => {
+  const removeItemHandler = async (item: cartItem) => {
     dispatch({ type: "CART_REMOVE_ITEM", payload: item });
+
+    try {
+      await DeleteCartItems({
+        user: userInfo._id,
+        cartItem: item,
+      });
+      toast.success(`Product ${item.name} was removed`);
+    } catch (error) {
+      toast.error(`${error as ApiError}`);
+    }
+
   };
 
   return (
