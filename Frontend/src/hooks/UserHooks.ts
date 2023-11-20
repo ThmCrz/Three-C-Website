@@ -61,13 +61,16 @@ export const useCartMutation = () =>
     mutationFn: async ({
       user,
       cartItem,
+      quantity,
     }: {
       user: string;
       cartItem: cartItem;
+      quantity: number | undefined;
     }) =>
       (
         await apiClient.put<UserInfo>(`api/users/${user}/Cart`, {
           cartItem,
+          quantity,
         })
       ).data,
   });

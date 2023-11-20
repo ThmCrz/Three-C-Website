@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Store } from "../Store";
@@ -6,16 +7,26 @@ import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import MessageBox from "../components/MessageBox";
+import { useCartMutation } from "../hooks/UserHooks";
+import { ApiError } from "../types/ApiError";
 export default function CartPage() {
   const navigate = useNavigate();
 
   const {
     state: {
+      userInfo,
       cart: { cartItems },
     },
     dispatch,
   } = useContext(Store);
 
+  const { mutateAsync: updateCart, isLoading } = useCartMutation();
+
+  const memoizedCartItems = useMemo(() => cartItems, [cartItems]);
+
+  const [editedQuantities, setEditedQuantities] = useState<{
+    [key: string]: number;
+  }>({});
   const updateCartHandler = async (item: cartItem, quantity: number) => {
     if (item.countInStock < quantity) {
       toast.warn("Sorry, Product is out of stock");
@@ -25,6 +36,17 @@ export default function CartPage() {
       type: "ADD_ITEM_TO_CART",
       payload: { ...item, quantity },
     });
+
+    try {
+      await updateCart({
+        user: userInfo._id,
+        cartItem: item,
+        quantity: quantity,
+      });
+      toast.success("Product Quantity updated successfully");
+    } catch (error) {
+      toast.error(`${error as ApiError}`);
+    }
   };
 
   const CheckoutHandler = () => {
@@ -43,13 +65,13 @@ export default function CartPage() {
       <h1>Cart</h1>
       <Row>
         <Col md={8}>
-          {cartItems.length === 0 ? (
+          {memoizedCartItems.length === 0 ? (
             <MessageBox>
               Your Cart Is Empty. <Link to="/">Go to Store</Link>
             </MessageBox>
           ) : (
             <ListGroup>
-              {cartItems.map((item: cartItem) => (
+              {memoizedCartItems.map((item: cartItem) => (
                 <ListGroup.Item key={item._id}>
                   <Row className="align-items-center">
                     <Col md={4}>
@@ -72,22 +94,57 @@ export default function CartPage() {
                       >
                         <i className="fas fa-minus-circle"></i>
                       </Button>
+
                       <input
+                        id={item._id}
                         className="quantityInput"
                         title="quantityInput"
                         type="number"
                         min="1"
                         max={item.countInStock}
-                        value={item.quantity}
+                        value={
+                          editedQuantities[item._id] !== undefined
+                            ? editedQuantities[item._id]
+                            : item.quantity
+                        }
+                        disabled={isLoading}
                         onChange={(e) => {
-                          let newQuantity = parseInt(e.target.value);
-                          if (isNaN(newQuantity) || newQuantity < 1) {
-                            newQuantity = 1;
+                          const newQuantity = parseInt(e.target.value) || 1;
+                          const clampedQuantity = Math.min(
+                            Math.max(newQuantity, 1),
+                            item.countInStock
+                          );
+                          setEditedQuantities(
+                            (prev: { [key: string]: number }) =>
+                              ({ ...prev, [item._id]: clampedQuantity } as {
+                                [key: string]: number;
+                              })
+                          );
+                        }}
+                        onBlur={() => {
+                          if (editedQuantities[item._id] !== undefined) {
+                            updateCartHandler(item, editedQuantities[item._id]);
+                            setEditedQuantities(
+                              (prev: { [key: string]: number }) =>
+                                ({ ...prev, [item._id]: undefined } as {
+                                  [key: string]: number;
+                                })
+                            );
                           }
-                          if (newQuantity > item.countInStock) {
-                            newQuantity = item.countInStock;
+                        }}
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "Enter" &&
+                            editedQuantities[item._id] !== undefined
+                          ) {
+                            updateCartHandler(item, editedQuantities[item._id]);
+                            setEditedQuantities(
+                              (prev: { [key: string]: number }) =>
+                                ({ ...prev, [item._id]: undefined } as {
+                                  [key: string]: number;
+                                })
+                            );
                           }
-                          updateCartHandler(item, newQuantity);
                         }}
                       />
 
@@ -122,10 +179,14 @@ export default function CartPage() {
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h3>
-                    Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{" "}
+                    Subtotal (
+                    {memoizedCartItems.reduce((a, c) => a + c.quantity, 0)}{" "}
                     items) : ₱
                     {Number(
-                      cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
+                      memoizedCartItems.reduce(
+                        (a, c) => a + c.quantity * c.price,
+                        0
+                      )
                     ).toFixed(2)}
                   </h3>
                 </ListGroup.Item>
@@ -135,7 +196,7 @@ export default function CartPage() {
                       type="button"
                       variant="primary"
                       onClick={CheckoutHandler}
-                      disabled={cartItems.length === 0}
+                      disabled={memoizedCartItems.length === 0}
                     >
                       Proceed to CheckOut
                     </Button>

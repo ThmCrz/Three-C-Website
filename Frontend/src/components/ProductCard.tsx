@@ -41,7 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     if(userInfo){
     try {
       // Update shipping address and handle loading state
-      await updateCart({ user: userInfo._id, cartItem: item });
+      await updateCart({ user: userInfo._id, cartItem: item, quantity});
 
       toast.success(`Product ${product.name} was added to cart`);
     } catch (error) {

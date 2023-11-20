@@ -71,6 +71,7 @@ userRouter.put(
   asyncHandler(async (req: Request, res: Response) => {
     const userId = req.params.id;
     const cartItem = req.body.cartItem;
+    const quantity = req.body.quantity;
 
     const user = await UserModel.findById(userId);
 
@@ -81,30 +82,26 @@ userRouter.put(
       );
 
       if (existingCartItem) {
-        // Item already exists in the cart, increase quantity by 1
-        existingCartItem.quantity += 1;
+        existingCartItem.quantity = quantity;
         existingCartItem.price = cartItem.price;
         existingCartItem.countInStock = cartItem.countInStock;
 
-        const index = user.currentCart?.findIndex(
-          (item) => item._id === cartItem._id
+        await UserModel.updateOne(
+          { _id: userId, "currentCart._id": cartItem._id },
+          {
+            $set: {
+              "currentCart.$.quantity": quantity,
+              "currentCart.$.price": cartItem.price,
+              "currentCart.$.countInStock": cartItem.countInStock,
+            },
+          }
         );
-        if (index !== -1) {
-          await UserModel.updateOne(
-            { _id: userId, "currentCart._id": cartItem._id },
-            { $inc: { "currentCart.$.quantity": 1 }, $set: { "currentCart.$.price": cartItem.price, "currentCart.$.countInStock": cartItem.countInStock } }
-          );
-        } else {
-          await UserModel.updateOne(
-            { _id: userId },
-            { $push: { currentCart: { itemId: cartItem._id, quantity: 1 } } }
-          );
-        }
       } else {
         // Item not in the cart, add it with quantity 1
         user.currentCart = user.currentCart || [];
         user.currentCart.push({
-          _id: cartItem._id, quantity: 1,
+          _id: cartItem._id,
+          quantity: quantity,
           image: cartItem.image,
           slug: cartItem.slug,
           countInStock: cartItem.countInStock,
