@@ -16,6 +16,15 @@ orderRouter.get(
 )
 
 orderRouter.get(
+  '/admin',
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const orders = await OrderModel.find()
+    res.send(orders)
+  })
+)
+
+orderRouter.get(
   '/:id',
   isAuth,
   asyncHandler(async (req: Request, res: Response) => {

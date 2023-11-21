@@ -7,16 +7,16 @@ export class User {
   public name!: string;
   @prop({ required: true, unique: true })
   public email!: string;
-  @prop({ required: true, unique: true })
-  public phone?: string;
+  @prop({ required: false })
+  public phone!: string;
   @prop({ required: true })
   public password!: string;
   @prop({ required: true, default: false })
   public isAdmin!: boolean;
   @prop({ type: () => Object })
-  public shippingAddress?: object;
+  public shippingAddress!: object;
   @prop({ type: () => [Object] })
-  public currentCart?: {
+  public currentCart!: {
     image: string | undefined
     slug: string
     quantity: number

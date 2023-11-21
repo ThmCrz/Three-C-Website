@@ -10,6 +10,12 @@ export const useGetOrderDetailsQuery = (id: string) =>
       (await apiClient.get<Order> (`api/orders/${id}`)).data,
   })
 
+  export const  useGetOrdersQuery = () =>
+  useQuery({
+    queryKey: ['products'],
+    queryFn: async () => (await apiClient.get<Order[]>('api/orders/admin')).data,
+  })
+
   export const useGetPaypalClientIdQuery = () =>
   useQuery({
     queryKey: ['paypal-clientId'],

@@ -20,6 +20,7 @@ export default function ShippingAddressPage() {
   const [city, setCity] = useState(shippingAddress.city || "");
   const [postalCode, setPostalCode] = useState( shippingAddress.postalCode || "");
   const [country, setCountry] = useState(shippingAddress.country || "");
+  const [phone, setPhone] = useState(userInfo.phone || "");
   useEffect(() => {
     if (!userInfo) {
       navigate("/signin?redirect=/shipping");
@@ -69,7 +70,7 @@ export default function ShippingAddressPage() {
     
       await updateShippingAddress({ user: userInfo._id, shippingAddress: updatedShippingAddress });
       toast.success("Shipping Address Updated");
-      navigate("/dashboard");
+      navigate("/payment");
     } catch (error) {
       // Handle error, e.g., show an error toast
       toast.error(`${error as ApiError}`);
@@ -128,6 +129,16 @@ export default function ShippingAddressPage() {
             <Form.Control
               value={country}
               onChange={(e) => setCountry(e.target.value)}
+              required
+              disabled={isLoading}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="phone">
+            <Form.Label>Phone Number (Optional)</Form.Label>
+            <Form.Control
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               required
               disabled={isLoading}
             />

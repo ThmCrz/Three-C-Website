@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Row, Col, Card, Button, Form, Spinner } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
@@ -14,19 +14,22 @@ import { toast } from "react-toastify";
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { data: orders, isLoading, error } = useGetOrderHistoryQuery();
-  const { mutateAsync: updateAccountDetails } = useAccountDetailsMutation();
+  const {
+    mutateAsync: updateAccountDetails,
+    isLoading: isAccountDetailsLoading,
+  } = useAccountDetailsMutation();
   const {
     dispatch,
-    state: { userInfo,
-      cart: { shippingAddress }, },
+    state: {
+      userInfo,
+      cart: { shippingAddress },
+    },
   } = useContext(Store);
 
   const [name, setName] = useState(userInfo.name || "");
   const [email, setEmail] = useState(userInfo.email || "");
   const [phone, setPhone] = useState(userInfo.phone || "");
-  const [isEditingAccountDetails, setIsEditingAccountDetails, ] = useState(false);
-
-  
+  const [isEditingAccountDetails, setIsEditingAccountDetails] = useState(false);
 
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -53,8 +56,8 @@ export default function DashboardPage() {
       toast.error(`${error as ApiError}`);
     }
 
-    setIsEditingAccountDetails(false)
-  } 
+    setIsEditingAccountDetails(false);
+  };
 
   return (
     <div>
@@ -70,62 +73,74 @@ export default function DashboardPage() {
                 {isEditingAccountDetails ? (
                   <span>Editing...</span>
                 ) : (
-                  <Button onClick={() => setIsEditingAccountDetails(true)}>Edit</Button>
-                )}
+                  <Button onClick={() => setIsEditingAccountDetails(true)}>
+                    Edit
+                  </Button>
+                )} 
               </Card.Title>
+              {isAccountDetailsLoading ? <div className="BlurBox"><Spinner className="Account-Detail-Spinner" animation="border" role="status"/></div> : ""}
               <Card.Text className="mb-3 white-BG MMAccount">
                 {isEditingAccountDetails ? (
                   // Render the form here
-                  <Form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="fullName">
-            <Form.Label>Userame:</Form.Label>
-            <Form.Control
-              className="transparent-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="address">
-            <Form.Label>Email:</Form.Label>
-            <Form.Control
-              className="transparent-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="city">
-            <Form.Label>Phone:</Form.Label>
-            <Form.Control
-              className="transparent-input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-          </Form.Group>
+                  <Form onSubmit={submitHandler} >
+                    <Form.Group className="mb-3" controlId="fullName">
+                      <Form.Label>Userame:</Form.Label>
+                      <Form.Control
+                        className="white-BG"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="address">
+                      <Form.Label>Email:</Form.Label>
+                      <Form.Control
+                        className="white-BG"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="city">
+                      <Form.Label>Phone:</Form.Label>
+                      <Form.Control
+                        className="white-BG"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                        
+                      />
+                    </Form.Group>
 
-          <div className="mb-3">
-          <Button variant="primary" type="submit" disabled={isLoading}>
-              {isLoading ? "saving..." : "Save"}
-            </Button>{" | "}
-          <Button onClick={() => setIsEditingAccountDetails(false)}>Cancel</Button>
-          </div>
-        </Form>
-                  
+                    <div className="mb-3">
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        disabled={isAccountDetailsLoading}
+                      >
+                        {isLoading ? "saving..." : "Save"}
+                      </Button>
+                      {" | "}
+                      <Button
+                        onClick={() => setIsEditingAccountDetails(false)}
+                        disabled={isAccountDetailsLoading}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </Form>
                 ) : (
                   // Render the regular text here
                   <>
                     Username: {userInfo.name} <br />
                     Email: {userInfo.email} <br />
-                    Phone: {" "}
+                    Phone:{" "}
                     {userInfo.phone ? userInfo.phone : "Add a Phone number"}
                     <br />
                     {userInfo.isAdmin ? (
-                      <Button> Admin Dashboard</Button>
+                      <Button onClick={() => navigate("/adminPage")}> Admin Dashboard</Button>
                     ) : (
                       <></>
                     )}
@@ -139,29 +154,28 @@ export default function DashboardPage() {
           <Card className="mb-3 white-BG">
             <Card.Body className="mb-3 white-BG">
               <Card.Title className="mb-3 white-BG">
-                Address Book <span>| </span> <Button onClick={() => navigate("/editShipping")}>Edit</Button>
+                Address Book <span>| </span>{" "}
+                <Button onClick={() => navigate("/editShipping")}>Edit</Button>
               </Card.Title>
               <Row>
                 <Col>
                   <Card.Text className="mb-3 white-BG">
                     <strong>Default Shipping Address</strong> <br />
                     {shippingAddress.fullName} <br />
-                    {shippingAddress.address} -{" "}
-                    {shippingAddress.city}
+                    {shippingAddress.address} - {shippingAddress.city}
                     <span> </span>
-                    {shippingAddress.postalCode} -{" "}
-                    {shippingAddress.country} <br />
+                    {shippingAddress.postalCode} - {shippingAddress.country}{" "}
+                    <br />
                   </Card.Text>
                 </Col>
                 <Col className="mb-3 white-BG">
                   <Card.Text className="mb-3 white-BG">
                     <strong>Default Billing Address</strong> <br />
                     {shippingAddress.fullName} <br />
-                    {shippingAddress.address} -{" "}
-                    {shippingAddress.city}
+                    {shippingAddress.address} - {shippingAddress.city}
                     <span> </span>
-                    {shippingAddress.postalCode} -{" "}
-                    {shippingAddress.country} <br />
+                    {shippingAddress.postalCode} - {shippingAddress.country}{" "}
+                    <br />
                   </Card.Text>
                 </Col>
               </Row>
@@ -194,7 +208,7 @@ export default function DashboardPage() {
                 <td>
                   {order.createdAt ? order.createdAt.substring(0, 10) : ""}
                 </td>
-                <td>{order.totalPrice.toFixed(2)}</td>
+                <td>₱ {order.totalPrice.toFixed(2)}</td>
                 <td>
                   {order.isPaid
                     ? order.paidAt
