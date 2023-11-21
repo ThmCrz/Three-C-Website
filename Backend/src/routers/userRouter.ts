@@ -49,6 +49,26 @@ userRouter.post(
 );
 
 userRouter.put(
+  "/:id/editAccount",
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await UserModel.findById(req.params.id);
+
+    if (user) {
+      user.name = req.body.name;
+      user.email = req.body.email;
+      user.phone = req.body.phone;
+
+      const updatedUser = await user.save();
+
+      res.send({ user: updatedUser, message: "Account Details Updated" });
+    } else {
+      res.status(404).send({ message: "User Not Found" });
+    }
+  })
+);
+
+userRouter.put(
   "/:id/shippingAddress",
   isAuth,
   asyncHandler(async (req: Request, res: Response) => {

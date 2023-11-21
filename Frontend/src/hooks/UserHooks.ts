@@ -39,6 +39,28 @@ export const useSignupMutation = () =>
         })
       ).data,
   });
+export const useAccountDetailsMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      _id,
+      name,
+      email,
+      phone,
+    }: {
+      _id: string;
+      name: string;
+      email: string;
+      phone: string;
+    }) =>
+      (
+        await apiClient.put<UserInfo>(`api/users/${_id}/editAccount`, {
+          _id,
+          name,
+          email,
+          phone,
+        })
+      ).data,
+  });
 
 export const useShippingMutation = () =>
   useMutation({

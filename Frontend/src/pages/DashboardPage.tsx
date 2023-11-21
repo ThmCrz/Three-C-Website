@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Row, Col, Card, Button, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
@@ -8,16 +8,53 @@ import { ApiError } from "../types/ApiError";
 import { getError } from "../types/Utils";
 import { Store } from "../Store";
 import { useContext, useState } from "react";
+import { useAccountDetailsMutation } from "../hooks/UserHooks";
+import { toast } from "react-toastify";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { data: orders, isLoading, error } = useGetOrderHistoryQuery();
+  const { mutateAsync: updateAccountDetails } = useAccountDetailsMutation();
   const {
+    dispatch,
     state: { userInfo,
       cart: { shippingAddress }, },
   } = useContext(Store);
 
+  const [name, setName] = useState(userInfo.name || "");
+  const [email, setEmail] = useState(userInfo.email || "");
+  const [phone, setPhone] = useState(userInfo.phone || "");
   const [isEditingAccountDetails, setIsEditingAccountDetails, ] = useState(false);
+
+  
+
+  const submitHandler = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    if (isLoading) {
+      return;
+    }
+
+    dispatch({
+      type: "SAVE_USER_DETAILS",
+      payload: {
+        _id: userInfo._id,
+        name,
+        email,
+        phone,
+      },
+    });
+
+    try {
+      await updateAccountDetails({ _id: userInfo._id, name, email, phone });
+      toast.success("User details updated");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(`${error as ApiError}`);
+    }
+
+    setIsEditingAccountDetails(false)
+  } 
 
   return (
     <div>
@@ -31,10 +68,7 @@ export default function DashboardPage() {
               <Card.Title className="mb-3 white-BG">
                 Manage My Account <span>|</span>{" "}
                 {isEditingAccountDetails ? (
-                  <>
-                    <Button onClick={() => setIsEditingAccountDetails(false)}>Save</Button>{" "}
-                    <Button onClick={() => setIsEditingAccountDetails(false)}>Cancel</Button>{" "}
-                  </>
+                  <span>Editing...</span>
                 ) : (
                   <Button onClick={() => setIsEditingAccountDetails(true)}>Edit</Button>
                 )}
@@ -42,25 +76,46 @@ export default function DashboardPage() {
               <Card.Text className="mb-3 white-BG MMAccount">
                 {isEditingAccountDetails ? (
                   // Render the form here
-                  <form>
-                    <Col>
-                    <Row>
-                    Username: <input className="transparent-input" type="text" title="username" value={userInfo.name} />
-                    </Row>
-                    <Row>
-                    Email: <input className="transparent-input" type="email" title="email" value={userInfo.email} />
-                    </Row>
-                    <Row>
-                    Phone: <input className="transparent-input"
-                      type="tel"
-                      title="phone"
-                      value={
-                        userInfo.phone ? userInfo.phone : "Add a Phone number"
-                      }
-                      />
-                      </Row>
-                    </Col>
-                  </form>
+                  <Form onSubmit={submitHandler}>
+          <Form.Group className="mb-3" controlId="fullName">
+            <Form.Label>Userame:</Form.Label>
+            <Form.Control
+              className="transparent-input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={isLoading}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="address">
+            <Form.Label>Email:</Form.Label>
+            <Form.Control
+              className="transparent-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isLoading}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="city">
+            <Form.Label>Phone:</Form.Label>
+            <Form.Control
+              className="transparent-input"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+              disabled={isLoading}
+            />
+          </Form.Group>
+
+          <div className="mb-3">
+          <Button variant="primary" type="submit" disabled={isLoading}>
+              {isLoading ? "saving..." : "Save"}
+            </Button>{" | "}
+          <Button onClick={() => setIsEditingAccountDetails(false)}>Cancel</Button>
+          </div>
+        </Form>
+                  
                 ) : (
                   // Render the regular text here
                   <>
@@ -84,9 +139,7 @@ export default function DashboardPage() {
           <Card className="mb-3 white-BG">
             <Card.Body className="mb-3 white-BG">
               <Card.Title className="mb-3 white-BG">
-                Address Book <span>|</span> 
-                  <Button onClick={() => navigate("/editShipping")}>Edit</Button>
-                
+                Address Book <span>| </span> <Button onClick={() => navigate("/editShipping")}>Edit</Button>
               </Card.Title>
               <Row>
                 <Col>

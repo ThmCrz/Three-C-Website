@@ -59,10 +59,17 @@ export default function ShippingAddressPage() {
     );
 
     try {
-      // Update shipping address and handle loading state
-      await updateShippingAddress({ user: userInfo._id, shippingAddress: shippingAddress });
+      const updatedShippingAddress = {
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+      };
+    
+      await updateShippingAddress({ user: userInfo._id, shippingAddress: updatedShippingAddress });
       toast.success("Shipping Address Updated");
-      navigate("/payment");
+      navigate("/dashboard");
     } catch (error) {
       // Handle error, e.g., show an error toast
       toast.error(`${error as ApiError}`);

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from "react";
 import { Cart, cartItem, shippingAddress } from "./types/Cart";
-import { UserInfo } from "./types/User";
+import { UserDetails, UserInfo } from "./types/User";
 
 type AppState = {
   mode: string;
@@ -43,6 +43,7 @@ type Action =
   | { type: "CART_REMOVE_ITEM"; payload: cartItem }
   | { type: "CART_CLEAR";}
   | { type: "USER_SIGNIN"; payload: UserInfo }
+  | { type: "SAVE_USER_DETAILS"; payload: UserDetails }
   | { type: "USER_SIGNOUT" }
   | { type: "SAVE_SHIPPING_ADDRESS"; payload: shippingAddress }
   | { type: "SAVE_PAYMENT_METHOD"; payload: string }
@@ -82,6 +83,17 @@ function reducer(state: AppState, action: Action): AppState {
 
     case "USER_SIGNIN":
       return { ...state, userInfo: action.payload, cart: { ...state.cart, cartItems: [] } };
+
+      case "SAVE_USER_DETAILS": {
+
+        const updatedUserInfo = {
+          ...state.userInfo,
+          name: action.payload.name,
+          email: action.payload.email,
+          phone: action.payload.phone,
+        };
+        return { ...state, userInfo: updatedUserInfo };
+      }
 
     case "USER_SIGNOUT":
       return {

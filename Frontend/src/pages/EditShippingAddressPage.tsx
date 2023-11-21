@@ -21,7 +21,7 @@ export default function EditShippingAddressPage() {
   const [country, setCountry] = useState(shippingAddress.country || "");
   useEffect(() => {
     if (!userInfo) {
-      navigate("/signin?redirect=/shipping");
+      navigate("/signin?redirect=/editShipping");
     }
   }, [userInfo, navigate]);
 
@@ -58,8 +58,15 @@ export default function EditShippingAddressPage() {
     );
 
     try {
-      // Update shipping address and handle loading state
-      await updateShippingAddress({ user: userInfo._id, shippingAddress: shippingAddress });
+      const updatedShippingAddress = {
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+      };
+    
+      await updateShippingAddress({ user: userInfo._id, shippingAddress: updatedShippingAddress });
       toast.success("Shipping Address Updated");
       navigate("/dashboard");
     } catch (error) {
