@@ -160,3 +160,10 @@ footer {
   font-size: large;
   
 }
+ 
+.transparent-input {
+  background-color: transparent;
+  border: 1px solid;
+  border-radius: 0;
+  color: black;
+}

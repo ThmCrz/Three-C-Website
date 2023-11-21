@@ -33,6 +33,7 @@ export default function SigninPage() {
         dispatch({ type: 'USER_SIGNIN', payload: data })
         localStorage.setItem('userInfo', JSON.stringify(data))
         localStorage.setItem("cartItems", JSON.stringify(data.currentCart));
+        localStorage.setItem("shippingAddress", JSON.stringify(data.shippingAddress));
         window.location.href = '/';
       } catch (err) {
         toast.error(getError(err as ApiError))

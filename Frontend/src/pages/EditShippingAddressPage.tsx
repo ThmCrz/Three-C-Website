@@ -3,12 +3,11 @@ import { Button, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../Store";
-import CheckoutGuide from "../components/CheckOutGuide";
 import { useShippingMutation } from "../hooks/UserHooks";
 import { toast } from "react-toastify";
 import { ApiError } from "../types/ApiError";
 
-export default function ShippingAddressPage() {
+export default function EditShippingAddressPage() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(Store);
   const {
@@ -62,7 +61,7 @@ export default function ShippingAddressPage() {
       // Update shipping address and handle loading state
       await updateShippingAddress({ user: userInfo._id, shippingAddress: shippingAddress });
       toast.success("Shipping Address Updated");
-      navigate("/payment");
+      navigate("/dashboard");
     } catch (error) {
       // Handle error, e.g., show an error toast
       toast.error(`${error as ApiError}`);
@@ -72,12 +71,11 @@ export default function ShippingAddressPage() {
   return (
     <div>
       <Helmet>
-        <title>Shipping Address</title>
+        <title>Edit Shipping Address</title>
       </Helmet>
 
-      <CheckoutGuide step1 step2></CheckoutGuide>
       <div className="mx-auto w-50">
-        <h1 className="my-3">Shipping Address</h1>
+        <h1 className="my-3">Edit Shipping Address</h1>
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="fullName">
             <Form.Label>Full Name</Form.Label>
