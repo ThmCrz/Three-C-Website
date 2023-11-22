@@ -12,9 +12,15 @@ import { useAccountDetailsMutation } from "../hooks/UserHooks";
 import { toast } from "react-toastify";
 
 export default function AdminPage() { 
+
+  const {
+    state: {
+      userInfo,
+    },
+  } = useContext(Store);
+
     const navigate = useNavigate();
     const { data: orders, isLoading, error } = useGetOrdersQuery();
-
 
 
 return (
@@ -27,7 +33,7 @@ return (
       <Col md={2}>
         <Card className="border-0">
           <Card.Body>
-            <Card.Title>Admin Info</Card.Title>
+            <Card.Title><div className="mb-2">Administrator:</div>{userInfo.name}</Card.Title>
             {/* Add admin's info here */}
           </Card.Body>
 
@@ -50,8 +56,8 @@ return (
       <Col fluid className="mt-3">
         <h1>Store Management Admin Dashboard</h1>
 
-        <Row>
-          <Col md={4} className="border-0" >
+        <Row className="mt-5">
+          <Col md={4} className="border-0 equal-height-column" >
             <Card>
               <Card.Body>
                 <Card.Title>Revenue Overview</Card.Title>
@@ -67,7 +73,7 @@ return (
             </Card>
           </Col>
 
-          <Col md={4}>
+          <Col md={4} className="equal-height-column">
             <Card>
               <Card.Body>
                 <Card.Title>Sales</Card.Title>
@@ -81,7 +87,7 @@ return (
             </Card>
           </Col>
 
-          <Col md={4} className="border-0">
+          <Col md={4} className="border-0 equal-height-column">
             <Card>
               <Card.Body>
                 <Card.Title>Financial Overview</Card.Title>
@@ -163,7 +169,7 @@ return (
           </Card>
         </Row>
 
-        <Row>
+        <Row className="mt-3">
           <Card>
             <Row>
               <Col>
