@@ -7,9 +7,11 @@ import { useGetOrdersQuery } from "../hooks/OrderHooks";
 import { ApiError } from "../types/ApiError";
 import { getError } from "../types/Utils";
 import { Store } from "../Store";
-import { useContext, useState } from "react";
-import { useAccountDetailsMutation } from "../hooks/UserHooks";
-import { toast } from "react-toastify";
+import { useContext, useEffect } from "react";
+import Chart from 'chart.js/auto';
+
+// import { useAccountDetailsMutation } from "../hooks/UserHooks";
+// import { toast } from "react-toastify";
 
 export default function AdminPage() { 
 
@@ -22,6 +24,85 @@ export default function AdminPage() {
     const navigate = useNavigate();
     const { data: orders, isLoading, error } = useGetOrdersQuery();
 
+    useEffect(() => {
+      // Get the canvas elements
+      const lineCanvas = document.getElementById('lineChart') as HTMLCanvasElement;
+      const barCanvas = document.getElementById('barChart') as HTMLCanvasElement;
+      const dougnutCanvas = document.getElementById('doughnutChart') as HTMLCanvasElement;
+    
+      if (lineCanvas && barCanvas && dougnutCanvas) {
+        // Create new chart instances
+        const colors = ['blue', 'green', 'red', 'yellow', 'orange', 'purple', 'pink'];
+        const lineChart = new Chart(lineCanvas, {
+          type: 'line',
+          data: {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            datasets: [
+              {
+                label: 'Total Revenue',
+                data: [5112, 1235, 5623, 1235, 6533, 1211, 500],
+                borderColor: colors,
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true, // Set responsive to true
+            maintainAspectRatio: false, // Set maintainAspectRatio to true
+          },
+        });
+        
+        const barChart = new Chart(barCanvas, {
+          type: 'bar',
+          data: {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            datasets: [
+              {
+                label: 'Total Sales',
+                data: [50, 23, 60, 46, 12, 2, 1],
+                backgroundColor: colors,
+              },
+            ],
+          },
+          options: {
+            responsive: true, // Set responsive to true
+            maintainAspectRatio: false, // Set maintainAspectRatio to true
+          },
+        });
+        
+        const doughnutChart = new Chart(dougnutCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: ["Profit", "Loss", "Expense"],
+            datasets: [
+              {
+                label: 'Pesos',
+                data: [6134, 2645, 5455],
+                backgroundColor: ['green', 'red', 'yellow'],
+              },
+            ],
+          },
+          options: {
+            responsive: false, // Set responsive to true
+            maintainAspectRatio: false, // Set maintainAspectRatio to true
+          },
+        });
+
+    
+        // Update the charts when the component re-renders
+        lineChart.update();
+        barChart.update();
+        doughnutChart.update();
+        
+        // Clean up the charts when the component unmounts
+        return () => {
+          lineChart.destroy();
+          barChart.destroy();
+          doughnutChart.destroy();
+        };
+      }
+    }, []);
+
 
 return (
   <Container fluid className="admin-page-container">
@@ -33,21 +114,23 @@ return (
       <Col md={2}>
         <Card className="border-0">
           <Card.Body>
-            <Card.Title><div className="mb-2">Administrator:</div>{userInfo.name}</Card.Title>
+            <Card.Title>
+              <div className="mb-2">Administrator:</div>
+              {userInfo.name}
+            </Card.Title>
             {/* Add admin's info here */}
           </Card.Body>
 
           <ul className="list-group list-group-flush">
             {/* Sidebar menu items */}
+            <li className="list-group-item"></li>
             <li className="list-group-item">
-              <Link to={`/revenue`}>Revenue</Link>
+              <Link to={`/adminPage`}>Order Management</Link>
             </li>
             <li className="list-group-item">
-              <Link to={`/orders`}>Order Management</Link>
+              <Link to={`/adminPage`}>Inventory Management</Link>
             </li>
-            <li className="list-group-item">
-              <Link to={`/inventory`}>Inventory Management</Link>
-            </li>
+            <li className="list-group-item"></li>
             {/* Add more menu items for other pages */}
           </ul>
         </Card>
@@ -57,32 +140,20 @@ return (
         <h1>Store Management Admin Dashboard</h1>
 
         <Row className="mt-5">
-          <Col md={4} className="border-0 equal-height-column" >
+          <Col md={4} className="border-0 equal-height-column">
             <Card>
               <Card.Body>
                 <Card.Title>Revenue Overview</Card.Title>
-                <Card.Text>
-                  Total Sales: A summary of the total sales over a specified
-                  period. <br />
-                  Sales Trends: Graphs or charts showing sales trends over time.{" "}
-                  <br />
-                  Average Order Value (AOV): The average amount customers spend
-                  per order.
-                </Card.Text>
+                <canvas id="lineChart" className="chart-container"></canvas>
               </Card.Body>
             </Card>
           </Col>
 
-          <Col md={4} className="equal-height-column">
+          <Col md={4} className=" equal-height-column">
             <Card>
               <Card.Body>
                 <Card.Title>Sales</Card.Title>
-                <Card.Text>
-                  Sales Trends: Analyze sales data to identify trends and
-                  seasonality, helping with stocking and promotions. <br />
-                  Customer Purchase History: Understand what your customers are
-                  buying to tailor promotions and marketing. <br />
-                </Card.Text>
+                <canvas id="barChart" className="chart-container"></canvas>
               </Card.Body>
             </Card>
           </Col>
@@ -92,9 +163,7 @@ return (
               <Card.Body>
                 <Card.Title>Financial Overview</Card.Title>
                 <Card.Text>
-                  Profit and Loss: A summary of the financial performance of the
-                  store. <br />
-                  Expenses: Details on various expenses related to the business.
+                  <canvas id="doughnutChart" className="chart-container"></canvas>
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -133,7 +202,11 @@ return (
                               ? order.createdAt.substring(0, 10)
                               : ""}
                           </td>
-                          <td>{order.totalPrice ? order.totalPrice.toFixed(2) : ""}</td>
+                          <td>
+                            {order.totalPrice
+                              ? order.totalPrice.toFixed(2)
+                              : ""}
+                          </td>
                           <td>
                             {order.isPaid
                               ? order.paidAt
@@ -205,7 +278,33 @@ return (
                 <div>
                   <Card.Body>
                     <Card.Title>Feedback and Reviews</Card.Title>
-                    <Card.Text></Card.Text>
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>User</th>
+                          <th>Feedback</th>
+                          <th>Review</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* Map over the data and render each row */}
+                        {isLoading ? (
+                          <LoadingBox></LoadingBox>
+                        ) : error ? (
+                          <MessageBox variant="danger">
+                            {getError(error as ApiError)}
+                          </MessageBox>
+                        ) : (
+                          orders?.map((order) => (
+                            <tr key={order._id}>
+                              <td>dadfa</td>
+                              <td>asdfasdf</td>
+                              <td>asdfasdf</td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
                   </Card.Body>
                 </div>
               </Col>

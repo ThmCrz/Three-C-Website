@@ -197,11 +197,15 @@ footer {
   width: 100vw;
   margin-left: -50vw;
   left: 50%;
-  padding-right: 5vw; 
+  padding-right: 10vw; 
 }
 
 .border-0 {
   padding: 0; 
   margin: 0;
 
+}
+
+.chart-container {
+  max-height: 300px; /* Adjust the value as needed */
 }
