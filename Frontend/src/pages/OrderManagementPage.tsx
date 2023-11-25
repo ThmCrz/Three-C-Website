@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect } from "react"
-import { Row, Col, Card, ListGroup } from "react-bootstrap"
+import { Row, Col, Card, ListGroup, Button } from "react-bootstrap"
 import { Helmet } from "react-helmet-async"
 import { useParams, Link } from "react-router-dom"
 import LoadingBox from "../components/LoadingBox"
 import MessageBox from "../components/MessageBox"
 import { ApiError } from "../types/ApiError"
 import { getError } from "../types/Utils"
-import { useGetOrderDetailsQuery, useGetPaypalClientIdQuery, usePayOrderMutation } from "../hooks/OrderHooks"
+import { useOrderDeliveredMutation, useGetOrderDetailsQuery, useOrderStatusMutation} from "../hooks/OrderHooks"
+import { FaArrowRight } from 'react-icons/fa';
 import { toast } from "react-toastify"
-import { PayPalButtons, PayPalButtonsComponentProps, SCRIPT_LOADING_STATE, usePayPalScriptReducer } from "@paypal/react-paypal-js"
 
-export default function OrderPage() {
-    
-    
-    const { mutateAsync: payOrder, isLoading: loadingPay } = usePayOrderMutation()
+export default function OrderManagementPage() {
+  
+
     const params = useParams()
     const { id: orderId } = params
 
@@ -24,63 +22,32 @@ export default function OrderPage() {
       isLoading,
       error,
       refetch,
-    } = useGetOrderDetailsQuery(orderId!)
+    } = useGetOrderDetailsQuery(orderId!);
 
-    
-    const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
-      style: { layout: 'vertical' },
-      createOrder(data, actions) {
-        return actions.order
-          .create({
-            purchase_units: [
-              {
-                amount: {
-                  value: order!.totalPrice.toString(),
-                },
-              },
-            ],
-          })
-          .then((orderID: string) => {
-            return orderID
-          })
-      },
-      onApprove(data, actions) {
-        return actions.order!.capture().then(async (details) => {
-          try {
-            await payOrder({ orderId: orderId!, ...details })
-            refetch()
-            toast.success('Order is paid')
-          } catch (err) {
-            toast.error(getError(err as ApiError))
-          }
-        })
-      },
-      onError: (err) => {
-        toast.error(getError(err as ApiError))
-      },
-    }
-    const [{ isPending, isRejected }, paypalDispatch] = usePayPalScriptReducer()
-    const { data: paypalConfig } = useGetPaypalClientIdQuery()
+    const { mutateAsync: updateStatus } = useOrderStatusMutation();
+    const { mutateAsync: completeOrder } = useOrderDeliveredMutation();
 
-    useEffect(() => {
-      if (paypalConfig && paypalConfig.clientId) {
-        const loadPaypalScript = async () => {
-          paypalDispatch({
-            type: 'resetOptions',
-            value: {
-              'clientId': paypalConfig!.clientId,
-              currency: 'PHP',
-            },
-          })
-          paypalDispatch({
-            type: 'setLoadingStatus',
-            value: SCRIPT_LOADING_STATE.PENDING,
-          })
-        }
-        loadPaypalScript()
+    const updateStatusHandler = async () => {
+      try {
+        await updateStatus(orderId!);
+        refetch();
+        toast.success("status updated")
+      } catch (error) {
+        toast.error(`${error as ApiError}`);
       }
-    }, [paypalConfig, paypalDispatch])
-    
+
+    };
+
+    const completeOrderHandler = async () => {
+      try {
+        await completeOrder(orderId!);
+        refetch();
+        toast.success("Order Completed")
+      } catch (error) {
+        toast.error(`${error as ApiError}`);
+      }
+
+    };
 
     return isLoading ? (
       <LoadingBox></LoadingBox>
@@ -97,37 +64,56 @@ export default function OrderPage() {
         <Row>
           <Col md={8}>
             <Card className="mb-3">
-              <Card.Body className="pb-0">
+              <Card.Body className="0">
                 <Card.Title>Shipping</Card.Title>
                 <Card.Text>
                   <strong>Name:</strong> {order.shippingAddress.fullName} <br />
-                  <strong>Address: </strong> {order.shippingAddress.address},
-                  {order.shippingAddress.city},{" "}
-                  {order.shippingAddress.postalCode},
+                  <strong>Address: </strong>
+                  <br />
+                  {order.shippingAddress.address}, {order.shippingAddress.city},{" "}
+                  {order.shippingAddress.postalCode},{" "}
                   {order.shippingAddress.country}
                 </Card.Text>
-
-                {order.status === 0 ? (
-                  <MessageBox variant="danger">Your Order has been Canceled</MessageBox>
-                ) : order.status === 1 ? (
-                  <MessageBox variant="info">
-                    Order not Confirmed
-                  </MessageBox>
-                ) : order.status === 2 ? (
-                  <MessageBox variant="info">Order Confirmed, waiting for payment Before Preparation</MessageBox>
-                ) : order.status === 3 ? (
-                  <MessageBox variant="info">Order Prepared</MessageBox>
-                ) : order.status === 4 ? (
-                  <MessageBox variant="info">Order is now out for Delivery</MessageBox>
-                ) : order.status === 5 ? (
+                <div className="mx-auto d-flex justify-content-center align-items-center">
+                  <Button onClick={updateStatusHandler} className="mx-2" disabled={order.status !== 1}>
+                    Confirm Order
+                  </Button>
+                  <FaArrowRight />
+                  {order.paymentMethod === "Cash On Delivery" ? 
+                  (    
+                    <Button onClick={updateStatusHandler} className="mx-2" disabled={order.status !== 2}>
+                      Order Prepared
+                    </Button>
+                  ):(  
+                    <Button onClick={updateStatusHandler} className="mx-2" disabled={order.status !== 2 || !order.isPaid}>
+                      {!order.isPaid ? (<div>Order Prepared <br/> (waiting for payment)</div>) : ("Order Prepared")}
+                    </Button>
+                  ) } 
+                  
+                  <FaArrowRight />
+                  <Button onClick={updateStatusHandler} className="mx-2" disabled={order.status !== 3}>
+                    Order out for Delivery
+                  </Button>
+                  <FaArrowRight />
+                  {order.paymentMethod === "Cash On Delivery" ? 
+                  (    
+                  <Button onClick={completeOrderHandler } className="mx-2" disabled={order.status !== 4}>
+                      Order Delivered And Paid
+                    </Button>
+                  ):(
+                    <Button onClick={completeOrderHandler} className="mx-2" disabled={order.status !== 4}>
+                      Order Delivered
+                    </Button>
+                  )
+                  }
+                </div>
+                  {order.status === 5 ? (
+                    <div className="mt-3 mb-0">
                   <MessageBox variant="success">
                     Order has been Delivered, Delivered At: {order.deliveredAt}
                   </MessageBox>
-                ) : (
-                  <MessageBox variant="warning">
-                    Invalid order status
-                  </MessageBox>
-                )}
+                    </div>
+                  ):("")}
               </Card.Body>
             </Card>
             <Card className="mb-3">
@@ -213,28 +199,6 @@ export default function OrderPage() {
                       </Col>
                     </Row>
                   </ListGroup.Item>
-                  {order.status === 2 && order.paymentMethod !==  "Cash On Delivery" ? (
-                    <ListGroup.Item className="white-BG">
-                      {!order.isPaid ? (
-                        <div className="white-BG">
-                          <PayPalButtons
-                            {...paypalbuttonTransactionProps}
-                          ></PayPalButtons>
-                        </div>
-                      ) : (
-                        <>
-                          {isPending ? (
-                            <LoadingBox />
-                          ) : isRejected ? (
-                            <MessageBox variant="danger">
-                              Error in connecting to PayPal
-                            </MessageBox>
-                          ) : null}
-                          {loadingPay && <LoadingBox></LoadingBox>}
-                        </>
-                      )}
-                    </ListGroup.Item>
-                  ):(<></>)}
                 </ListGroup>
               </Card.Body>
             </Card>

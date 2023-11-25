@@ -97,7 +97,7 @@ export const useCartMutation = () =>
       ).data,
   });
 
-  export const useCartDeleteMutation = () =>
+  export const useCartDeleteItemMutation = () =>
   useMutation({
     mutationFn: async ({
       user,
@@ -109,8 +109,21 @@ export const useCartMutation = () =>
       
     }) =>
       (
-        await apiClient.put<UserInfo>(`api/users/${user}/Cart/Delete`, {
+        await apiClient.put<UserInfo>(`api/users/${user}/Cart/DeleteItem`, {
           cartItem,
+        })
+      ).data,
+  });
+
+  export const useCartClearMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      user,
+    }: {
+      user: string;
+    }) =>
+      (
+        await apiClient.put<UserInfo>(`api/users/${user}/Cart/ClearCart`, {
         })
       ).data,
   });

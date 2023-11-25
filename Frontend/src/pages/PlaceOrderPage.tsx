@@ -9,12 +9,13 @@ import { useCreateOrderMutation } from "../hooks/OrderHooks"
 import { ApiError } from "../types/ApiError"
 import { getError } from "../types/Utils"
 import CheckoutGuide from "../components/CheckOutGuide"
+import { useCartClearMutation } from "../hooks/UserHooks"
 
 export default function PlaceOrderPage() {
     const navigate = useNavigate()
 
     const { state, dispatch } = useContext(Store)
-    const { cart } = state
+    const { cart, userInfo } = state
 
     const round2 = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100 // 123.2345 => 123.23
     cart.itemsPrice = round2(
@@ -25,6 +26,8 @@ export default function PlaceOrderPage() {
     cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice
 
     const { mutateAsync: createOrder, isLoading } = useCreateOrderMutation()
+    const { mutateAsync: clearCart } = useCartClearMutation();
+
 
     const placeOrderHandler = async () => {
       try {
@@ -36,7 +39,11 @@ export default function PlaceOrderPage() {
           shippingPrice: cart.shippingPrice,
           taxPrice: cart.taxPrice,
           totalPrice: cart.totalPrice,
+          phone: userInfo.phone
+
+          
         })
+        await clearCart({user: userInfo._id,});
         dispatch({ type: 'CART_CLEAR' })
         localStorage.removeItem('cartItems')
         navigate(`/order/${data.order._id}`)

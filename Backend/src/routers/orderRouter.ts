@@ -56,6 +56,8 @@ orderRouter.post(
               taxPrice: req.body.taxPrice,
               totalPrice: req.body.totalPrice,
               user: req.user._id,
+              phone: req.body.phone,
+              status: 1
             })
             res
               .status(201)
@@ -72,7 +74,7 @@ orderRouter.put(
 
     if (order) {
       order.isPaid = true
-      order.paidAt = new Date(Date.now())
+      order.paidAt = new Date(Date.now()).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
       order.paymentResult = {
         paymentId: req.body.id,
         status: req.body.status,
@@ -82,6 +84,44 @@ orderRouter.put(
       const updatedOrder = await order.save()
 
       res.send({ order: updatedOrder, message: "Order Paid Successfully" })
+    } else {
+      res.status(404).send({ message: 'Order Not Found' })
+    }
+  })
+)
+
+orderRouter.put(
+  '/:id/status',
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const order = await OrderModel.findById(req.params.id)
+
+    if (order) {
+      order.status += 1; // Increment the status by 1
+      const updatedOrder = await order.save();
+
+      res.send({ order: updatedOrder, message: "Status Updated" })
+    } else {
+      res.status(404).send({ message: 'Order Not Found' })
+    }
+  })
+)
+
+orderRouter.put(
+  '/:id/completed',
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const order = await OrderModel.findById(req.params.id)
+
+    if (order) {
+      order.status += 1; // Increment the status by 1
+      order.deliveredAt = new Date(Date.now()).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
+      order.isDelivered = true
+      order.isPaid = true
+      order.paidAt = new Date(Date.now()).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
+      const updatedOrder = await order.save();
+
+      res.send({ order: updatedOrder, message: "Order Completed" })
     } else {
       res.status(404).send({ message: 'Order Not Found' })
     }

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import MessageBox from "../components/MessageBox";
-import { useCartDeleteMutation, useCartMutation } from "../hooks/UserHooks";
+import { useCartDeleteItemMutation, useCartMutation } from "../hooks/UserHooks";
 import { ApiError } from "../types/ApiError";
 export default function CartPage() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function CartPage() {
   } = useContext(Store);
 
   const { mutateAsync: updateCartQuantity, isLoading } = useCartMutation();
-  const { mutateAsync: DeleteCartItems } = useCartDeleteMutation();
+  const { mutateAsync: DeleteCartItems } = useCartDeleteItemMutation();
 
 
   const memoizedCartItems = useMemo(() => cartItems, [cartItems]);

@@ -41,6 +41,25 @@ export const usePayOrderMutation = () =>
        ).data,
    })
 
+export const useOrderStatusMutation = () =>
+   useMutation({
+     mutationFn: async ( Id: string ) =>
+       (
+         await apiClient.put<{ message: string; order: Order }>(
+           `api/orders/${Id}/status`,
+         )
+       ).data,
+   })
+export const useOrderDeliveredMutation = () =>
+   useMutation({
+     mutationFn: async ( Id: string ) =>
+       (
+         await apiClient.put<{ message: string; order: Order }>(
+           `api/orders/${Id}/completed`,
+         )
+       ).data,
+   })
+
 export const useCreateOrderMutation = () =>
 useMutation({
   mutationFn: async (order: {
@@ -51,6 +70,7 @@ useMutation({
     shippingPrice: number
     taxPrice: number
     totalPrice: number
+    phone: string
   }) =>
     (
       await apiClient.post<{ message: string; order: Order }>(

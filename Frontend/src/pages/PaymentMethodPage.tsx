@@ -16,6 +16,8 @@ export default function PaymentMethodPage() {
     const [paymentMethodName, setPaymentMethod] = useState(
       paymentMethod || 'PayPal'
     )
+
+    const [isRadioButtonSelected, setIsRadioButtonSelected] = useState(true);
   
     useEffect(() => {
       if (!shippingAddress.address) {
@@ -44,27 +46,36 @@ export default function PaymentMethodPage() {
                 label="PayPal"
                 value="PayPal"
                 checked={paymentMethodName === 'PayPal'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setIsRadioButtonSelected(true);
+                }}
               />
             </div>
             <div className="mb-4">
               <Form.Check
                 type="radio"
                 id="Stripe"
-                label="Stripe"
-                value="Stripe"
+                label="Stripe (PlaceHolder)"
+                value="Stripe (PlaceHolder)"
                 checked={paymentMethodName === 'Stripe'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setIsRadioButtonSelected(true);
+                }}
               />
             </div>
             <div className="mb-4">
               <Form.Check
                 type="radio"
                 id="E-Wallet"
-                label="E-Wallet"
-                value="E-Wallet"
+                label="E-Wallet (PlaceHolder)"
+                value="E-Wallet (PlaceHolder)"
                 checked={paymentMethodName === 'E-Wallet'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setIsRadioButtonSelected(true);
+                }}
               />
             </div>
             <div className="mb-4">
@@ -74,11 +85,14 @@ export default function PaymentMethodPage() {
                 label="Cash On Delivery"
                 value="Cash On Delivery"
                 checked={paymentMethodName === 'Cash On Delivery'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setIsRadioButtonSelected(true);
+                }}
               />
             </div>
             <div className="mb-4">
-              <Button className="mt-4" type="submit">Continue</Button>
+              <Button className="mt-4" type="submit" disabled={!isRadioButtonSelected}>Continue</Button>
             </div>
           </Form>
         </div>

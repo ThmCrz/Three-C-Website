@@ -16,4 +16,5 @@ export type Order = {
     shippingPrice: number
     taxPrice: number
     totalPrice: number
+    status: number
 }

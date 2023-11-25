@@ -34,15 +34,27 @@ export default function AdminPage() {
         // Create new chart instances
         const colors = ['blue', 'green', 'red', 'yellow', 'orange', 'purple', 'pink'];
         const lineChart = new Chart(lineCanvas, {
-          type: 'line',
+          type: "line",
           data: {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            labels: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ],
             datasets: [
               {
-                label: 'Total Revenue',
-                data: [5112, 1235, 5623, 1235, 6533, 1211, 500],
+                label: "Total Revenue",
+                data: [4112, 3235, 5623, 5235, 6533, 4211, 500],
                 borderColor: colors,
+                backgroundColor: colors,
                 fill: false,
+                pointStyle: "circle",
+                pointRadius: 10,
+                pointHoverRadius: 15,
               },
             ],
           },
@@ -83,7 +95,7 @@ export default function AdminPage() {
             ],
           },
           options: {
-            responsive: false, // Set responsive to true
+            responsive: true, // Set responsive to true
             maintainAspectRatio: false, // Set maintainAspectRatio to true
           },
         });
@@ -226,7 +238,7 @@ return (
                               type="button"
                               variant="light"
                               onClick={() => {
-                                navigate(`/order/${order._id}`);
+                                navigate(`/OrderManagementPage/${order._id}`);
                               }}
                             >
                               Details

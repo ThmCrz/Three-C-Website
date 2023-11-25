@@ -2,19 +2,6 @@ import { modelOptions, prop, getModelForClass, Ref } from '@typegoose/typegoose'
 import { Product } from './productModel'
 import { User } from './userModel'
 
-class shippingAddress {
-  @prop()
-  public fullName?: string
-  @prop()
-  public address?: string
-  @prop()
-  public city?: string
-  @prop()
-  public postalCode?: string
-  @prop()
-  public country?: string
-  
-}
 
 class item {
   @prop({ required: true })
@@ -42,35 +29,38 @@ class paymentResult {
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class Order {
-  public _id!: string
+  public _id!: string;
   @prop()
-  public orderItems!: item[]
-  @prop()
-  public shippingAddress?: shippingAddress
-
+  public orderItems!: item[];
+  @prop({ type: () => Object })
+  public shippingAddress!: object;
   @prop({ ref: User })
-  public user?: Ref<User>
-
+  public user?: Ref<User>;
+  @prop()
+  public phone?: number;
   @prop({ required: true })
-  public paymentMethod!: string
+  public paymentMethod!: string;
   @prop()
-  public paymentResult?: paymentResult
+  public paymentResult?: paymentResult;
   @prop({ required: true, default: 0 })
-  public itemsPrice!: number
+  public itemsPrice!: number;
   @prop({ required: true, default: 0 })
-  public shippingPrice!: number
+  public shippingPrice!: number;
   @prop({ required: true, default: 0 })
-  public taxPrice!: number
+  public taxPrice!: number;
   @prop({ required: true, default: 0 })
-  public totalPrice!: number
+  public totalPrice!: number;
   @prop({ required: true, default: false })
-  public isPaid!: boolean
+  public isPaid!: boolean;
   @prop()
-  public paidAt!: Date
+  public paidAt!: string;
   @prop({ required: true, default: false })
-  public isDelivered!: boolean
+  public isDelivered!: boolean;
   @prop()
-  public deliveredAt!: Date
+  public deliveredAt!: string;
+  @prop({ required: true })
+  public status!: number;
+  
 }
 
 export const OrderModel = getModelForClass(Order)

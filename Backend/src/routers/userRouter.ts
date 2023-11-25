@@ -141,7 +141,7 @@ userRouter.put(
 );
 
 userRouter.put(
-  "/:id/Cart/Delete",
+  "/:id/Cart/DeleteItem",
   isAuth,
   asyncHandler(async (req: Request, res: Response) => {
     //Recieves the request
@@ -170,6 +170,31 @@ userRouter.put(
         res.send({ message: "Cart Item Deleted" });
         return;
       }
+    }
+    //if the cart Item is not found.
+    res.status(404).send({ message: "Cart Item Not Found" });
+  })
+);
+
+userRouter.put(
+  "/:id/Cart/ClearCart",
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    //Recieves the userId from request
+    const userId = req.params.id;
+
+    //tries to find the user
+    const user = await UserModel.findById(userId);
+
+    //if user is found.
+    if (user) {
+      // remove all items from the cart
+      user.currentCart = [];
+      // save the user after clearing the cart
+      await user.save();
+
+      // send a response back
+      res.send({ message: "Cart Cleared" });
     }
     //if the cart Item is not found.
     res.status(404).send({ message: "Cart Item Not Found" });
