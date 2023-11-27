@@ -48,7 +48,7 @@ export default function AdminPage() {
             datasets: [
               {
                 label: "Total Revenue",
-                data: [4112, 3235, 5623, 5235, 6533, 4211, 500],
+                data: [4112, 3235, 5623, 5235, 6533, 0, 0],
                 borderColor: colors,
                 backgroundColor: colors,
                 fill: false,
@@ -71,7 +71,7 @@ export default function AdminPage() {
             datasets: [
               {
                 label: 'Total Sales',
-                data: [50, 23, 60, 46, 12, 2, 1],
+                data: [50, 23, 60, 46, 12, 0, 0],
                 backgroundColor: colors,
               },
             ],
@@ -140,7 +140,7 @@ return (
               <Link to={`/adminPage`}>Order Management</Link>
             </li>
             <li className="list-group-item">
-              <Link to={`/adminPage`}>Inventory Management</Link>
+              <Link to={`/InventoryManagementPage`}>Inventory Management</Link>
             </li>
             <li className="list-group-item"></li>
             {/* Add more menu items for other pages */}

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient from "../apiClient";
 import { Product } from "../types/Products"
 
@@ -49,3 +49,73 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
         return updatedProducts;
       },
     });
+
+    export const useProductEditMutation = () =>
+    useMutation({
+      mutationFn: async ({
+        _id,
+        name,
+        slug,
+        // image,
+        category,
+        brand,
+        price,
+        countInStock,
+        description,
+
+      }: {
+        _id: string;
+        name: string;
+        slug: string;
+        // image: string;
+        category: string;
+        brand: string;
+        price: number;
+        countInStock: number;
+        description: string;
+      }) =>
+        (
+          await apiClient.put<Product>(`api/products/${_id}/update`, {
+            name,
+            slug,
+            // image,
+            category,
+            brand,
+            price,
+            countInStock,
+            description,
+          })
+        ).data,
+    });
+
+    export const useCreateProductMutation = () =>
+      useMutation({
+        mutationFn: async ({
+          name,
+          image,
+          category,
+          brand,
+          price,
+          countInStock,
+          description,
+        }: {
+          name: string;
+          image: string;
+          category: string;
+          brand: string;
+          price: number;
+          countInStock: number;
+          description: string;
+        }) =>
+          (
+            await apiClient.post<Product>("api/products/newProduct", {
+              name,
+              image,
+              category,
+              brand,
+              price,
+              countInStock,
+              description,
+            })
+          ).data,
+      });

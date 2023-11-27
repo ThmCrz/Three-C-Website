@@ -9,14 +9,17 @@ import { Product } from '../types/Products';
 
 
 export default function Homepage() {
+
+  
  
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const { data: products, isLoading: IsLoadingHomePage, error } = useGetProductsQuery();
+
 
   const uniqueCategories = products
   ? Array.from(new Set(products.map(product => product.category)))
   : [];
   
-  return isLoading ? (
+  return IsLoadingHomePage ? (
     <LoadingBox />
   ) : error ? (
     <MessageBox variant="danger">{getError(error as ApiError)}</MessageBox>
