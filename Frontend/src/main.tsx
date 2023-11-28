@@ -27,6 +27,8 @@ import EditShippingAddressPage from "./pages/EditShippingAddressPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import AdminRoute from "./components/AdminRoute.tsx";
 import OrderManagementPage from "./pages/OrderManagementPage.tsx";
+import InventoryManagementPage from "./pages/InventoryManagementPage.tsx";
+import AdminProductpage from "./pages/AdminProductPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,6 +48,8 @@ const router = createBrowserRouter(
          <Route path="" element={<AdminRoute />}>
           <Route path="/adminPage" element={<AdminPage />} />
           <Route path="/OrderManagementPage/:id" element={<OrderManagementPage />} />
+          <Route path="/InventoryManagementPage" element={<InventoryManagementPage />} />
+          <Route path="/Product/:slug/AdminProductPage" element={<AdminProductpage />} />
          </Route>
       </Route>
     </Route>

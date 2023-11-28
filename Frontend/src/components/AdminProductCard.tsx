@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
 import { Product } from "../types/Products";
 import { Link } from "react-router-dom";
-import { useProductEditMutation } from "../hooks/ProductHooks";
+import { useDeleteProductMutation, useProductEditMutation } from "../hooks/ProductHooks";
 import { toast } from "react-toastify";
 import { ApiError } from "../types/ApiError";
 
@@ -13,6 +13,8 @@ type ProductCardProps = {
 const AdminProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const { mutateAsync: updateProductDetails, isLoading: isProductUpdateLoading , } = useProductEditMutation();
+  const { mutateAsync: removeProduct, isLoading: isDeleting} = useDeleteProductMutation();
+
   
   
     const [isEditingProductDetails, setIsEditingProductDetails] = useState(false);
@@ -25,6 +27,19 @@ const AdminProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const [brand, setBrand] = useState(product.brand);
     const [price, setPrice] = useState(product.price);
     const [countInStock, setCountInStock] = useState(product.countInStock);
+
+
+    const deleteHandler = async () => {
+    
+    try {
+      await removeProduct({id: _id});
+      toast.success("Product deleted");
+      window.location.reload()
+    } catch (error) {
+      toast.error(`${error as ApiError}`);
+    }
+    
+    }
 
     const submitHandler = async () =>{
         console.log("submit")
@@ -179,7 +194,8 @@ const AdminProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           </Form>
         ) : (
-            <Button onClick={() => setIsEditingProductDetails(true)}>Edit</Button>)}
+            <Button onClick={() => setIsEditingProductDetails(true)}>Edit</Button>)} {"  |  "}
+            <Button onClick={deleteHandler} disabled={isDeleting}>{isDeleting? ("Removing..."):("Remove Product")}</Button>
       </Card.Body>
     </Card>
   

@@ -5,6 +5,12 @@
   "hints": {
     "meta-viewport": "off",
     "typescript-config/is-valid": "off",
-    "compat-api/css": "off"
+    "compat-api/css": "off",
+    "axe/forms": [
+      "default",
+      {
+        "select-name": "off"
+      }
+    ]
   }
 }

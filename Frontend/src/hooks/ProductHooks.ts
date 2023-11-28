@@ -119,3 +119,19 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
             })
           ).data,
       });
+
+    export const useDeleteProductMutation = () =>
+      useMutation({
+        mutationFn: async ({
+          id
+        }: {
+          id: string;
+        }) =>
+          (
+            await apiClient.put<Product>(`api/products/deleteProduct/${id}`, {
+              id
+            })
+          ).data,
+      });
+
+      
