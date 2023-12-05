@@ -107,18 +107,26 @@ export default function OrderPage() {
                   {order.shippingAddress.country}
                 </Card.Text>
 
-                {order.status === 0 ? (
-                  <MessageBox variant="danger">Your Order has been Canceled</MessageBox>
-                ) : order.status === 1 ? (
-                  <MessageBox variant="info">
-                    Order not Confirmed
+                {order.status === -1 ? (
+                  <MessageBox variant="danger">
+                    Your Order has been Canceled By The Admin
                   </MessageBox>
-                ) : order.status === 2 ? (
-                  <MessageBox variant="info">Order Confirmed, waiting for payment Before Preparation</MessageBox>
+                ) : order.status === 1 ? (
+                  <MessageBox variant="info">Order not Confirmed</MessageBox>
+                ) : order.status === 2 && order.paymentMethod !== "Cash On Delivery" ? (
+                  <MessageBox variant="info">
+                    Order Confirmed, waiting for payment Before Preparation
+                  </MessageBox>
+                ) : order.status === 2  ? (
+                  <MessageBox variant="info">
+                    Order Confirmed
+                  </MessageBox>
                 ) : order.status === 3 ? (
                   <MessageBox variant="info">Order Prepared</MessageBox>
                 ) : order.status === 4 ? (
-                  <MessageBox variant="info">Order is now out for Delivery</MessageBox>
+                  <MessageBox variant="info">
+                    Order is now out for Delivery
+                  </MessageBox>
                 ) : order.status === 5 ? (
                   <MessageBox variant="success">
                     Order has been Delivered, Delivered At: {order.deliveredAt}
@@ -136,7 +144,12 @@ export default function OrderPage() {
                 <Card.Text>
                   <strong>Method:</strong> {order.paymentMethod}
                 </Card.Text>
-                {order.isPaid ? (
+
+                {order.status === -1 ? (
+                  <MessageBox variant="danger">
+                  Your Order has been Canceled By The Admin
+                  </MessageBox>
+                ) : order.isPaid ? (
                   <MessageBox variant="success">
                     Paid at {order.paidAt}
                   </MessageBox>
@@ -213,7 +226,8 @@ export default function OrderPage() {
                       </Col>
                     </Row>
                   </ListGroup.Item>
-                  {order.status === 2 && order.paymentMethod !==  "Cash On Delivery" ? (
+                  {order.status === 2 &&
+                  order.paymentMethod !== "Cash On Delivery" ? (
                     <ListGroup.Item className="white-BG">
                       {!order.isPaid ? (
                         <div className="white-BG">
@@ -234,7 +248,9 @@ export default function OrderPage() {
                         </>
                       )}
                     </ListGroup.Item>
-                  ):(<></>)}
+                  ) : (
+                    <></>
+                  )}
                 </ListGroup>
               </Card.Body>
             </Card>

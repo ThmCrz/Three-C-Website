@@ -38,7 +38,7 @@ function CustomNavBar() {
     <>
       <Navbar bg="black" variant="dark">
         <Container>
-              <Link to="/">
+          <Link to="/">
             <Navbar.Brand>
               <img
                 alt=""
@@ -53,9 +53,9 @@ function CustomNavBar() {
                 width="150px"
                 height="50px"
                 className="d-inline-block align-top"
-                />{" "}
+              />{" "}
             </Navbar.Brand>
-                </Link>
+          </Link>
           <Nav className="justify-content-end" activeKey="/home">
             <Nav.Item>
               <Button variant={mode} onClick={switchModeHandler}>
@@ -65,28 +65,42 @@ function CustomNavBar() {
               </Button>
             </Nav.Item>
             <Nav.Item>
-            <Link to={"Cart"}>
-              <Nav.Link href="/cart">
-                Cart
-                {cart.cartItems.length > 0 && (
-                  <Badge pill bg="danger">
-                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
-                  </Badge>
-                )}
-              </Nav.Link>
+              <Link to={"Cart"}>
+                <Nav.Link href="/cart">
+                  Cart
+                  {cart.cartItems.length > 0 && (
+                    <Badge pill bg="danger">
+                      {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                    </Badge>
+                  )}
+                </Nav.Link>
               </Link>
             </Nav.Item>
             <Nav.Item>
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                  <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
-                  <Link className="dropdown-item" to="#signout" onClick={signoutHandler}>
+                  {userInfo.isAdmin ? (
+                    <Link className="dropdown-item" to="/adminPage">
+                      Admin Dashboard
+                    </Link>
+                  ) : (
+                    <Link className="dropdown-item" to="/dashboard">
+                      User Dashboard
+                    </Link>
+                  )}
+                  <Link
+                    className="dropdown-item"
+                    to="#signout"
+                    onClick={signoutHandler}
+                  >
                     Sign Out
                   </Link>
                 </NavDropdown>
-              ):( <Link to={"SignIn"}>
-              <Nav.Link href="/home">Sign in</Nav.Link>
-            </Link>)}
+              ) : (
+                <Link to={"SignIn"}>
+                  <Nav.Link href="/home">Sign in</Nav.Link>
+                </Link>
+              )}
             </Nav.Item>
           </Nav>
         </Container>

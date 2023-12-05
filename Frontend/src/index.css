@@ -209,3 +209,9 @@ footer {
 .chart-container {
   max-height: 300px; /* Adjust the value as needed */
 }
+
+.Sidebar-menu:hover {
+  background-color: lightgray;
+  cursor: pointer;
+  color: black;
+}

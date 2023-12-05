@@ -10,6 +10,7 @@ import { ApiError } from "../types/ApiError"
 import { getError } from "../types/Utils"
 import CheckoutGuide from "../components/CheckOutGuide"
 import { useCartClearMutation } from "../hooks/UserHooks"
+import { useDeductQuantityFromOrderMutation } from "../hooks/ProductHooks"
 
 export default function PlaceOrderPage() {
     const navigate = useNavigate()
@@ -26,6 +27,8 @@ export default function PlaceOrderPage() {
     cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice
 
     const { mutateAsync: createOrder, isLoading } = useCreateOrderMutation()
+    const { mutateAsync: updateProductCountInStock } = useDeductQuantityFromOrderMutation()
+
     const { mutateAsync: clearCart } = useCartClearMutation();
 
 
@@ -39,10 +42,8 @@ export default function PlaceOrderPage() {
           shippingPrice: cart.shippingPrice,
           taxPrice: cart.taxPrice,
           totalPrice: cart.totalPrice,
-          phone: userInfo.phone
-
-          
-        })
+          phone: userInfo.phone});
+        await updateProductCountInStock({orderItems: cart.cartItems});
         await clearCart({user: userInfo._id,});
         dispatch({ type: 'CART_CLEAR' })
         localStorage.removeItem('cartItems')
@@ -50,6 +51,8 @@ export default function PlaceOrderPage() {
       } catch (err) {
         toast.error(getError(err as ApiError))
       }
+
+      
     }
 
     useEffect(() => {

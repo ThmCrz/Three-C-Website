@@ -1,6 +1,6 @@
 import { Row, Col, Card, Button, Container } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { useGetOrdersQuery } from "../hooks/OrderHooks";
@@ -48,7 +48,7 @@ export default function AdminPage() {
             datasets: [
               {
                 label: "Total Revenue",
-                data: [4112, 3235, 5623, 5235, 6533, 0, 0],
+                data: [1112, 535, 623, 1235, 733, 0, 0],
                 borderColor: colors,
                 backgroundColor: colors,
                 fill: false,
@@ -71,7 +71,7 @@ export default function AdminPage() {
             datasets: [
               {
                 label: 'Total Sales',
-                data: [50, 23, 60, 46, 12, 0, 0],
+                data: [10, 21, 50, 26, 76, 0, 0],
                 backgroundColor: colors,
               },
             ],
@@ -89,7 +89,7 @@ export default function AdminPage() {
             datasets: [
               {
                 label: 'Pesos',
-                data: [6134, 2645, 5455],
+                data: [50000, 28000, 22000],
                 backgroundColor: ['green', 'red', 'yellow'],
               },
             ],
@@ -135,14 +135,10 @@ return (
 
           <ul className="list-group list-group-flush">
             {/* Sidebar menu items */}
-            <li className="list-group-item"></li>
-            <li className="list-group-item">
-              <Link to={`/adminPage`}>Order Management</Link>
-            </li>
-            <li className="list-group-item">
-              <Link to={`/InventoryManagementPage`}>Inventory Management</Link>
-            </li>
-            <li className="list-group-item"></li>
+            <li className=""></li>
+            <li className="list-group-item Sidebar-menu" onClick={() => {navigate("/OrdersManagementPage")}}>Orders Management</li>
+            <li className="list-group-item Sidebar-menu"  onClick={() => {navigate("/InventoryManagementPage")}}>Inventory Management</li>
+            <li className=""></li>
             {/* Add more menu items for other pages */}
           </ul>
         </Card>
@@ -185,7 +181,7 @@ return (
         <Row className="mt-3">
           <Card>
             <Card.Body>
-              <Card.Title>Order Management</Card.Title>
+              <Card.Title>Orders History</Card.Title>
               <Card.Text>
                 <table className="table">
                   <thead>
@@ -220,14 +216,14 @@ return (
                               : ""}
                           </td>
                           <td>
-                            {order.isPaid
+                            {order.status === -1 ? ("Cancelled"):order.isPaid
                               ? order.paidAt
                                 ? order.paidAt.substring(0, 10)
                                 : ""
                               : "No"}
                           </td>
                           <td>
-                            {order.isDelivered
+                            {order.status === -1 ? ("Cancelled"):order.isDelivered
                               ? order.deliveredAt
                                 ? order.deliveredAt.substring(0, 10)
                                 : "Yes"
@@ -277,11 +273,6 @@ return (
                           Generate Monthly Report
                         </Button>
                       </Row>
-                      <Row>
-                        <Button className="mt-2 mb-2">
-                          Generate Yearly Report
-                        </Button>
-                      </Row>
                     </Card.Text>
                   </Card.Body>
                 </div>
@@ -309,9 +300,9 @@ return (
                         ) : (
                           orders?.map((order) => (
                             <tr key={order._id}>
-                              <td>dadfa</td>
-                              <td>asdfasdf</td>
-                              <td>asdfasdf</td>
+                              <td>{order.user}</td>
+                              <td>{order.status}</td>
+                              <td>{order.paymentMethod}</td>
                             </tr>
                           ))
                         )}

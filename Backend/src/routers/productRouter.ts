@@ -90,3 +90,52 @@ productRouter.get(
       }
     })
   );
+
+  productRouter.put(
+  "/DeductQuantityFromOrder",
+  isAuth,
+  asyncHandler(async (req, res) => {
+    if (req.body.orderItems.length === 0) {
+      res.status(400).send({ message: 'Cart is empty' });
+    } else {
+      try {
+        const orderItems = req.body.orderItems;
+        for (const cartItem of orderItems) {
+          const product = await productModel.findById(cartItem._id);
+          if (product) {
+            product.countInStock -= cartItem.quantity;
+            await product.save();
+          }
+        }
+        res.status(200).json({ message: "Quantity deducted successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
+  })
+);
+
+productRouter.put(
+  "/AddQuantityFromCancelledOrder",
+  isAuth,
+  asyncHandler(async (req, res) => {
+    if (req.body.orderItems.length === 0) {
+      res.status(400).send({ message: 'Cart is empty' });
+    } else {
+      try {
+        const orderItems = req.body.orderItems;
+        for (const cartItem of orderItems) {
+          const product = await productModel.findById(cartItem._id);
+          if (product) {
+            product.countInStock += cartItem.quantity;
+            await product.save();
+          }
+        }
+        res.status(200).json({ message: "Quantity deducted successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
+  })
+);
+

@@ -12,7 +12,7 @@ export const useGetOrderDetailsQuery = (id: string) =>
 
   export const  useGetOrdersQuery = () =>
   useQuery({
-    queryKey: ['products'],
+    queryKey: ['orders'],
     queryFn: async () => (await apiClient.get<Order[]>('api/orders/admin')).data,
   })
 
@@ -50,6 +50,17 @@ export const useOrderStatusMutation = () =>
          )
        ).data,
    })
+export const useCancelOrderStatusMutation = () =>
+   useMutation({
+     mutationFn: async ( Id: string ) =>
+       (
+         await apiClient.put<{ message: string; order: Order }>(
+           `api/orders/${Id}/cancel`,
+         )
+       ).data,
+   })
+
+
 export const useOrderDeliveredMutation = () =>
    useMutation({
      mutationFn: async ( Id: string ) =>

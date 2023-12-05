@@ -211,14 +211,14 @@ export default function DashboardPage() {
                   </td>
                   <td>₱ {order.totalPrice.toFixed(2)}</td>
                   <td>
-                    {order.isPaid
+                    {order.status === -1 ? ("Cancelled"): order.isPaid
                       ? order.paidAt
                         ? order.paidAt.substring(0, 10)
                         : ""
                       : "No"}
                   </td>
                   <td>
-                    {order.isDelivered
+                    {order.status === -1 ? ("Cancelled"):order.isDelivered
                       ? order.deliveredAt
                         ? order.deliveredAt.substring(0, 10)
                         : ""

@@ -108,6 +108,23 @@ orderRouter.put(
 )
 
 orderRouter.put(
+  '/:id/cancel',
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const order = await OrderModel.findById(req.params.id)
+
+    if (order) {
+      order.status = -1;
+      const updatedOrder = await order.save();
+
+      res.send({ order: updatedOrder, message: "Status Updated" })
+    } else {
+      res.status(404).send({ message: 'Order Not Found' })
+    }
+  })
+)
+
+orderRouter.put(
   '/:id/completed',
   isAuth,
   asyncHandler(async (req: Request, res: Response) => {

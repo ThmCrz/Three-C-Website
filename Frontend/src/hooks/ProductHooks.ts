@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient from "../apiClient";
 import { Product } from "../types/Products"
+import { Order } from "../types/Order";
+import { cartItem } from "../types/Cart";
 
 export const  useGetProductsQuery = () =>
   useQuery({
@@ -134,4 +136,34 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
           ).data,
       });
 
+      export const useDeductQuantityFromOrderMutation = () =>
+  useMutation({
+    mutationFn: async ({ 
+      orderItems
+     }: { 
+      orderItems: cartItem[] 
+    }) => {
+      return (
+        await apiClient.put<{ message: string; order: Order }>(
+          `api/products/DeductQuantityFromOrder`,
+          { orderItems }
+        )
+      ).data;
+    },
+  });
+      export const useReAddQuantityFromOrderMutation = () =>
+  useMutation({
+    mutationFn: async ({ 
+      orderItems
+     }: { 
+      orderItems: cartItem[] 
+    }) => {
+      return (
+        await apiClient.put<{ message: string; order: Order }>(
+          `api/products/AddQuantityFromCancelledOrder`,
+          { orderItems }
+        )
+      ).data;
+    },
+  });
       
