@@ -4,7 +4,7 @@ import { ApiError } from "../types/ApiError";
 import { getError } from "../types/Utils";
 import { useGetOrdersQuery } from "../hooks/OrderHooks";
 import OrdersCard from "../components/OrderCard";
-import { Card, Col, Row } from "react-bootstrap";
+import { Badge, Card, Col, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useState } from "react";
 
@@ -23,7 +23,7 @@ export default function OrdersManagementPage() {
 
     return (
       <Row>
-        <Col md={2}>
+        <Col md={3}>
           <Card className="border-0">
             <Card.Body>
               <Card.Title>
@@ -35,12 +35,13 @@ export default function OrdersManagementPage() {
 
             <ul className="list-group list-group-flush">
               {/* Sidebar menu items */}
-              <li className={`list-group-item Sidebar-menu ${orderStatus === 1 ? 'active' : ''}`} onClick={() => {setOrderStatus(1)}}>Unconfirmed Orders</li>
-              <li className={`list-group-item Sidebar-menu ${orderStatus === 2 ? 'active' : ''}`} onClick={() => {setOrderStatus(2)}}>Confirmed Orders</li>
-              <li className={`list-group-item Sidebar-menu ${orderStatus === 3 ? 'active' : ''}`} onClick={() => {setOrderStatus(3)}}>Prepared Orders</li>
-              <li className={`list-group-item Sidebar-menu ${orderStatus === 4 ? 'active' : ''}`} onClick={() => {setOrderStatus(4)}}>Out for Delivery Orders</li>
-              <li className={`list-group-item Sidebar-menu ${orderStatus === 5 ? 'active' : ''}`} onClick={() => {setOrderStatus(5)}}>Completed Orders</li>
-              <li className={`list-group-item Sidebar-menu ${orderStatus === -1 ? 'active' : ''}`} onClick={() => {setOrderStatus(-1)}}>Cancelled Orders</li>
+             
+              <li className={`list-group-item Sidebar-menu ${orderStatus === 1 ? 'active' : ''}`} onClick={() => {setOrderStatus(1)}}><Badge pill bg="danger">{orders.filter(order => order.status === 1).length}</Badge> Unconfirmed Orders</li>
+              <li className={`list-group-item Sidebar-menu ${orderStatus === 2 ? 'active' : ''}`} onClick={() => {setOrderStatus(2)}}><Badge pill bg="danger">{orders.filter(order => order.status === 2).length}</Badge> Confirmed Orders</li>
+              <li className={`list-group-item Sidebar-menu ${orderStatus === 3 ? 'active' : ''}`} onClick={() => {setOrderStatus(3)}}><Badge pill bg="danger">{orders.filter(order => order.status === 3).length}</Badge> Prepared Orders </li>
+              <li className={`list-group-item Sidebar-menu ${orderStatus === 4 ? 'active' : ''}`} onClick={() => {setOrderStatus(4)}}><Badge pill bg="danger">{orders.filter(order => order.status === 4).length}</Badge> Out for Delivery Orders </li>
+              <li className={`list-group-item Sidebar-menu ${orderStatus === 5 ? 'active' : ''}`} onClick={() => {setOrderStatus(5)}}><Badge pill bg="danger">{orders.filter(order => order.status === 5).length}</Badge> Completed Orders </li>
+              <li className={`list-group-item Sidebar-menu ${orderStatus === -1 ? 'active' : ''}`} onClick={() => {setOrderStatus(-1)}}><Badge pill bg="danger">{orders.filter(order => order.status === -1).length}</Badge> Cancelled Orders </li>
               {/* Add more menu items for other pages */}
             </ul>
           </Card>

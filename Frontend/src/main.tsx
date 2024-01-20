@@ -31,6 +31,7 @@ import InventoryManagementPage from "./pages/InventoryManagementPage.tsx";
 import AdminProductpage from "./pages/AdminProductPage.tsx";
 import OrdersManagementPage from "./pages/OrdersManagementPage.tsx";
 
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>

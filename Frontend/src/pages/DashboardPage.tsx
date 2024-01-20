@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Form, Spinner } from "react-bootstrap";
+import { Row, Col, Card, Button, Form, Spinner, Badge, Nav } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
@@ -10,6 +10,7 @@ import { Store } from "../Store";
 import { useContext, useState } from "react";
 import { useAccountDetailsMutation } from "../hooks/UserHooks";
 import { toast } from "react-toastify";
+import UserOrdersCard from "../components/UserOrderCard";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ export default function DashboardPage() {
   const [email, setEmail] = useState(userInfo.email || "");
   const [phone, setPhone] = useState(userInfo.phone || "");
   const [isEditingAccountDetails, setIsEditingAccountDetails] = useState(false);
+  const [ orderStatus, setOrderStatus ] = useState(1);
+
 
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -189,60 +192,132 @@ export default function DashboardPage() {
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{getError(error as ApiError)}</MessageBox>
-      ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>DATE</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders ? (
-              orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>
-                    {order.createdAt ? order.createdAt.substring(0, 10) : ""}
-                  </td>
-                  <td>₱ {order.totalPrice.toFixed(2)}</td>
-                  <td>
-                    {order.status === -1 ? ("Cancelled"): order.isPaid
-                      ? order.paidAt
-                        ? order.paidAt.substring(0, 10)
-                        : ""
-                      : "No"}
-                  </td>
-                  <td>
-                    {order.status === -1 ? ("Cancelled"):order.isDelivered
-                      ? order.deliveredAt
-                        ? order.deliveredAt.substring(0, 10)
-                        : ""
-                      : "No"}
-                  </td>
-                  <td>
-                    <Button
-                      type="button"
-                      variant="light"
-                      onClick={() => {
-                        navigate(`/order/${order._id}`);
-                      }}
-                    >
-                      Details
-                    </Button>
-                  </td>
-                </tr>
-              ))
-
-            ):( <></>)}
+      ) : ( orders ? (
+                    <Nav variant="tabs" className="mt-3">
+                      <Nav.Link
+                        className={`Sidebar-menu ${
+                          orderStatus === 1 ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setOrderStatus(1);
+                        }}
+                      >
+                        Unconfirmed Orders{" "}
+                        <Badge pill bg="danger">
+                          {
+                            orders
+                              .filter((order) => order.status === 1)
+                              .length
+                          }
+                        </Badge>
+                      </Nav.Link>
+                      <Nav.Link
+                        className={`Sidebar-menu ${
+                          orderStatus === 2 ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setOrderStatus(2);
+                        }}
+                      >
+                        Confirmed Orders{" "}
+                        <Badge pill bg="danger">
+                          {
+                            orders
+                              .filter((order) => order.status === 2)
+                              .length
+                          }
+                        </Badge>
+                      </Nav.Link>
+                      <Nav.Link
+                        className={`Sidebar-menu ${
+                          orderStatus === 3 ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setOrderStatus(3);
+                        }}
+                      >
+                        Prepared Orders{" "}
+                        <Badge pill bg="danger">
+                          {
+                            orders
+                              .filter((order) => order.status === 3)
+                              .length
+                          }
+                        </Badge>
+                      </Nav.Link>
+                      <Nav.Link
+                        className={`Sidebar-menu ${
+                          orderStatus === 4 ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setOrderStatus(4);
+                        }}
+                      >
+                        Out for Delivery Orders{" "}
+                        <Badge pill bg="danger">
+                          {
+                            orders
+                              .filter((order) => order.status === 4)
+                              .length
+                          }
+                        </Badge>
+                      </Nav.Link>
+                      <Nav.Link
+                        className={`Sidebar-menu ${
+                          orderStatus === 5 ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setOrderStatus(5);
+                        }}
+                      >
+                        Completed Orders{" "}
+                        <Badge pill bg="danger">
+                          {
+                            orders
+                              .filter((order) => order.status === 5)
+                              .length
+                          }
+                        </Badge>
+                      </Nav.Link>
+                      <Nav.Link
+                        className={`Sidebar-menu ${
+                          orderStatus === -1 ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          setOrderStatus(-1);
+                        }}
+                      >
+                        Cancelled Orders{" "}
+                        <Badge pill bg="danger">
+                          {
+                            orders
+                              .filter((order) => order.status === -1)
+                              .length
+                          }
+                        </Badge>
+                      </Nav.Link>
+                    </Nav>
+                  ) : (
+                    ""
+                  )
+            )}
             
-          </tbody>
-        </table>
-      )}
+             {isLoading ? (
+                    <LoadingBox></LoadingBox>
+                  ) : error ? (
+                    <MessageBox variant="danger">
+                      {getError(error as ApiError)}
+                    </MessageBox>
+                  ) : orders ? (
+                    <UserOrdersCard
+                      status={orderStatus}
+                      orders={orders
+                        .filter((order) => order.status === orderStatus)
+                       }
+                    />
+                  ) : (
+                    ""
+                  )}
     </div>
   );
 }

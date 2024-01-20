@@ -6,9 +6,10 @@ import MessageBox from "./MessageBox";
 interface OrdersCardProps {
     status: number;
     orders: Order[];
+   
   }
 
-  export default function OrdersCard({ status, orders }: OrdersCardProps) {
+  export default function UserOrdersCard({ status, orders }: OrdersCardProps) {
 
     const navigate = useNavigate();
 
@@ -95,18 +96,19 @@ interface OrdersCardProps {
                         </>
                       )}
                       <td>
-                      <Button
-                        type="button"
-                        variant="light"
-                        onClick={() => {
-                          navigate(`/OrderManagementPage/${order._id}`);
-                        }}
-                      >
-                        Details
-                      </Button>
-                    </td>
-                  </tr>
-                )))}
+                        <Button
+                          type="button"
+                          variant="light"
+                          onClick={() => {
+                            navigate(`/order/${order._id}`);
+                          }}
+                        >
+                          Details
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </Card.Body>
