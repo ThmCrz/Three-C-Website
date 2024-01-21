@@ -18,46 +18,69 @@ import OrdersCard from "../components/OrderCard";
 export default function AdminPage() {
 
   const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const [weekStartDate, setStartDate] = useState(new Date());
+  const [weekEndDate, setEndDate] = useState(new Date());
+
   const [weeklyOrders, setWeeklyOrders] = useState<number[]>([]);
   const [DailyTotal, setDailyTotal] = useState<number[]>([]);
-  const [ orderStatus, setOrderStatus ] = useState(1);
+  const [orderStatus, setOrderStatus ] = useState(1);
 
 
-  const startOfWeek = new Date();
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-
- const calculateWeeklyOrders = (orders: Order[]) => {
+const calculateCurrentWeek = () => {
   const currentDate = new Date();
-  const currentWeekStart = new Date(
-  currentDate.getFullYear(),
-  currentDate.getMonth(),
-  currentDate.getDate() - (currentDate.getDay() + 6) % 7
-);
+  const currentDay = currentDate.getDay();
+  const startDate = new Date(currentDate);
+  startDate.setDate(currentDate.getDate() - currentDay); // Set start date to the previous Sunday
+  startDate.setHours(0, 0, 0, 0); // Set start time to 00:00:00.000
+  const endDate = new Date(startDate);
+  endDate.setDate(startDate.getDate() + 6);
+  endDate.setHours(23, 59, 59, 999); // Set end time to 23:59:59.999
 
+  setStartDate(startDate);
+  setEndDate(endDate);
+};
+
+useEffect(() => {
+  calculateCurrentWeek();
+}, []);
+  
+
+const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
   const weeklyOrders = Array(7).fill(0);
-  const dailyTotal = Array(7).fill(0); // New array to store the daily total prices
+  const dailyTotal = Array(7).fill(0);
 
- orders.forEach((order) => {
-  if (order.status === 2 || order.status === 3 || order.status === 4 || order.status === 5) {
+  filteredWeekOrders.forEach((order) => {
     const orderDate = new Date(order.createdAt);
-    if (orderDate >= currentWeekStart && orderDate <= currentDate) {
-      const dayIndex = orderDate.getDay();
-      weeklyOrders[dayIndex]++;
-      dailyTotal[dayIndex] += order.totalPrice;
-    }
-  }
-});
-
+    const dayIndex = orderDate.getDay();
+    weeklyOrders[dayIndex]++;
+    dailyTotal[dayIndex] += order.totalPrice;
+  });
 
   setWeeklyOrders(weeklyOrders);
-  setDailyTotal(dailyTotal);// Set the new state for the array of daily total prices
+  setDailyTotal(dailyTotal);
 };
 
   useEffect(() => {
+
+    const filterWeekOrders = (orders: Order[]) => {
+      const filteredWeekOrders = orders.filter((order) => {
+        const orderDate = new Date(order.createdAt);
+        return (
+          (order.status >= 1 && order.status <= 5) &&
+
+          (orderDate >= weekStartDate && orderDate <= weekEndDate)
+
+        );
+      });
+    
+      return filteredWeekOrders;
+    };
+
   if (!isLoading && !error && orders) {
-    calculateWeeklyOrders(orders);
+    currentWeekSetStates(filterWeekOrders(orders));
   }
-}, [isLoading, orders, error]);
+
+}, [isLoading, orders, error, weekStartDate, weekEndDate]);
 
 
   
@@ -375,7 +398,7 @@ export default function AdminPage() {
                               .filter((order) => order.status === 1)
                               .filter((order) => {
                                 const orderDate = new Date(order.createdAt);
-                                return orderDate >= startOfWeek;
+                                return orderDate >= weekStartDate;
                               }).length
                           }
                         </Badge>
@@ -395,7 +418,7 @@ export default function AdminPage() {
                               .filter((order) => order.status === 2)
                               .filter((order) => {
                                 const orderDate = new Date(order.createdAt);
-                                return orderDate >= startOfWeek;
+                                return orderDate >= weekStartDate;
                               }).length
                           }
                         </Badge>
@@ -415,7 +438,7 @@ export default function AdminPage() {
                               .filter((order) => order.status === 3)
                               .filter((order) => {
                                 const orderDate = new Date(order.createdAt);
-                                return orderDate >= startOfWeek;
+                                return orderDate >= weekStartDate;
                               }).length
                           }
                         </Badge>
@@ -435,7 +458,7 @@ export default function AdminPage() {
                               .filter((order) => order.status === 4)
                               .filter((order) => {
                                 const orderDate = new Date(order.createdAt);
-                                return orderDate >= startOfWeek;
+                                return orderDate >= weekStartDate;
                               }).length
                           }
                         </Badge>
@@ -455,7 +478,7 @@ export default function AdminPage() {
                               .filter((order) => order.status === 5)
                               .filter((order) => {
                                 const orderDate = new Date(order.createdAt);
-                                return orderDate >= startOfWeek;
+                                return orderDate >= weekStartDate;
                               }).length
                           }
                         </Badge>
@@ -475,7 +498,7 @@ export default function AdminPage() {
                               .filter((order) => order.status === -1)
                               .filter((order) => {
                                 const orderDate = new Date(order.createdAt);
-                                return orderDate >= startOfWeek;
+                                return orderDate >= weekStartDate;
                               }).length
                           }
                         </Badge>
@@ -498,7 +521,7 @@ export default function AdminPage() {
                         .filter((order) => order.status === orderStatus)
                         .filter((order) => {
                           const orderDate = new Date(order.createdAt);
-                          return orderDate >= startOfWeek;
+                          return orderDate >= weekStartDate;
                         })}
                     />
                   ) : (
@@ -557,7 +580,15 @@ export default function AdminPage() {
                               {getError(error as ApiError)}
                             </MessageBox>
                           ) : (
-                            orders?.map((order) => (
+                            orders?.filter((order) => {
+                              const orderDate = new Date(order.createdAt);
+                              return (
+                                order.status >= 0 &&
+                                order.status <= 5 &&
+                                orderDate >= weekStartDate &&
+                                orderDate <= weekEndDate
+                              );
+                            })?.map((order) => (
                               <tr key={order._id}>
                                 <td>{order.user}</td>
                                 <td>{order.status}</td>
