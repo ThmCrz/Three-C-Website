@@ -30,6 +30,7 @@ import OrderManagementPage from "./pages/OrderManagementPage.tsx";
 import InventoryManagementPage from "./pages/InventoryManagementPage.tsx";
 import AdminProductpage from "./pages/AdminProductPage.tsx";
 import OrdersManagementPage from "./pages/OrdersManagementPage.tsx";
+import SupplierOrderPage from "./pages/OrderToSupplierPage.tsx";
 
 
 const router = createBrowserRouter(
@@ -53,6 +54,7 @@ const router = createBrowserRouter(
           <Route path="/OrdersManagementPage" element={<OrdersManagementPage />} />
           <Route path="/InventoryManagementPage" element={<InventoryManagementPage />} />
           <Route path="/Product/:slug/AdminProductPage" element={<AdminProductpage />} />
+          <Route path="/SupplierOrderPage" element={<SupplierOrderPage />} />
          </Route>
       </Route>
     </Route>

@@ -7,14 +7,15 @@ import { ApiError } from '../types/ApiError';
 import { Product } from '../types/Products';
 import AdminCategoryProductList from '../components/AdminCategoryProductList';
 import NewProductForm from '../components/AddNewProduct';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 
 
-export default function Homepage() {
+export default function InventoryManagementPage() {
   const { data: products, isLoading, error } = useGetProductsQuery();
+  const navigate = useNavigate();
 
- 
- 
   const uniqueCategories = products
   ? Array.from(new Set(products.map(product => product.category)))
   : [];
@@ -31,6 +32,8 @@ export default function Homepage() {
       <h1>Product Management</h1>
       
           <NewProductForm uniqueCategories={uniqueCategories} />
+          <div>  ||  </div>
+          <Button onClick={() => {navigate("/SupplierOrderPage")}}>View Suggested Purchase Order</Button>
           {products && (
             <div>
               {uniqueCategories.map((category) => (

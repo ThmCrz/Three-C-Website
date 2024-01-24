@@ -77,6 +77,7 @@ export default function AdminProductpage() {
 
   return stockLevels;
 }
+const stockLevels = suggestStockLevels(product || {} as Product, orders || [] as Order[]);
 
   useEffect(() => {
     if (product) {
@@ -181,7 +182,7 @@ export default function AdminProductpage() {
   <MessageBox variant="danger">
     {getError(error as ApiError)}
   </MessageBox>
-) : suggestStockLevels(product ?? [], orders ?? []).some(stockLevel => stockLevel.minimumStockLevel === 0) ? (
+) : stockLevels.some(stockLevel => stockLevel.minimumStockLevel === 0) ? (
   <MessageBox variant="warning">
     Not enough Order Data for
    </MessageBox>
@@ -193,21 +194,21 @@ export default function AdminProductpage() {
       </ListGroup.Item>
     </ListGroup>
     <ListGroup>
-      {suggestStockLevels(product ?? [], orders ?? []).map((stockLevel, index) => (
+      {stockLevels.map((stockLevel, index) => (
         <ListGroup.Item key={index}>
           Minimum Stock Level: {stockLevel.minimumStockLevel}
         </ListGroup.Item>
       ))}
     </ListGroup>
     <ListGroup>
-      {suggestStockLevels(product ?? [], orders ?? []).map((stockLevel, index) => (
+      {stockLevels.map((stockLevel, index) => (
         <ListGroup.Item key={index}>
           Optimal Stock Level: {stockLevel.optimalStockLevel}
         </ListGroup.Item>
       ))}
     </ListGroup>
     <ListGroup>
-      {suggestStockLevels(product ?? [], orders ?? []).map((stockLevel, index) => (
+      {stockLevels.map((stockLevel, index) => (
         <ListGroup.Item key={index}>
           Maximum Stock Level: {stockLevel.maximumStockLevel}
         </ListGroup.Item>
