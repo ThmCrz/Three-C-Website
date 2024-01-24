@@ -9,6 +9,9 @@ import { ApiError } from "../types/ApiError";
 import { Badge, Button, Card, Col, Form, ListGroup, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useGetOrdersQuery } from "../hooks/OrderHooks";
+import { Product } from "../types/Products";
+import { Order } from "../types/Order";
 
 export default function AdminProductpage() {
   const navigate = useNavigate();
@@ -21,6 +24,8 @@ export default function AdminProductpage() {
     isLoading,
     error,
   } = useGetProductDetailsBySlugQuery(slug!);
+  const { data: orders, isLoading: ordersLoading, error: ordersError } = useGetOrdersQuery();
+
 
   const {
     mutateAsync: updateProductDetails,
@@ -38,7 +43,40 @@ export default function AdminProductpage() {
   const [price, setPrice] = useState(0);
   const [countInStock, setCountInStock] = useState(0);
 
-  // ...
+  function suggestStockLevels(product: Product, orders: Order[]): { name: string, minimumStockLevel: number, optimalStockLevel: number, maximumStockLevel: number }[] {
+  const stockLevels: { name: string, minimumStockLevel: number, optimalStockLevel: number, maximumStockLevel: number }[] = [];
+
+  // Calculate the total quantity sold for the single product
+  const soldQuantities: { [productId: string]: number } = {};
+  orders.forEach((order) => {
+    order.orderItems.forEach((orderItem) => {
+      const productId = orderItem._id;
+      const quantity = orderItem.quantity;
+      if (productId === product._id) {
+        if (soldQuantities[productId]) {
+          soldQuantities[productId] += quantity;
+        } else {
+          soldQuantities[productId] = quantity;
+        }
+      }
+    });
+  });
+
+  // Calculate the minimum, optimal, and maximum stock levels for the single product
+  const soldQuantity = soldQuantities[product._id];
+  const minimumStockLevel = soldQuantity || 0;
+  const optimalStockLevel = soldQuantity ? Math.ceil(soldQuantity * 1.2) : 0;
+  const maximumStockLevel = optimalStockLevel * 2; // Example: maximum stock level is twice the optimal stock level
+
+  stockLevels.push({
+    name: product.name,
+    minimumStockLevel,
+    optimalStockLevel,
+    maximumStockLevel,
+  });
+
+  return stockLevels;
+}
 
   useEffect(() => {
     if (product) {
@@ -131,8 +169,55 @@ export default function AdminProductpage() {
                           <Badge bg="danger">Unavailable</Badge>
                         )}
                       </Col>
+                      
                     </Row>
                   </ListGroup.Item>
+                  <ListGroup.Item>
+  <Row>
+    
+      {isLoading || ordersLoading ? (
+  <LoadingBox />
+) : error || ordersError ? (
+  <MessageBox variant="danger">
+    {getError(error as ApiError)}
+  </MessageBox>
+) : suggestStockLevels(product ?? [], orders ?? []).some(stockLevel => stockLevel.minimumStockLevel === 0) ? (
+  <MessageBox variant="warning">
+    Not enough Order Data for
+   </MessageBox>
+) : (
+  <>
+    <ListGroup>
+      <ListGroup.Item key={"Stock"}>
+        Count in Stock: {product.countInStock}
+      </ListGroup.Item>
+    </ListGroup>
+    <ListGroup>
+      {suggestStockLevels(product ?? [], orders ?? []).map((stockLevel, index) => (
+        <ListGroup.Item key={index}>
+          Minimum Stock Level: {stockLevel.minimumStockLevel}
+        </ListGroup.Item>
+      ))}
+    </ListGroup>
+    <ListGroup>
+      {suggestStockLevels(product ?? [], orders ?? []).map((stockLevel, index) => (
+        <ListGroup.Item key={index}>
+          Optimal Stock Level: {stockLevel.optimalStockLevel}
+        </ListGroup.Item>
+      ))}
+    </ListGroup>
+    <ListGroup>
+      {suggestStockLevels(product ?? [], orders ?? []).map((stockLevel, index) => (
+        <ListGroup.Item key={index}>
+          Maximum Stock Level: {stockLevel.maximumStockLevel}
+        </ListGroup.Item>
+      ))}
+    </ListGroup>
+  </>
+)}
+  
+  </Row>
+</ListGroup.Item>
 
                   <ListGroup.Item>
                     <div className="d-grid">
@@ -217,6 +302,8 @@ export default function AdminProductpage() {
                               }
                             />
                           </Form.Group>
+
+                          
 
                           <Form.Group className="mb-3">
                             <Form.Label>Price</Form.Label>

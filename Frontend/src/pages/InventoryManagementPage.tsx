@@ -9,9 +9,12 @@ import AdminCategoryProductList from '../components/AdminCategoryProductList';
 import NewProductForm from '../components/AddNewProduct';
 
 
+
 export default function Homepage() {
   const { data: products, isLoading, error } = useGetProductsQuery();
 
+ 
+ 
   const uniqueCategories = products
   ? Array.from(new Set(products.map(product => product.category)))
   : [];
@@ -26,16 +29,20 @@ export default function Homepage() {
         <title>Inventory Management</title>
       </Helmet>
       <h1>Product Management</h1>
-      <NewProductForm uniqueCategories={uniqueCategories} />
-      {products && (
-  <div>
-    
-    {uniqueCategories .map(category => (
-        <AdminCategoryProductList key={category} products={products as Product[]} category={category} />
-      ))}
-
-  </div>
-)}
+      
+          <NewProductForm uniqueCategories={uniqueCategories} />
+          {products && (
+            <div>
+              {uniqueCategories.map((category) => (
+                <AdminCategoryProductList
+                  key={category}
+                  products={products as Product[]}
+                  category={category}
+                />
+              ))}
+            </div>
+          )}
+        
     </div>
   );
 }
