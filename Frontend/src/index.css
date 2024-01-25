@@ -215,3 +215,29 @@ footer {
   cursor: pointer;
   color: black;
 }
+
+@media print {
+  .hide-on-print {
+    display: none;
+  }
+}
+
+/* Add these styles to your global CSS or the component's stylesheet */
+.NavBar-Flex {
+  display: flex;
+  align-items: center; /* Align items vertically in the middle */
+}
+
+/* Adjust the spacing between items if needed */
+.ml-auto {
+  margin-left: auto !important;
+}
+
+.yourSelectClass {
+  width: 25vw; /* Adjust the width as needed */
+}
+
+
+/* * {
+  box-shadow: 0 0 3px green;
+} */

@@ -88,7 +88,6 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
   const [activeChart, setActiveChart] = useState<string>("lineChart");
   const RevenueData = DailyTotal;
   const SalesData = weeklyOrders;
-  const FinancialData = [50000, 28000, 22000];
   
 
   const LineChart = () => {
@@ -180,41 +179,6 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
     return <canvas id="barChart" className="chart-container"></canvas>;
   };
   
-  const DoughnutChart = () => {
-    useEffect(() => {
-      const doughnutCanvas = document.getElementById(
-        "doughnutChart"
-      ) as HTMLCanvasElement;
-  
-      if (doughnutCanvas) {
-        const doughnutChart = new Chart(doughnutCanvas, {
-          type: "doughnut",
-          data: {
-            labels: ["Profit", "Loss", "Expense"],
-            datasets: [
-              {
-                label: "Pesos",
-                data: FinancialData,
-                backgroundColor: ["green", "red", "yellow"],
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-          },
-        });
-  
-        return () => {
-          doughnutChart.destroy();
-        };
-      }
-    }, []);
-  
-    return <canvas id="doughnutChart" className="chart-container"></canvas>;
-  };
-  
-
   return (
     <Container fluid className="admin-page-container">
       <Helmet>
@@ -249,15 +213,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
                   Sales Overview
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  eventKey="doughnutChart"
-                  active={activeChart === "doughnutChart"}
-                  onClick={() => setActiveChart("doughnutChart")}
-                >
-                  Financial Overview
-                </Nav.Link>
-              </Nav.Item>
+              
             </Nav>
             {activeChart === "lineChart" && (
               <Col md={12} className="border-0 equal-height-column">
@@ -346,34 +302,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
                 </Card>
               </Col>
             )}
-            {activeChart === "doughnutChart" && (
-              <Col md={12} className="border-0 equal-height-column">
-                <Card>
-                  <Card.Body>
-                    <Card.Title>Financial Overview</Card.Title>
-                    <Card.Text>
-                      <DoughnutChart />
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th>Financial</th>
-                            <th>Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {FinancialData.map((revenue, index) => (
-                            <tr key={index}>
-                              <td>{["Profit", "Expenses", "Loses"][index]}</td>
-                              <td>{revenue}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            )}
+            
           </Row>
 
           <Row className="mt-3">

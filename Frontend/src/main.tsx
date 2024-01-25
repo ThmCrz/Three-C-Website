@@ -12,7 +12,7 @@ import Homepage from "./pages/Homepage.tsx";
 import Productpage from "./pages/Productpage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { StoreProvider } from "./Store.tsx";
 import CartPage from "./pages/Cart.tsx";
 import SigninPage from "./pages/SignInPage.tsx";
@@ -31,6 +31,7 @@ import InventoryManagementPage from "./pages/InventoryManagementPage.tsx";
 import AdminProductpage from "./pages/AdminProductPage.tsx";
 import OrdersManagementPage from "./pages/OrdersManagementPage.tsx";
 import SupplierOrderPage from "./pages/OrderToSupplierPage.tsx";
+import DailyReportsPage from "./pages/DailyReportsPage.tsx";
 
 
 const router = createBrowserRouter(
@@ -55,6 +56,7 @@ const router = createBrowserRouter(
           <Route path="/InventoryManagementPage" element={<InventoryManagementPage />} />
           <Route path="/Product/:slug/AdminProductPage" element={<AdminProductpage />} />
           <Route path="/SupplierOrderPage" element={<SupplierOrderPage />} />
+          <Route path="/DailyReportsPage" element={<DailyReportsPage />} />
          </Route>
       </Route>
     </Route>
@@ -72,7 +74,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <StoreProvider>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </StoreProvider>
     </HelmetProvider>
