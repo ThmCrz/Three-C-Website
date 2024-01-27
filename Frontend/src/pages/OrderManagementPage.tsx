@@ -16,8 +16,16 @@ import {
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useReAddQuantityFromOrderMutation } from "../hooks/ProductHooks";
+import { Store } from "../Store";
+import { useContext } from "react";
 
 export default function OrderManagementPage() {
+  const {
+    state: {
+      userInfo,
+    },
+  } = useContext(Store);
+  
   const params = useParams();
   const { id: orderId } = params;
 
@@ -91,7 +99,10 @@ export default function OrderManagementPage() {
                 {order.shippingAddress.country}
               </Card.Text>
               <div className="mx-auto d-flex justify-content-center align-items-center">
-                <Button
+                
+                {userInfo.isAdmin ? (
+                  <>
+                  <Button
                   onClick={cancelOrderHandler}
                   className="mx-2"
                   disabled={order.status !== 1}
@@ -140,6 +151,12 @@ export default function OrderManagementPage() {
                   Order out for Delivery
                 </Button>
                 <FaArrowRight />
+                </>
+                ):(
+<></>
+                )}
+                
+                
                 {order.paymentMethod === "Cash On Delivery" ? (
                   <Button
                     onClick={completeOrderHandler}

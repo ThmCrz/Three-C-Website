@@ -177,7 +177,11 @@ function CustomNavBar() {
                     <Link className="dropdown-item" to="/adminPage">
                       Admin Dashboard
                     </Link>
-                  ) : (
+                  ) : userInfo.role === "Delivery" ? (
+                    <Link className="dropdown-item" to="/OrdersDeliveryPage">
+                      Delivery Dashboard
+                    </Link>
+                  ):(
                     <Link className="dropdown-item" to="/dashboard">
                       User Dashboard
                     </Link>

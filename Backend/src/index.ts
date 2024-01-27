@@ -6,6 +6,7 @@ import { productRouter } from "./routers/productRouter";
 import { userRouter } from "./routers/userRouter";
 import { orderRouter } from "./routers/orderRouter";
 import { keyRouter } from "./routers/keyRouter";
+import mailRouter from "./routers/nodeMailerRouter"
 // import { seedRouter } from "./routers/seedRouter";
 
 
@@ -33,7 +34,7 @@ app.use(
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+app.use('/api/mail', mailRouter )
 app.use('/api/products', productRouter)
 // app.use('/api/seed', seedRouter)
 app.use('/api/users', userRouter)

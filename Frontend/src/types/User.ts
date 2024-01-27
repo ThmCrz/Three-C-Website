@@ -18,8 +18,10 @@ export type UserInfo = {
     name: string
     email: string
     phone: string
+    role: string
     token: string
     isAdmin: boolean
+    isEmailConfirmed: boolean
     shippingAddress: shippingAddress
     currentCart: CurrentCart
 }

@@ -30,6 +30,7 @@ export default function AdminSidebar() {
         <li className=""></li>
         <li className="list-group-item Sidebar-menu" onClick={() => {navigate("/OrdersManagementPage")}}>All Orders Management</li>
         <li className="list-group-item Sidebar-menu"  onClick={() => {navigate("/InventoryManagementPage")}}>Inventory Management</li>
+        <li className="list-group-item Sidebar-menu"  onClick={() => {navigate("/DailyReportsPage")}}>Reports Management</li>
         <li className=""></li>
         {/* Add more menu items for other pages */}
       </ul>

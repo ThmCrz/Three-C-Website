@@ -11,6 +11,8 @@ import { getError } from "../types/Utils"
 import CheckoutGuide from "../components/CheckOutGuide"
 import { useCartClearMutation } from "../hooks/UserHooks"
 import { useDeductQuantityFromOrderMutation } from "../hooks/ProductHooks"
+import useEmail from "../hooks/NodeMailerHook"
+
 
 export default function PlaceOrderPage() {
     const navigate = useNavigate()
@@ -28,9 +30,55 @@ export default function PlaceOrderPage() {
 
     const { mutateAsync: createOrder, isLoading } = useCreateOrderMutation()
     const { mutateAsync: updateProductCountInStock } = useDeductQuantityFromOrderMutation()
+    const { sendEmail, loading, error } = useEmail();
 
     const { mutateAsync: clearCart } = useCartClearMutation();
 
+    const handleSendEmail = async () => {
+      try {
+        // Extract order items from cart
+        const orderItemsText = cart.cartItems.map(item => (
+          `Product ID: ${item._id} 
+           Product: ${item.name} | Quantity: ${item.quantity}| Price: $${item.price.toFixed(2)}\n`
+        )).join('\n');
+    
+        // Build email content
+        const emailContent = `Thank you for your order with Three C Enterprises! We are delighted to serve you.
+    
+    Order Details:
+    ${orderItemsText}
+    
+    Account Information:
+    Username: ${userInfo.name}
+    Email: ${userInfo.email}
+    
+    Next Steps:
+    - You can track your order status in your account.
+    - Feel free to contact us if you have any questions about your order.
+    
+    Thank you again for choosing Three C Enterprises. We appreciate your business!
+    
+    Best Regards,
+    Three C Enterprises`;
+    
+        // Send the email
+        await sendEmail({
+          to: userInfo.email,
+          subject: 'Three C Enterprises - Order Confirmation',
+          text: emailContent,
+        });
+    
+        // Show success message
+        if(!loading){
+          alert("We have sent an order confirmation email. Please check your email address.");
+        }
+      } catch (err) {
+        // Handle errors
+        toast.error('Failed to send order confirmation email.');
+        console.error('Error sending order confirmation email:', err);
+      }
+    };
+    
 
     const placeOrderHandler = async () => {
       try {
@@ -48,6 +96,7 @@ export default function PlaceOrderPage() {
         dispatch({ type: 'CART_CLEAR' })
         localStorage.removeItem('cartItems')
         navigate(`/order/${data.order._id}`)
+        handleSendEmail()
       } catch (err) {
         toast.error(getError(err as ApiError))
       }

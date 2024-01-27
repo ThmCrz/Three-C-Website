@@ -237,6 +237,11 @@ footer {
   width: 25vw; /* Adjust the width as needed */
 }
 
+.confirmed{
+  color: green;
+  box-shadow: 0 0 3px green;
+}
+
 
 /* * {
   box-shadow: 0 0 3px green;

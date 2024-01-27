@@ -32,6 +32,8 @@ import AdminProductpage from "./pages/AdminProductPage.tsx";
 import OrdersManagementPage from "./pages/OrdersManagementPage.tsx";
 import SupplierOrderPage from "./pages/OrderToSupplierPage.tsx";
 import DailyReportsPage from "./pages/DailyReportsPage.tsx";
+import OrdersDeliveryPage from "./pages/OrdersDeliveryPage.tsx";
+import StaffRoute from "./components/StaffRoute.tsx";
 
 
 const router = createBrowserRouter(
@@ -49,14 +51,19 @@ const router = createBrowserRouter(
          <Route path="/placeorder" element={<PlaceOrderPage />} />
          <Route path="/order/:id" element={<OrderPage />} />
          <Route path="/dashboard" element={<DashboardPage />} />
-         <Route path="" element={<AdminRoute />}>
-          <Route path="/adminPage" element={<AdminPage />} />
+         <Route path="" element={<StaffRoute/>}>
+
+          <Route path="" element={<AdminRoute />}>
+            <Route path="/adminPage" element={<AdminPage />} />
+            <Route path="/OrdersManagementPage" element={<OrdersManagementPage />} />
+            <Route path="/InventoryManagementPage" element={<InventoryManagementPage />} />
+            <Route path="/Product/:slug/AdminProductPage" element={<AdminProductpage />} />
+            <Route path="/SupplierOrderPage" element={<SupplierOrderPage />} />
+            <Route path="/DailyReportsPage" element={<DailyReportsPage />} />
+           </Route>
+         
           <Route path="/OrderManagementPage/:id" element={<OrderManagementPage />} />
-          <Route path="/OrdersManagementPage" element={<OrdersManagementPage />} />
-          <Route path="/InventoryManagementPage" element={<InventoryManagementPage />} />
-          <Route path="/Product/:slug/AdminProductPage" element={<AdminProductpage />} />
-          <Route path="/SupplierOrderPage" element={<SupplierOrderPage />} />
-          <Route path="/DailyReportsPage" element={<DailyReportsPage />} />
+          <Route path="/OrdersDeliveryPage" element={<OrdersDeliveryPage/>}/>
          </Route>
       </Route>
     </Route>

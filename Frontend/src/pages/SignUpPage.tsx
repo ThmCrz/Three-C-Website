@@ -7,6 +7,7 @@ import { Store } from "../Store"
 import { useSignupMutation } from "../hooks/UserHooks"
 import { ApiError } from "../types/ApiError"
 import { getError } from "../types/Utils"
+import useEmail from "../hooks/NodeMailerHook"
 
 export default function SignupPage() {
   const navigate = useNavigate()
@@ -16,13 +17,56 @@ export default function SignupPage() {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setphone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const { sendEmail, loading, error } = useEmail();
 
   const { state, dispatch } = useContext(Store)
   const { userInfo } = state
 
   const { mutateAsync: signup } = useSignupMutation()
+
+  const handleSendEmail = async () => {
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'Welcome to Three C Enterprises - Registration Confirmation',
+        text: (`Thank you for choosing Three C Enterprises! We are delighted to welcome you to our community.
+
+        This email is to confirm that your registration was successful. Your account has been created, 
+        and you are now a valued member of Three C Enterprises.
+        
+        Account Information:
+        
+        Username: ${name}
+        Email: ${email}
+
+        Next Steps:
+
+        Now that you're a registered member, you can enjoy the following benefits:
+        
+        Access to exclusive content and resources.
+        Receive updates on our latest products and services.
+        Engage with our community through forums and discussions.
+        Feel free to explore our website and let us know if you have any questions 
+        or if there's anything we can assist you with. 
+        We're here to make your experience with Three C Enterprises exceptional.
+        
+        Thank you again for choosing Three C Enterprises. We look forward to serving you!
+        
+        Best Regards,
+        
+        Three C Enterprises
+        `),
+       
+      }); 
+      toast.success("We Have Sent an Email. Please check your email address")
+    } catch (err) {
+      toast.error('Failed to send test email.');
+      console.error('Error sending test email:', err);
+    }
+  };
 
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -35,9 +79,11 @@ export default function SignupPage() {
         name,
         email,
         password,
+        phone,
       })
       dispatch({ type: 'USER_SIGNIN', payload: data })
       localStorage.setItem('userInfo', JSON.stringify(data))
+      handleSendEmail()
       navigate(redirect || '/')
     } catch (err) {
       toast.error(getError(err as ApiError))

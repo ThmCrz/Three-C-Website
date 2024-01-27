@@ -26,16 +26,19 @@ export const useSignupMutation = () =>
       name,
       email,
       password,
+      phone,
     }: {
       name: string;
       email: string;
       password: string;
+      phone: string;
     }) =>
       (
         await apiClient.post<UserInfo>(`api/users/signup`, {
           name,
           email,
           password,
+          phone,
         })
       ).data,
   });
@@ -93,6 +96,19 @@ export const useCartMutation = () =>
         await apiClient.put<UserInfo>(`api/users/${user}/Cart`, {
           cartItem,
           quantity,
+        })
+      ).data,
+  });
+
+  export const useEmailConfirmMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      _id,
+    }: {
+      _id: string;
+    }) =>
+      (
+        await apiClient.put<UserInfo>(`api/users/${_id}/confirmEmail`, {
         })
       ).data,
   });

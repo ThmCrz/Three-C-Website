@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Container, Badge } from "react-bootstrap";
+import { Row, Col, Card, Container, Badge } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -66,7 +66,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
       const filteredWeekOrders = orders.filter((order) => {
         const orderDate = new Date(order.createdAt);
         return (
-          (order.status >= 1 && order.status <= 5) &&
+          (order.status >= 2 && order.status <= 5) &&
 
           (orderDate >= weekStartDate && orderDate <= weekEndDate)
 
@@ -458,79 +458,6 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
                   )}
                 </Card.Text>
               </Card.Body>
-            </Card>
-          </Row>
-
-          <Row className="mt-3">
-            <Card>
-              <Row>
-                <Col>
-                  <div>
-                    <Card.Body>
-                      <Card.Title>Reports</Card.Title>
-                      <Card.Text>
-                        <Row>
-                          <Button className="mt-2 mb-2">
-                            Generate Daily Report
-                          </Button>
-                        </Row>
-                        <Row>
-                          <Button className="mt-2 mb-2">
-                            Generate Weekly Report
-                          </Button>
-                        </Row>
-                        <Row>
-                          <Button className="mt-2 mb-2">
-                            Generate Monthly Report
-                          </Button>
-                        </Row>
-                      </Card.Text>
-                    </Card.Body>
-                  </div>
-                </Col>
-                <Col>
-                  <div>
-                    <Card.Body>
-                      <Card.Title>Feedback and Reviews</Card.Title>
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th>User</th>
-                            <th>Feedback</th>
-                            <th>Review</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {/* Map over the data and render each row */}
-                          {isLoading ? (
-                            <LoadingBox></LoadingBox>
-                          ) : error ? (
-                            <MessageBox variant="danger">
-                              {getError(error as ApiError)}
-                            </MessageBox>
-                          ) : (
-                            orders?.filter((order) => {
-                              const orderDate = new Date(order.createdAt);
-                              return (
-                                order.status >= 0 &&
-                                order.status <= 5 &&
-                                orderDate >= weekStartDate &&
-                                orderDate <= weekEndDate
-                              );
-                            })?.map((order) => (
-                              <tr key={order._id}>
-                                <td>{order.user}</td>
-                                <td>{order.status}</td>
-                                <td>{order.paymentMethod}</td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </table>
-                    </Card.Body>
-                  </div>
-                </Col>
-              </Row>
             </Card>
           </Row>
         </Col>
