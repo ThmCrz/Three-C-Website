@@ -34,7 +34,7 @@ export default function SigninPage() {
         localStorage.setItem('userInfo', JSON.stringify(data))
         localStorage.setItem("cartItems", JSON.stringify(data.currentCart));
         localStorage.setItem("shippingAddress", JSON.stringify(data.shippingAddress || { address: "", city: "", country: "", fullName: "", postalCode: "" }));
-        window.location.href = '/';
+        
       } catch (err) {
         toast.error(getError(err as ApiError))
       }
@@ -42,7 +42,12 @@ export default function SigninPage() {
 
     useEffect(() => {
       if (userInfo) {
-        navigate(redirect)
+        if(userInfo.isAdmin){
+          navigate("/adminPage")
+          return
+        }else{
+          navigate(redirect)
+        }
       }
     }, [navigate, redirect, userInfo])
 

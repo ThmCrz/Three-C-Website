@@ -139,6 +139,8 @@ const [product, setProduct] = useState({
         <Form.Control
           required
           type="number"
+          min={0}
+          step={1}
           placeholder="Enter product price"
           name="price"
           value={product.price}
@@ -151,6 +153,8 @@ const [product, setProduct] = useState({
         <Form.Control
           required
           type="number"
+          min={0}
+          step={1}
           placeholder="Enter count in stock"
           name="countInStock"
           value={product.countInStock}

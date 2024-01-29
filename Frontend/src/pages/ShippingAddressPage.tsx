@@ -139,7 +139,6 @@ export default function ShippingAddressPage() {
             <Form.Control
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              required
               disabled={isLoading}
             />
           </Form.Group>

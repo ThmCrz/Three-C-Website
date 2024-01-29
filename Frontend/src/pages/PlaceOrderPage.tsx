@@ -21,12 +21,13 @@ export default function PlaceOrderPage() {
     const { cart, userInfo } = state
 
     const round2 = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100 // 123.2345 => 123.23
+    const totalPrices = cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0);
     cart.itemsPrice = round2(
-      cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
-    )
-    cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(0)
-    cart.taxPrice = round2(0.15 * cart.itemsPrice)
-    cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice
+      totalPrices - cart.taxPrice
+)
+cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(0)
+cart.taxPrice = round2(0.15 * cart.itemsPrice)
+cart.totalPrice = totalPrices
 
     const { mutateAsync: createOrder, isLoading } = useCreateOrderMutation()
     const { mutateAsync: updateProductCountInStock } = useDeductQuantityFromOrderMutation()
@@ -70,7 +71,7 @@ export default function PlaceOrderPage() {
     
         // Show success message
         if(!loading){
-          alert("We have sent an order confirmation email. Please check your email address.");
+          toast.success("We have sent an order confirmation email. Please check your email address.");
         }
       } catch (err) {
         // Handle errors
