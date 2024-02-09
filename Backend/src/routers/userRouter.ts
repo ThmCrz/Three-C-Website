@@ -121,13 +121,13 @@ userRouter.put(
       // Check if cartItem is already in currentCart
       const existingCartItem = user.currentCart?.find(
         (item) => item._id === cartItem._id
-      );
+        );
 
       if (existingCartItem) {
         existingCartItem.quantity = quantity;
         existingCartItem.price = cartItem.price;
         existingCartItem.countInStock = cartItem.countInStock;
-
+        
         await UserModel.updateOne(
           { _id: userId, "currentCart._id": cartItem._id },
           {
@@ -137,7 +137,7 @@ userRouter.put(
               "currentCart.$.countInStock": cartItem.countInStock,
             },
           }
-        );
+          );
       } else {
         // Item not in the cart, add it with quantity 1
         user.currentCart = user.currentCart || [];
@@ -151,9 +151,9 @@ userRouter.put(
           name: cartItem.name,
         });
       }
-
+      
       const updatedUser = await user.save();
-
+      
       res.send({ user: updatedUser, message: "Cart Added to Cart" });
     } else {
       res.status(404).send({ message: "User Not Found" });
@@ -168,25 +168,25 @@ userRouter.put(
     //Recieves the request
     const userId = req.params.id;
     const cartItem = req.body.cartItem;
-
+    
     //tries to find the user
     const user = await UserModel.findById(userId);
-
+    
     //if user is found.
     if (user) {
       //checks if the cart Item exists in the cart
       const existingCartItem = user.currentCart?.find(
         (item) => item._id === cartItem._id
-      );
-
-      //if it exists, then remove it from the cart
+        );
+        
+        //if it exists, then remove it from the cart
       if (existingCartItem) {
         user.currentCart = user.currentCart?.filter(
           (item) => item._id !== cartItem._id
-        );
+          );
         //saves the user after deleting the item
         await user.save();
-
+        
         //sends a response back
         res.send({ message: "Cart Item Deleted" });
         return;
@@ -195,29 +195,58 @@ userRouter.put(
     //if the cart Item is not found.
     res.status(404).send({ message: "Cart Item Not Found" });
   })
-);
-
-userRouter.put(
-  "/:id/Cart/ClearCart",
+  );
+  
+  userRouter.put(
+    "/:id/Cart/ClearCart",
   isAuth,
   asyncHandler(async (req: Request, res: Response) => {
     //Recieves the userId from request
     const userId = req.params.id;
-
+    
     //tries to find the user
     const user = await UserModel.findById(userId);
-
+    
     //if user is found.
     if (user) {
       // remove all items from the cart
       user.currentCart = [];
       // save the user after clearing the cart
       await user.save();
-
+      
       // send a response back
       res.send({ message: "Cart Cleared" });
     }
     //if the cart Item is not found.
     res.status(404).send({ message: "Cart Item Not Found" });
   })
-);
+  );
+  
+  userRouter.put(
+    "/passwordReset",
+    asyncHandler(async (req: Request, res: Response) => {
+      const user = await UserModel.findOne({ email: req.body.email });
+      
+      if (user) {
+        
+        user.password = bcrypt.hashSync(req.body.password)
+        const updatedUser = await user.save();
+        
+        res.send({ user: updatedUser, message: "New Password Saved" });
+      } else {
+        res.status(404).send({ message: "User Not Found" });
+      }
+    })
+    );
+    
+    userRouter.post(
+      "/CheckEmail",
+      asyncHandler(async (req: Request, res: Response) => {
+        const user = await UserModel.findOne({ email: req.body.email });
+        if (user) {
+          res.send({message: "User Found"});
+        } else {
+          res.status(404).send({ message: "User Not Found" });
+        }
+      })
+    );

@@ -143,3 +143,34 @@ export const useCartMutation = () =>
         })
       ).data,
   });
+
+  export const usePasswordMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) =>
+      (
+        await apiClient.put<UserInfo>(`api/users/passwordReset`, {
+          email,
+          password,
+        })
+      ).data,
+  });
+
+  export const useCheckEmailMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      email,
+    }: {
+      email: string;
+    }) =>
+      (
+        await apiClient.post<UserInfo>(`api/users/CheckEmail`, {
+          email,
+        })
+      ).data,
+  });

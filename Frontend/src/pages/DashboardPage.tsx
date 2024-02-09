@@ -27,16 +27,19 @@ export default function DashboardPage() {
       cart: { shippingAddress },
     },
   } = useContext(Store);
-  const {mutateAsync: confirmEmail, isLoading: confirmIsLoading} = useEmailConfirmMutation()
+  const {mutateAsync: confirmEmail} = useEmailConfirmMutation()
 
   const [name, setName] = useState(userInfo.name || "");
   const [email, setEmail] = useState(userInfo.email || "");
   const [phone, setPhone] = useState(userInfo.phone || "");
   const [isEditingAccountDetails, setIsEditingAccountDetails] = useState(false);
   const [ orderStatus, setOrderStatus ] = useState(1);
+
   const [ isconfirmingEmail, setisconfirmingEmail] = useState(false);
+
   const [confirmationCodeEmail, setconfirmationCodeEmail] = useState(userInfo.name || "");
   const [confirmationCode, setconfirmationCode] = useState(userInfo.name || "");
+
   const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(false);
   const [isSendButtonPressed, setisSendButtonPressed] = useState(false);
   
