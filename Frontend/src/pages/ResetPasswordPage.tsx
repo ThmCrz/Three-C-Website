@@ -22,7 +22,7 @@ export default function ResetPasswordPage() {
   const { sendEmail } = useEmail();
 
   const { mutateAsync: passwordMutation, isLoading} = usePasswordMutation();
-  const { mutateAsync: checkEmail, isLoading: loadingEmail, error: emailError} = useCheckEmailMutation();
+  const { mutateAsync: checkEmail, isLoading: loadingEmail } = useCheckEmailMutation();
 
   // Function to generate a six-digit code
   function generateSixDigitCode(): string {
@@ -156,8 +156,7 @@ if (password === ConfirmPassword) {
             </Button>
           </Form>
         ) : null}
-      </div>
-      
+      </div>   
       <div className="mb-3">
         New customer?{" "}
         <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>

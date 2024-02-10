@@ -1,6 +1,6 @@
 import { Row, Col, Card, Button, Form, Spinner, Badge, Nav } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { useGetOrderHistoryQuery } from "../hooks/OrderHooks";
@@ -238,8 +238,9 @@ const updateLocalStorage = () => {
                         required
                       />
                     </Form.Group>
+                    <Link to={`/ChangePasswordPage`}>Change Password</Link>
 
-                    <div className="mb-3">
+                    <div className="mb-3 mt-3">
                       <Button
                         variant="primary"
                         type="submit"
@@ -255,6 +256,7 @@ const updateLocalStorage = () => {
                         Cancel
                       </Button>
                     </div>
+                    
                   </Form>
                 ) : (
                   // Render the regular text here

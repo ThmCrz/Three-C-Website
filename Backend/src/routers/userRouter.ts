@@ -238,6 +238,25 @@ userRouter.put(
       }
     })
     );
+
+    userRouter.put(
+      "/changePassword",
+      asyncHandler(async (req: Request, res: Response) => {
+        const user = await UserModel.findOne({ email: req.body.email });
+        if (user) {
+          if (bcrypt.compareSync(req.body.currentPassword, user.password)) {
+            
+            user.password = bcrypt.hashSync(req.body.newPassword)
+            
+            const updatedUser = await user.save();
+            
+            res.send({ user: updatedUser, message: "New Password Saved" });
+            return;
+          }
+        }
+        res.status(401).send({ message: "Invalid Password" });
+      })
+    );
     
     userRouter.post(
       "/CheckEmail",
@@ -250,3 +269,4 @@ userRouter.put(
         }
       })
     );
+

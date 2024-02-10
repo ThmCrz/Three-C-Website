@@ -160,6 +160,25 @@ export const useCartMutation = () =>
         })
       ).data,
   });
+  export const useChangePasswordMutation = () =>
+  useMutation({
+    mutationFn: async ({
+      email,
+      currentPassword,
+      newPassword,
+    }: {
+      email: string;
+      currentPassword: string;
+      newPassword: string;
+    }) =>
+      (
+        await apiClient.put<UserInfo>(`api/users/changePassword`, {
+          email,
+          currentPassword,
+          newPassword,
+        })
+      ).data,
+  });
 
   export const useCheckEmailMutation = () =>
   useMutation({
