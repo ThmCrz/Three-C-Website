@@ -36,11 +36,13 @@ import OrdersDeliveryPage from "./pages/OrdersDeliveryPage.tsx";
 import StaffRoute from "./components/StaffRoute.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import ChangePasswordPage from "./pages/ChangePasswordPage.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
+      <Route path="/LandingPage" element={<LandingPage/>}/>
       <Route index={true} element={<Homepage />} />
       <Route path="/SignIn" element={<SigninPage />} />
       <Route path="/Product/:slug" element={<Productpage />} />
