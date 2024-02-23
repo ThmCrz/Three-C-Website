@@ -17,10 +17,10 @@ export default function SignupPage() {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setphone] = useState('')
+  const [phone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const { sendEmail, loading, error } = useEmail();
+  const { sendEmail } = useEmail();
 
   const { state, dispatch } = useContext(Store)
   const { userInfo } = state

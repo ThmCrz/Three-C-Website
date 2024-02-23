@@ -43,6 +43,7 @@ export default function OrderPage() {
           .then((orderID: string) => {
             return orderID
           })
+          console.log(data)
       },
       onApprove(data, actions) {
         return actions.order!.capture().then(async (details) => {
@@ -54,6 +55,7 @@ export default function OrderPage() {
             toast.error(getError(err as ApiError))
           }
         })
+        console.log(data)
       },
       onError: (err) => {
         toast.error(getError(err as ApiError))

@@ -31,7 +31,7 @@ cart.totalPrice = totalPrices
 
     const { mutateAsync: createOrder, isLoading } = useCreateOrderMutation()
     const { mutateAsync: updateProductCountInStock } = useDeductQuantityFromOrderMutation()
-    const { sendEmail, loading, error } = useEmail();
+    const { sendEmail, loading} = useEmail();
 
     const { mutateAsync: clearCart } = useCartClearMutation();
 
