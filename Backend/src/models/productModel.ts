@@ -29,5 +29,4 @@ export class Product {
   public description?: string;
 }
 
-const productModel = getModelForClass(Product);
-export default productModel;
+export const productModel = getModelForClass(Product);
