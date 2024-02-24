@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "cd Backend && npm install && npm run build && cd ../Frontend && npm install && npm run build",
-    "start": "node backend/build/index.js",
+    "start": "node Backend/build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
