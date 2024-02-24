@@ -1,11 +1,21 @@
 import express, { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { User, UserModel } from "../models/userModel";
+import { User, UserModel } from "./userModel";
 import bcrypt from "bcryptjs";
 import { generateToken, isAuth } from "../Utils";
 import { MongoAPIError } from "mongodb";
 
 export const userRouter = express.Router();
+
+interface CartItem {
+  image: string | undefined;
+  slug: string;
+  quantity: number;
+  countInStock: number;
+  price: number;
+  _id: string;
+  name: string;
+}
 
 userRouter.post(
   "/signin",
@@ -125,7 +135,7 @@ userRouter.put(
     if (user) {
       // Check if cartItem is already in currentCart
       const existingCartItem = user.currentCart?.find(
-        (item) => item._id === cartItem._id
+        (CartItem) => CartItem._id === cartItem._id
         );
 
       if (existingCartItem) {
@@ -181,13 +191,13 @@ userRouter.put(
     if (user) {
       //checks if the cart Item exists in the cart
       const existingCartItem = user.currentCart?.find(
-        (item) => item._id === cartItem._id
+        (CartItem) => CartItem._id === cartItem._id
         );
         
         //if it exists, then remove it from the cart
       if (existingCartItem) {
         user.currentCart = user.currentCart?.filter(
-          (item) => item._id !== cartItem._id
+          (CartItem) => CartItem._id !== cartItem._id
           );
         //saves the user after deleting the item
         await user.save();
