@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { User } from "./models/userModel"
+import { User } from "./routers/userModel"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
 export const generateToken = (user: User) => {
