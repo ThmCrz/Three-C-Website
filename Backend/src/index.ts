@@ -14,7 +14,7 @@ import mailRouter from "./routers/nodeMailerRouter"
 dotenv.config();
 
 const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost/Three-C-DataBase";
+  process.env.MONGODB_URI || "mongodb+srv://Three-C-User:fG0SW4bh9InRrhHM@three-c-cluster.bxk8fom.mongodb.net/Three-C-DataBase?retryWrites=true&w=majority";
 mongoose.set("strictQuery", true);
 mongoose
   .connect(MONGODB_URI)
