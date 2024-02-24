@@ -135,7 +135,7 @@ userRouter.put(
     if (user) {
       // Check if cartItem is already in currentCart
       const existingCartItem = user.currentCart?.find(
-        (CartItem) => CartItem._id === cartItem._id
+        (CartItem: CartItem) => CartItem._id === cartItem._id
         );
 
       if (existingCartItem) {
@@ -191,13 +191,13 @@ userRouter.put(
     if (user) {
       //checks if the cart Item exists in the cart
       const existingCartItem = user.currentCart?.find(
-        (CartItem) => CartItem._id === cartItem._id
+        (CartItem: CartItem) => CartItem._id === cartItem._id
         );
         
         //if it exists, then remove it from the cart
       if (existingCartItem) {
         user.currentCart = user.currentCart?.filter(
-          (CartItem) => CartItem._id !== cartItem._id
+          (CartItem: CartItem) => CartItem._id !== cartItem._id
           );
         //saves the user after deleting the item
         await user.save();
