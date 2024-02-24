@@ -21,7 +21,7 @@ productRouter.post(
         category: req.body.category || "No Category",
         brand: req.body.brand || "No brand Provided",
         price: req.body.price,
-        countInStock: req.body.countInStock,
+        countInStock: req.body.countInStock || 0,
         description: req.body.description || "No description Provided",
       });
 
@@ -35,8 +35,20 @@ productRouter.post(
 productRouter.get(
   "/",
   asyncHandler(async (req, res) => {
-    const products = await productModel.find();
-    res.json(products);
+    try {
+      const products = await productModel.find();
+      // If the products array is empty, return a 204 No Content status
+      if (products.length === 0) {
+        res.status(204).send();
+      } else {
+        // If products are found, return a 200 OK status along with the products
+        res.status(200).json(products);
+      }
+    } catch (error) {
+      // If there's an error, return a 500 Internal Server Error status
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   })
 );
 

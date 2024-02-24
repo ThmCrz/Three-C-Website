@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import { User, UserModel } from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { generateToken, isAuth } from "../Utils";
+import { MongoAPIError } from "mongodb";
 
 export const userRouter = express.Router();
 
@@ -34,20 +35,24 @@ userRouter.post(
 userRouter.post(
   "/signup",
   asyncHandler(async (req: Request, res: Response) => {
-    const user = await UserModel.create({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: bcrypt.hashSync(req.body.password),
-    } as User);
+    try {
+      const user = await UserModel.create({
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        password: bcrypt.hashSync(req.body.password),
+      } as User);
 
-    res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user),
-    });
+      res.send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user),
+      });
+    } catch (error) {
+      res.status(500).send({ message: 'Server Error', error: MongoAPIError.toString() });
+    }
   })
 );
 
