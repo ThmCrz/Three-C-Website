@@ -20,7 +20,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
       const productData = response.data;
       const updatedProduct = {
         ...productData,
-        image: `http://localhost:4000/${productData.image}`,
+        image: `https://three-c-website.onrender.com/${productData.image}`,
       };
 
       return updatedProduct;
@@ -42,7 +42,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
           const productData = response.data;
           const updatedProduct = {
             ...productData,
-            image: `http://localhost:4000/${productData.image}`,
+            image: `https://three-c-website.onrender.com/${productData.image}`,
           };
 
           updatedProducts.push(updatedProduct);
