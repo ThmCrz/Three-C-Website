@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { UserInfo } from '../types/User'; // Ensure this path is correct
+// import { UserInfo } from '../types/User'; // Ensure this path is correct
 import AdminSidebar from '../components/AdminSidebar';
 
 const AccountManagement: React.FC = () => {

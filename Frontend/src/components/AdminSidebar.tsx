@@ -1,8 +1,7 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../Store";
-import { FaBox, FaChartLine, FaDatabase, FaUsers, FaBars, FaHome } from "react-icons/fa"; // Import FaBars for the hamburger icon
-import { Button } from "react-bootstrap";
+import { FaBox, FaChartLine, FaDatabase, FaUsers, FaHome } from "react-icons/fa"; // Import FaBars for the hamburger icon
 
 export default function AdminSidebar() {
   const {
@@ -12,10 +11,10 @@ export default function AdminSidebar() {
   const navigate = useNavigate();
 
   // State to manage sidebar collapse
-  const [isCollapsed, setIsCollapsed] = useState(false);
+ 
 
   // Toggle function
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+ 
 
   return (
     <>
@@ -33,7 +32,7 @@ export default function AdminSidebar() {
           }}
         >
           <FaHome  className="sidebar-icon"/>
-          {!isCollapsed && <span className="sidebar-text"> Admin Dashboard</span>}
+          <span className="sidebar-text"> Admin Dashboard</span>
         </li>
         <li
           className="list-group-item Sidebar-menu sidebar-li"
@@ -42,7 +41,7 @@ export default function AdminSidebar() {
           }}
         >
           <FaBox className="sidebar-icon"/>
-          {!isCollapsed && <span className="sidebar-text"> All Orders Management</span>}
+         <span className="sidebar-text"> All Orders Management</span>
         </li>
         <li
           className="list-group-item Sidebar-menu sidebar-li"
@@ -51,7 +50,7 @@ export default function AdminSidebar() {
           }}
         >
           <FaDatabase className="sidebar-icon"/>
-          {!isCollapsed && <span className="sidebar-text"> Inventory Management</span>}
+         <span className="sidebar-text"> Inventory Management</span>
         </li>
         <li
           className="list-group-item Sidebar-menu sidebar-li"
@@ -60,7 +59,7 @@ export default function AdminSidebar() {
           }}
         >
           <FaChartLine className="sidebar-icon"/>
-          {!isCollapsed && <span className="sidebar-text"> Reports Management</span>}
+          <span className="sidebar-text"> Reports Management</span>
         </li>
         <li
           className="list-group-item Sidebar-menu sidebar-li"
@@ -69,7 +68,7 @@ export default function AdminSidebar() {
           }}
         >
           <FaUsers className="sidebar-icon"/>
-          {!isCollapsed && <span className="sidebar-text"> Accounts Management</span>}
+          <span className="sidebar-text"> Accounts Management</span>
         </li>
       </ul>
     </>
