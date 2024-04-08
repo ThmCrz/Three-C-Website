@@ -37,6 +37,7 @@ import StaffRoute from "./components/StaffRoute.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import ChangePasswordPage from "./pages/ChangePasswordPage.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
+import AccountManagement from "./pages/AccountManagementPage.tsx";
 
 
 const router = createBrowserRouter(
@@ -66,6 +67,7 @@ const router = createBrowserRouter(
             <Route path="/Product/:slug/AdminProductPage" element={<AdminProductpage />} />
             <Route path="/SupplierOrderPage" element={<SupplierOrderPage />} />
             <Route path="/DailyReportsPage" element={<DailyReportsPage />} />
+            <Route path="/AccountsManagement" element={<AccountManagement />} />
            </Route>
          
           <Route path="/OrderManagementPage/:id" element={<OrderManagementPage />} />

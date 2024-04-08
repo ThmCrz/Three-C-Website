@@ -6,6 +6,7 @@ import { useGetProductsQuery } from '../hooks/ProductHooks';
 import { getError } from '../types/Utils';
 import { ApiError } from '../types/ApiError';
 import { Product } from '../types/Products';
+import Carousel from '../components/Carousel';
 
 
 export default function Homepage() {
@@ -28,9 +29,10 @@ export default function Homepage() {
       <Helmet>
         <title>Three C Enterprises</title> 
       </Helmet>
+{products && <Carousel products={products}/>}
       {uniqueCategories .map(category => (
         <CategoryProductList key={category} products={products as Product[]} category={category} />
       ))}
     </div>
-    );
+    )
 }

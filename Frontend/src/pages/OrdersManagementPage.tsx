@@ -4,9 +4,10 @@ import { ApiError } from "../types/ApiError";
 import { getError } from "../types/Utils";
 import { useGetOrdersQuery } from "../hooks/OrderHooks";
 import OrdersCard from "../components/OrderCard";
-import { Badge, Card, Col, Row } from "react-bootstrap";
+import { Badge, Card, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useState } from "react";
+import AdminSidebar from "../components/AdminSidebar";
 
 
 export default function OrdersManagementPage() {
@@ -22,7 +23,11 @@ export default function OrdersManagementPage() {
 
 
     return (
+      <Container fluid className="admin-page-container">
       <Row>
+        <Col md={2}>
+          <AdminSidebar />
+        </Col>
         <Col md={3}>
           <Card className="border-0">
             <Card.Body>
@@ -72,6 +77,7 @@ export default function OrdersManagementPage() {
           </div>
         </Col>
       </Row>
+      </Container>
     );
     }
 

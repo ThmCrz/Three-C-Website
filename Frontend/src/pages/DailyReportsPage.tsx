@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Order } from '../types/Order';
 import { useGetOrdersQuery } from "../hooks/OrderHooks";
-import { Table } from 'react-bootstrap';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 // import LoadingBox from '../components/LoadingBox';
 // import MessageBox from '../components/MessageBox';
@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { cartItem } from '../types/Cart';
+import AdminSidebar from '../components/AdminSidebar';
 
 
 
@@ -86,11 +87,16 @@ export default function DailyReportsPage() {
 
 
   return (
-    <>
+    <Container fluid className="admin-page-container">
       <Helmet>
         <title>Reports Page</title>
       </Helmet>
-      <h1 className="hide-on-print">Date to Reports</h1>
+      <Row>
+      <Col className="hide-on-print" md={2}>
+          <AdminSidebar/>
+        </Col>
+        <Col>
+        <h1 className="hide-on-print">Date to Reports</h1>
       <div className="hide-on-print">
         <DatePicker
           selected={startDate}
@@ -139,6 +145,9 @@ export default function DailyReportsPage() {
       <p>No orders found.</p>
     )}
     {/* ... */}
-  </>
+        </Col>
+      </Row>
+      
+  </Container>
   );
 }

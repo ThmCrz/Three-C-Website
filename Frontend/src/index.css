@@ -103,9 +103,30 @@ footer {
   max-height: 3.6em; /* Adjust the height based on your font size and line height */
   }
   
-  .Card{
-      margin-top: 1.75rem;
+  .Card {
+    box-sizing: border-box;
+    background: white;
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    cursor: pointer;
+    transition: all 0.5s;
+    align-items: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    margin-bottom: 1.5rem;
   }
+  
+  .Card:hover {
+    border: 1px solid black;
+    transform: scale(1.05);
+  }
+  
+  /* .Card:active {
+    transform: scale(0.95) rotateZ(1.7deg);
+  } */
   
   .Category{
       margin: 2rem;
@@ -122,6 +143,7 @@ footer {
       display: Flex;
       justify-content: center;
   }
+  
   .form-control{
     background-color: whitesmoke;
   }
@@ -191,6 +213,7 @@ footer {
 
 }
 
+
 .admin-page-container {
   position: relative;
   z-index: 1;
@@ -209,6 +232,20 @@ footer {
 .chart-container {
   max-height: 300px; /* Adjust the value as needed */
 }
+
+.sidebar-li{
+display: flex;
+justify-content: space-between;
+}
+
+.sidebar-icon {
+  font-size: 2rem; /* Adjust the size as needed */
+}
+
+.sidebar-text {
+  font-size: 1rem; /* Adjust the size as needed */
+}
+
 
 .Sidebar-menu:hover {
   background-color: lightgray;
@@ -242,7 +279,13 @@ footer {
   box-shadow: 0 0 3px green;
 }
 
-
+.Product-carousel{
+  width: 100%;
+  height: 20vw; 
+  object-fit: cover; 
+  object-position: center;
+}
 /* * {
   box-shadow: 0 0 3px green;
 } */
+

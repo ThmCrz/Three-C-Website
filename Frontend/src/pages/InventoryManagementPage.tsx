@@ -7,8 +7,9 @@ import { ApiError } from '../types/ApiError';
 import { Product } from '../types/Products';
 import AdminCategoryProductList from '../components/AdminCategoryProductList';
 import NewProductForm from '../components/AddNewProduct';
-import { Button } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
+import AdminSidebar from '../components/AdminSidebar';
 
 
 
@@ -25,8 +26,14 @@ export default function InventoryManagementPage() {
   ) : error ? (
     <MessageBox variant="danger">{getError(error as ApiError)}</MessageBox>
   ) : (
+    <Container fluid className="admin-page-container">
     <div>
-      <Helmet>
+      <Row>
+      <Col md={2}>
+          <AdminSidebar />
+        </Col>
+        <Col>
+        <Helmet>
         <title>Inventory Management</title>
       </Helmet>
       <h1>Product Management</h1>
@@ -46,6 +53,9 @@ export default function InventoryManagementPage() {
             </div>
           )}
         
+        </Col>
+      </Row>
     </div>
+    </Container>
   );
 }

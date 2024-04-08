@@ -10,9 +10,6 @@ productRouter.post(
   '/newProduct',
   isAuth,
   asyncHandler(async (req, res) => {
-
-
-
     try {
       const newProduct = await productModel.create({
         name: req.body.name,

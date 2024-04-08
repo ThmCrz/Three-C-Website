@@ -1,39 +1,77 @@
-import { useContext } from 'react';
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Store } from '../Store';
-import { Card } from 'react-bootstrap';
-
+import { Store } from "../Store";
+import { FaBox, FaChartLine, FaDatabase, FaUsers, FaBars, FaHome } from "react-icons/fa"; // Import FaBars for the hamburger icon
+import { Button } from "react-bootstrap";
 
 export default function AdminSidebar() {
+  const {
+    state: { userInfo },
+  } = useContext(Store);
 
-    const {
-        state: {
-          userInfo,
-        },
-      } = useContext(Store);
+  const navigate = useNavigate();
 
-      const navigate = useNavigate();
+  // State to manage sidebar collapse
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
-    
+  // Toggle function
+  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+
   return (
-    <Card className="border-0">
-      <Card.Body>
-        <Card.Title>
-          <div className="mb-2">Administrator:</div>
-          {userInfo.name}
-        </Card.Title>
-        {/* Add admin's info here */}
-      </Card.Body>
+    <>
+   
+      <div className="mb-2"><h3>Administrator: <br/> {userInfo.name}</h3></div>
+      
+    
+      
 
-      <ul className="list-group list-group-flush">
-        {/* Sidebar menu items */}
-        <li className=""></li>
-        <li className="list-group-item Sidebar-menu" onClick={() => {navigate("/OrdersManagementPage")}}>All Orders Management</li>
-        <li className="list-group-item Sidebar-menu"  onClick={() => {navigate("/InventoryManagementPage")}}>Inventory Management</li>
-        <li className="list-group-item Sidebar-menu"  onClick={() => {navigate("/DailyReportsPage")}}>Reports Management</li>
-        <li className=""></li>
-        {/* Add more menu items for other pages */}
+      <ul className="list-group list-group-flush mb-5 mt-5 ">
+        <li
+          className="list-group-item Sidebar-menu sidebar-li"
+          onClick={() => {
+            navigate("/adminPage");
+          }}
+        >
+          <FaHome  className="sidebar-icon"/>
+          {!isCollapsed && <span className="sidebar-text"> Admin Dashboard</span>}
+        </li>
+        <li
+          className="list-group-item Sidebar-menu sidebar-li"
+          onClick={() => {
+            navigate("/OrdersManagementPage");
+          }}
+        >
+          <FaBox className="sidebar-icon"/>
+          {!isCollapsed && <span className="sidebar-text"> All Orders Management</span>}
+        </li>
+        <li
+          className="list-group-item Sidebar-menu sidebar-li"
+          onClick={() => {
+            navigate("/InventoryManagementPage");
+          }}
+        >
+          <FaDatabase className="sidebar-icon"/>
+          {!isCollapsed && <span className="sidebar-text"> Inventory Management</span>}
+        </li>
+        <li
+          className="list-group-item Sidebar-menu sidebar-li"
+          onClick={() => {
+            navigate("/DailyReportsPage");
+          }}
+        >
+          <FaChartLine className="sidebar-icon"/>
+          {!isCollapsed && <span className="sidebar-text"> Reports Management</span>}
+        </li>
+        <li
+          className="list-group-item Sidebar-menu sidebar-li"
+          onClick={() => {
+            navigate("/AccountsManagement");
+          }}
+        >
+          <FaUsers className="sidebar-icon"/>
+          {!isCollapsed && <span className="sidebar-text"> Accounts Management</span>}
+        </li>
       </ul>
-    </Card>
+    </>
   );
 }
