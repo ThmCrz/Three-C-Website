@@ -167,3 +167,5 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
     },
   });
       
+
+  

@@ -253,6 +253,7 @@ const AdminProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <div className="mb-3">
               <Button
+                className="NewUserButton"
                 variant="primary"
                 type="submit"
                 disabled={isProductUpdateLoading}
@@ -261,6 +262,7 @@ const AdminProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </Button>
               {" | "}
               <Button
+                className="NewUserButton"
                 onClick={() => setIsEditingProductDetails(false)}
                 disabled={isProductUpdateLoading}
               >
@@ -269,8 +271,8 @@ const AdminProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           </Form>
         ) : (
-            <Button onClick={() => setIsEditingProductDetails(true)}>Edit</Button>)} {"  |  "}
-          <Button onClick={deleteHandler} disabled={isDeleting}>{isDeleting? ("Removing..."):("Remove Product")}</Button>
+            <Button className="NewUserButton" onClick={() => setIsEditingProductDetails(true)}>Edit</Button>)} {"  |  "}
+          <Button className="NewUserButton" onClick={deleteHandler} disabled={isDeleting}>{isDeleting? ("Removing..."):("Remove Product")}</Button>
           
       </Card.Body>
       { ordersLoading ? (

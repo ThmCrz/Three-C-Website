@@ -55,32 +55,6 @@ export default function PaymentMethodPage() {
             <div className="mb-4">
               <Form.Check
                 type="radio"
-                id="Stripe"
-                label="Stripe (PlaceHolder)"
-                value="Stripe (PlaceHolder)"
-                checked={paymentMethodName === 'Stripe'}
-                onChange={(e) => {
-                  setPaymentMethod(e.target.value);
-                  setIsRadioButtonSelected(true);
-                }}
-              />
-            </div>
-            <div className="mb-4">
-              <Form.Check
-                type="radio"
-                id="E-Wallet"
-                label="E-Wallet (PlaceHolder)"
-                value="E-Wallet (PlaceHolder)"
-                checked={paymentMethodName === 'E-Wallet'}
-                onChange={(e) => {
-                  setPaymentMethod(e.target.value);
-                  setIsRadioButtonSelected(true);
-                }}
-              />
-            </div>
-            <div className="mb-4">
-              <Form.Check
-                type="radio"
                 id="COD"
                 label="Cash On Delivery"
                 value="Cash On Delivery"
@@ -92,7 +66,7 @@ export default function PaymentMethodPage() {
               />
             </div>
             <div className="mb-4">
-              <Button className="mt-4" type="submit" disabled={!isRadioButtonSelected}>Continue</Button>
+              <Button className="mt-4 NewUserButton" type="submit" disabled={!isRadioButtonSelected}>Continue</Button>
             </div>
           </Form>
         </div>

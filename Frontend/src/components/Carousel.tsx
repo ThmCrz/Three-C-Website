@@ -14,17 +14,20 @@ const ProductCardList: React.FC<ProductListProps> = ({ products }) => {
     <div>
       <Row>
         <Col>
-          <Carousel>
+        <h1 className="Category" >Our Featured Products</h1>
+          <Carousel className="Card">
             {products.map((product) => (
               // ...
 
-              <Carousel.Item key={product.slug}>
+              <Carousel.Item key={product.slug} className="mb-5">
                 <Link to={`/product/${product.slug}`}>
                   <img
                     title={product.slug}
                     src={product.image}
                     className="Product-carousel"
                   />
+                  <h4>{product.name}</h4>
+                  <p className="ProductDescCarousel">{product.description}</p>
                 </Link>
               </Carousel.Item>
             ))}

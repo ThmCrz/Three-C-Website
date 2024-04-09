@@ -74,11 +74,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Card.Text>Price: ₱{product.price}</Card.Text>
         </Link>
         {product.countInStock === 0 ? (
-          <Button variant="primary" disabled>
+          <Button className="NewUserButton" variant="primary" disabled>
             Out of Stock
           </Button>
         ) : (
           <Button
+            className="NewUserButton"
             variant="primary"
             onClick={() => addToCartHandler(convertProductToCartItem(product))}
             disabled={isLoading}>

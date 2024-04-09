@@ -212,6 +212,7 @@ cart.totalPrice = totalPrices
                   <ListGroup.Item>
                     <div className="d-grid">
                       <Button
+                        className="NewUserButton"
                         type="button"
                         onClick={placeOrderHandler}
                         disabled={cart.cartItems.length === 0 || isLoading}

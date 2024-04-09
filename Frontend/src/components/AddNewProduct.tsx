@@ -98,7 +98,7 @@ const [product, setProduct] = useState({
           aria-label="Select category"
           name="category"
           title="Select category"
-          value={isCategoryFormEnabled ? '' : product.category}
+          value={isCategoryFormEnabled ? "" : product.category}
           onChange={handleCategoryChange}
         >
           <option value="" disabled>
@@ -109,7 +109,9 @@ const [product, setProduct] = useState({
               {category}
             </option>
           ))}
-          <option key="New Category" value="new">New Category...</option>
+          <option key="New Category" value="new">
+            New Category...
+          </option>
         </Form.Select>
         {isCategoryFormEnabled && (
           <Form.Control
@@ -175,11 +177,17 @@ const [product, setProduct] = useState({
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" disabled={isLoading}>
+      <Button
+        className="NewUserButton"
+        variant="primary"
+        type="submit"
+        disabled={isLoading}
+      >
         {isLoading ? "Creating..." : "Submit"}
       </Button>
       {" | "}
       <Button
+        className="NewUserButton"
         variant="primary"
         disabled={isLoading}
         onClick={() => {
@@ -191,6 +199,7 @@ const [product, setProduct] = useState({
     </Form>
   ) : (
     <Button
+      className="NewUserButton"
       variant="primary"
       onClick={() => {
         setisProductFormEnabled(true);

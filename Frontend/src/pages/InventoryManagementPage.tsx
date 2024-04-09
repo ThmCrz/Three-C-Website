@@ -40,7 +40,7 @@ export default function InventoryManagementPage() {
       
           <NewProductForm uniqueCategories={uniqueCategories} />
           <div>  ||  </div>
-          <Button onClick={() => {navigate("/SupplierOrderPage")}}>View Suggested Purchase Order</Button>
+          <Button className="NewUserButton" onClick={() => {navigate("/SupplierOrderPage")}}>View Suggested Purchase Order</Button>
           {products && (
             <div>
               {uniqueCategories.map((category) => (

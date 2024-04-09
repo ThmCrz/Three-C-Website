@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient from "../apiClient";
 import { UserInfo } from "../types/User";
 import { cartItem, shippingAddress } from "../types/Cart";
@@ -193,3 +193,42 @@ export const useCartMutation = () =>
         })
       ).data,
   });
+
+  export const useGetEmployeeAccountsQuery = () =>
+    useQuery({
+      queryKey: ['employeeAccounts'],
+      queryFn: async () => {
+        const response = await apiClient.get<UserInfo[]>('api/users/EmployeeAccounts');
+        return response.data;
+      },
+      onError: (error) => {
+        // Handle error here, for example, logging or showing a notification
+        console.error("Error fetching employee accounts:", error);
+      }
+    });
+
+    export const useNewEmployeeMutation = () =>
+      useMutation({
+        mutationFn: async ({
+          name,
+          email,
+          password,
+          phone,
+          role,
+        }: {
+          name: string;
+          email: string;
+          password: string;
+          phone: string;
+          role: string;
+        }) =>
+          (
+            await apiClient.post<UserInfo>(`api/users/NewEmployee`, {
+              name,
+              email,
+              password,
+              phone,
+              role,
+            })
+          ).data,
+      });

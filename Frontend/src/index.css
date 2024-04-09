@@ -21,7 +21,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #00ffea9d;
+  color: #003366;
 }
 
 body {
@@ -38,7 +38,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+button{
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -102,7 +102,15 @@ footer {
   -webkit-box-orient: vertical;
   max-height: 3.6em; /* Adjust the height based on your font size and line height */
   }
-  
+  .ProductDescCarousel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    max-height: 3.6em; /* Adjust the height based on your font size and line height */
+    }
+
   .Card {
     box-sizing: border-box;
     background: white;
@@ -233,9 +241,14 @@ footer {
   max-height: 300px; /* Adjust the value as needed */
 }
 
-.sidebar-li{
+.flex-space-evenly{
 display: flex;
-justify-content: space-between;
+flex-wrap: wrap;
+}
+
+.AccountCard{
+width: 20vw;
+margin: 1%
 }
 
 .sidebar-icon {
@@ -279,11 +292,49 @@ justify-content: space-between;
   box-shadow: 0 0 3px green;
 }
 
-.Product-carousel{
+.Product-carousel {
   width: 100%;
-  height: 20vw; 
-  object-fit: cover; 
-  object-position: center;
+  height: 300px; /* Adjust the height as needed */
+  overflow: hidden; /* Hide any overflow */
+}
+
+.Product-carousel img {
+  width: 100%; /* Make sure the image fills the container horizontally */
+  height: 100%; /* Make sure the image fills the container vertically */
+  object-fit: contain; /* Fit the entire image within the container */
+}
+
+
+/* NewUserButton styles */
+.NewUserButton {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* NewUserButton hover effect */
+.NewUserButton:hover {
+  background-color: #45a049;
+}
+
+/* NewUserButton focus effect */
+.NewUserButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+/* NewUserButton disabled state */
+.NewUserButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 /* * {
   box-shadow: 0 0 3px green;

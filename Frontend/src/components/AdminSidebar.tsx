@@ -9,21 +9,10 @@ export default function AdminSidebar() {
   } = useContext(Store);
 
   const navigate = useNavigate();
-
-  // State to manage sidebar collapse
- 
-
-  // Toggle function
- 
-
   return (
     <>
    
       <div className="mb-2"><h3>Administrator: <br/> {userInfo.name}</h3></div>
-      
-    
-      
-
       <ul className="list-group list-group-flush mb-5 mt-5 ">
         <li
           className="list-group-item Sidebar-menu sidebar-li"

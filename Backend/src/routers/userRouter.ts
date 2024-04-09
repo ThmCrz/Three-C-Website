@@ -285,3 +285,35 @@ userRouter.put(
       })
     );
 
+    userRouter.get(
+  "/EmployeeAccounts",
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const users = await UserModel.find({ role: { $ne: "Customer" } });
+    if (users.length > 0) {
+      res.send(users);
+    } else {
+      res.status(404).send({ message: "No accounts found" });
+    }
+  })
+);
+
+userRouter.post(
+  "/NewEmployee",
+  asyncHandler(async (req: Request, res: Response) => {
+
+    try {
+      const user = await UserModel.create({
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        password: bcrypt.hashSync(req.body.password),
+        role: req.body.role,
+      } as User);
+
+      res.send({message: "New Employee: " + user.name + "was Created Successfully" });
+    } catch (error) {
+      res.status(500).send({ message: 'Server Error', error: MongoAPIError.toString() });
+    }
+  })
+);

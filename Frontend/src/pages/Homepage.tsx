@@ -30,7 +30,7 @@ export default function Homepage() {
         <title>Three C Enterprises</title> 
       </Helmet>
 {products && <Carousel products={products}/>}
-      {uniqueCategories .map(category => (
+      {uniqueCategories.map(category => (
         <CategoryProductList key={category} products={products as Product[]} category={category} />
       ))}
     </div>

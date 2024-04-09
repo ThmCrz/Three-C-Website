@@ -135,16 +135,17 @@ export default function ShippingAddressPage() {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="phone">
-            <Form.Label>Phone Number (Optional)</Form.Label>
+            <Form.Label>Phone Number</Form.Label>
             <Form.Control
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              required
               disabled={isLoading}
             />
           </Form.Group>
 
           <div className="mb-3">
-            <Button variant="primary" type="submit" disabled={isLoading}>
+            <Button className="NewUserButton" variant="primary" type="submit" disabled={isLoading}>
               {isLoading ? "Updating..." : "Continue"}
             </Button>
           </div>
