@@ -111,21 +111,21 @@ footer {
     max-height: 3.6em; /* Adjust the height based on your font size and line height */
     }
 
-  .Card {
-    box-sizing: border-box;
-    background: white;
-    border: 1px solid white;
-    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
-    backdrop-filter: blur(6px);
-    border-radius: 17px;
-    cursor: pointer;
-    transition: all 0.5s;
-    align-items: center;
-    user-select: none;
-    font-weight: bolder;
-    color: black;
-    margin-bottom: 1.5rem;
-  }
+    .Card {
+      box-sizing: border-box;
+      background: white;
+      border: 1px solid white;
+      box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(6px);
+      border-radius: 17px;
+      cursor: pointer;
+      transition: all 0.5s;
+      align-items: center;
+      user-select: none;
+      font-weight: bolder;
+      color: black;
+      margin-bottom: 1.5rem;
+    }
   
   .Card:hover {
     border: 1px solid black;
@@ -231,6 +231,7 @@ footer {
   padding-right: 10vw; 
 }
 
+
 .border-0 {
   padding: 0; 
   margin: 0;
@@ -294,15 +295,12 @@ margin: 1%
 
 .Product-carousel {
   width: 100%;
-  height: 300px; /* Adjust the height as needed */
+  height: 20rem; /* Adjust the height as needed */
   overflow: hidden; /* Hide any overflow */
+  object-fit: contain;
 }
 
-.Product-carousel img {
-  width: 100%; /* Make sure the image fills the container horizontally */
-  height: 100%; /* Make sure the image fills the container vertically */
-  object-fit: contain; /* Fit the entire image within the container */
-}
+
 
 
 /* NewUserButton styles */
@@ -340,3 +338,17 @@ margin: 1%
   box-shadow: 0 0 3px green;
 } */
 
+.Carousel {
+  box-sizing: border-box;
+  background: white;
+  border: 1px solid white;
+  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: all 0.5s;
+  align-items: center;
+  user-select: none;
+  font-weight: bolder;
+  color: black;
+  margin-bottom: 1.5rem;
+}

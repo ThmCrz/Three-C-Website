@@ -317,3 +317,30 @@ userRouter.post(
     }
   })
 );
+
+userRouter.put(
+  "/:id/editEmployeeAccount",
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await UserModel.findById(req.params.id);
+
+    if (user) {
+      user.name = req.body.name;
+      user.email = req.body.email;
+      user.phone = req.body.phone;
+      user.role = req.body.role;
+
+      if(req.body.role === 'Admin'){
+        user.isAdmin = true
+      }else{
+        user.isAdmin = false
+      }
+
+      const updatedUser = await user.save();
+
+      res.send({ user: updatedUser, message: "Account Details Updated" });
+    } else {
+      res.status(404).send({ message: "User Not Found" });
+    }
+  })
+);

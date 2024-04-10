@@ -16,6 +16,7 @@ const AccountManagement: React.FC = () => {
     data: AccountsInfo,
     isLoading: isAccountsLoading,
     error: AccountError,
+    refetch
   } = useGetEmployeeAccountsQuery();
 
   const {
@@ -188,7 +189,7 @@ const submitHandler = async (e: React.SyntheticEvent) => {
             ) : AccountsInfo ? (
               <div className="flex-space-evenly">
                 {AccountsInfo?.map((account: UserInfo) => (
-                  <AccountCard key={account._id} accountData={account} />
+                  <AccountCard key={account._id} accountData={account} onUpdateSuccess={refetch} />
                 ))}
               </div>
             ) : null}

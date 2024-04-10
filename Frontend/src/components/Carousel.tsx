@@ -14,8 +14,8 @@ const ProductCardList: React.FC<ProductListProps> = ({ products }) => {
     <div>
       <Row>
         <Col>
-        <h1 className="Category" >Our Featured Products</h1>
-          <Carousel className="Card">
+        <h2 className="Category" >Our Featured Products</h2>
+          <Carousel className="Carousel">
             {products.map((product) => (
               // ...
 
@@ -26,8 +26,8 @@ const ProductCardList: React.FC<ProductListProps> = ({ products }) => {
                     src={product.image}
                     className="Product-carousel"
                   />
-                  <h4>{product.name}</h4>
-                  <p className="ProductDescCarousel">{product.description}</p>
+                  <h4 className="ProductDescCarousel m-lg-3">{product.name}</h4>
+                  <p className="ProductDescCarousel m-lg-3">{product.description}</p>
                 </Link>
               </Carousel.Item>
             ))}

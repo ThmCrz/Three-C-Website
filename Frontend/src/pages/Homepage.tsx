@@ -7,6 +7,7 @@ import { getError } from '../types/Utils';
 import { ApiError } from '../types/ApiError';
 import { Product } from '../types/Products';
 import Carousel from '../components/Carousel';
+import { Container } from 'react-bootstrap';
 
 
 export default function Homepage() {
@@ -25,7 +26,7 @@ export default function Homepage() {
   ) : error ? (
     <MessageBox variant="danger">{getError(error as ApiError)}</MessageBox>
   ) : (
-    <div>
+    <Container fluid className="Home-page-container">
       <Helmet>
         <title>Three C Enterprises</title> 
       </Helmet>
@@ -33,6 +34,6 @@ export default function Homepage() {
       {uniqueCategories.map(category => (
         <CategoryProductList key={category} products={products as Product[]} category={category} />
       ))}
-    </div>
+    </Container>
     )
 }

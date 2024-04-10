@@ -232,3 +232,29 @@ export const useCartMutation = () =>
             })
           ).data,
       });
+
+      export const useEmployeeAccountDetailsMutation = () =>
+        useMutation({
+          mutationFn: async ({
+            _id,
+            name,
+            email,
+            phone,
+            role,
+          }: {
+            _id: string;
+            name: string;
+            email: string;
+            phone: string;
+            role: string;
+          }) =>
+            (
+              await apiClient.put<UserInfo>(`api/users/${_id}/editEmployeeAccount`, {
+                _id,
+                name,
+                email,
+                phone,
+                role,
+              })
+            ).data,
+        });
