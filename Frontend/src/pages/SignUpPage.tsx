@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react"
 import { Container, Button, Form } from "react-bootstrap"
 import { Helmet } from "react-helmet-async"
-import { useNavigate, useLocation, Link } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { toast } from "react-toastify"
 import { Store } from "../Store"
 import { useSignupMutation } from "../hooks/UserHooks"
@@ -134,11 +134,11 @@ export default function SignupPage() {
             />
         </Form.Group>
         <div className="mb-3">
-          <Button type="submit">Sign Up</Button>
+          <Button className="NewUserButton mb-3" type="submit">Sign Up</Button>
         </div>
         <div className="mb-3">
           Already have an account?{' '}
-          <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
+          <Button onClick={() => navigate(`/signin?redirect=${redirect}`)}>Sign-In</Button>
         </div>
       </Form>
     </Container>

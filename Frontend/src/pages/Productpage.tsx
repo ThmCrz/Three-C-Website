@@ -116,6 +116,7 @@ export default function Productpage() {
                     <ListGroup.Item>
                       <div className="d-grid">
                         <Button
+                        className="NewUserButton"
                           onClick={addToCartHandler}
                           variant="primary"
                           disabled={isLoading}

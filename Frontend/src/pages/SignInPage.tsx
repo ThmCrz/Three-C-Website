@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react"
 import { Container, Button, Form } from "react-bootstrap"
 import { Helmet } from "react-helmet-async"
-import { useNavigate, useLocation, Link } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { toast } from "react-toastify"
 import { Store } from "../Store"
 import LoadingBox from "../components/LoadingBox"
@@ -75,17 +75,17 @@ export default function SigninPage() {
             />
           </Form.Group>
           <div className="mb-3">
-            <Button disabled={isLoading} type="submit">
+            <Button className="NewUserButton" disabled={isLoading} type="submit">
               Sign In
             </Button>
             {isLoading && <LoadingBox />}
           </div>
-          <div className="mb-3">
-            New customer?{' '}
-            <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>   
-          </div>
         </Form>
-            <Link to={`/resetPassword`}>Forgot Password</Link>
+          <div className="OthersigninButtons m-3">
+            New customer?{' '}
+            <Button variant="primary" className="m-3" onClick={() => navigate(`/signup?redirect=${redirect}`)}>Create your account</Button>  
+            <Button variant="primary" onClick={() => navigate(`/resetPassword`)}>Forgot Password</Button> 
+          </div>
       </Container>
     )
   }

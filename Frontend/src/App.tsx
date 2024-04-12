@@ -18,7 +18,7 @@ function App() {
           <Outlet />
         </Container>
       </main>
-      <footer className="c">All rights reserved.</footer>
+      <footer>All rights reserved.</footer>
     </div>
   );
 }

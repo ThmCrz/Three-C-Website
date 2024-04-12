@@ -1,5 +1,5 @@
 import { Button, Form } from "react-bootstrap";
-import { Link, redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useEmail from "../hooks/NodeMailerHook";
 import { useState } from "react";
@@ -8,6 +8,8 @@ import { ApiError } from "../types/ApiError";
 import LoadingBox from "../components/LoadingBox";
 
 export default function ResetPasswordPage() {
+  
+  const navigate = useNavigate()
   // State variables
   const [email, setEmail] = useState("");
   const [confirmationCodeEmail, setconfirmationCodeEmail] = useState("");
@@ -97,10 +99,11 @@ if (password === ConfirmPassword) {
 
       <div>
         {PasswordResetStep === 1 ? (
-        <Form >
+        <Form>
           <Form.Group controlId="Email">
             <Form.Label>Email address</Form.Label>
             <Form.Control 
+            className="mb-3"
             type="email" 
             value={email} 
             placeholder="Enter email" 
@@ -108,6 +111,7 @@ if (password === ConfirmPassword) {
             required />
           </Form.Group>
           <Button
+            className="NewUserButton"
             variant="primary"
             onClick={() => {handleSendButtonPress()}}
             disabled={loadingEmail}
@@ -118,10 +122,11 @@ if (password === ConfirmPassword) {
          ) : null}
 
         {PasswordResetStep === 2 ? (
-          <Form >
+          <Form>
             <Form.Group controlId="formBasicCode">
               <Form.Label>We've send a code to your email to Reset your password</Form.Label>
               <Form.Control
+                className="mb-3"
                 type="text"
                 value={confirmationCode} 
                 onChange={(e) => setconfirmationCode(e.target.value)}
@@ -130,6 +135,7 @@ if (password === ConfirmPassword) {
               />
             </Form.Group>
             <Button 
+            className="NewUserButton"
             variant="primary" 
             onClick={() => checkConfirmationCode()}
             >
@@ -140,26 +146,26 @@ if (password === ConfirmPassword) {
 
         {PasswordResetStep === 3 ? (
           <Form>
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)}
             required />
             </Form.Group>
-            <Form.Group controlId="formBasicConfirmPassword">
+            <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control type="password" placeholder="Confirm password" onChange={(e) => setConfirmPassword(e.target.value)}
             required />
             </Form.Group>
             
-            <Button variant="primary" disabled={isLoading} onClick={() => {handlePasswordResetSubmit()}}>
+            <Button className="NewUserButton" variant="primary" disabled={isLoading} onClick={() => {handlePasswordResetSubmit()}}>
               Reset Password {isLoading ? (<LoadingBox/>): null}
             </Button>
           </Form>
         ) : null}
       </div>   
-      <div className="mb-3">
+      <div className="mb-3 mt-3">
         New customer?{" "}
-        <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
+        <Button onClick={() => navigate(`/signup?redirect=${redirect}`)}>Create your account</Button>
       </div>
 
 

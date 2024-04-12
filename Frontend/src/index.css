@@ -352,3 +352,9 @@ margin: 1%
   color: black;
   margin-bottom: 1.5rem;
 }
+
+.OthersigninButtons{
+  display: flex;
+  align-items: center;
+}
+
