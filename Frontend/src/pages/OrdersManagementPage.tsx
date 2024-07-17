@@ -26,8 +26,9 @@ export default function OrdersManagementPage() {
     
       const searchTermLower = searchTerm.toLowerCase();
       // Combine all match conditions using logical AND (&&)
-      return order._id.toLowerCase().includes(searchTermLower) &&
-             order.user.toLowerCase().includes(searchTermLower);
+      return [order._id.toLowerCase().includes(searchTermLower),
+             order.user.toLowerCase().includes(searchTermLower),
+            ].some((match) => match)
     });
 
     if (!orders) {

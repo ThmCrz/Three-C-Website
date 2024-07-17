@@ -708,7 +708,7 @@ margin: 1%
 
 .ProductsContainer{
   display: 'flex';
-  justify-Content: 'center';
+  justify-content: 'center';
   align-content: 'center';
 }
 
