@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import { useGetEmployeeAccountsQuery } from "../hooks/UserHooks";
 import AdminSidebar from "../components/AdminSidebar";
 import LoadingBox from "../components/LoadingBox";
@@ -29,10 +29,12 @@ const AccountManagement: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [role, setRole] = useState('')
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [role, setRole] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+
 
 
   const toggleForm = () => setShowForm(!showForm);
@@ -72,22 +74,27 @@ const submitHandler = async (e: React.SyntheticEvent) => {
     toast.error(getError(err as ApiError))
   }
   toast.success("New User has successfully been created")
+
 }
+
+const filteredAccounts = AccountsInfo?.filter((account) => {
+  const searchTermLower = searchTerm.toLowerCase();
+  return [
+    account.name.toLowerCase().includes(searchTermLower),
+    account.email.toLowerCase().includes(searchTermLower),
+    account.phone.toLowerCase().includes(searchTermLower),
+    account.role.toLowerCase().includes(searchTermLower),
+  ].some((match) => match); // Check if at least one field matches
+});
 
   return (
     <Container fluid className="admin-page-container">
       <Row>
-        <Col md={2}>
           <AdminSidebar />
-        </Col>
         <Col>
           <Row>
-            <h1>Account Management</h1>
-            {!showForm && (
-              <Button variant="primary" onClick={toggleForm} className="NewUserButton">
-                Create new User
-              </Button>
-            )}
+            <h2>Account Management</h2>
+            
             {showForm && (
               <Form onSubmit={submitHandler}>
                 <Form.Group className="mt-2" controlId="formUsername">
@@ -174,25 +181,58 @@ const submitHandler = async (e: React.SyntheticEvent) => {
             )}
             {/* Ensure AccountCard is updated to accept UserInfo if necessary */}
           </Row>
-          <Row className="mt-5">
-            {isAccountsLoading || isLoadingCreateAccount ? (
-              <>
-                <LoadingBox /> <div>Loading Accounts...</div>
-              </>
-            ) : AccountError || AccountCreationError ? (
-              <>
-                <MessageBox variant="danger">
-                  {getError(AccountError as ApiError)}
-                  {getError(AccountCreationError as ApiError)}
-                </MessageBox>
-              </>
-            ) : AccountsInfo ? (
-              <div className="flex-space-evenly">
-                {AccountsInfo?.map((account: UserInfo) => (
-                  <AccountCard key={account._id} accountData={account} onUpdateSuccess={refetch} />
-                ))}
-              </div>
-            ) : null}
+          <Row className="mt-3">
+          {isAccountsLoading || isLoadingCreateAccount ? (
+    <>
+      <LoadingBox />
+      <div>Loading Accounts...</div>
+    </>
+  ) : AccountError || AccountCreationError ? (
+    <>
+      <MessageBox variant="danger">
+        {getError(AccountError as ApiError)}
+        {getError(AccountCreationError as ApiError)}
+      </MessageBox>
+    </>
+  ) : AccountsInfo ? (
+    <div className="">
+        {/* Search input */}
+        <div className="input-container">
+        <input
+          className="input"
+          id="SearchTableInput"
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <span className="icon2"> 
+    <svg width="19px" height="19px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="1" d="M14 5H20" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path opacity="1" d="M14 8H17" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> <path opacity="1" d="M22 22L20 20" stroke="#000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+  </span>
+          </div>
+
+      <Table className="mt-3" striped bordered hover size="sm">
+        <thead>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Role</th>
+          <th>Action</th>
+        </thead>
+        <tbody>
+          {filteredAccounts?.map((account: UserInfo) => (
+            <AccountCard key={account._id} accountData={account} onUpdateSuccess={refetch} />
+          ))}
+        </tbody>
+      </Table>
+    </div>
+  ) : null}
+        {!showForm && (
+              <Button variant="primary" onClick={toggleForm} className="mt-5">
+                Create new User
+              </Button>
+            )}
           </Row>
         </Col>
       </Row>

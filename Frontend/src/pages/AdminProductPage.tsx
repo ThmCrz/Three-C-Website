@@ -183,9 +183,7 @@ const stockLevels = suggestStockLevels(product || {} as Product, orders || [] as
     {getError(error as ApiError)}
   </MessageBox>
 ) : stockLevels.some(stockLevel => stockLevel.minimumStockLevel === 0) ? (
-  <MessageBox variant="warning">
-    Not enough Order Data for
-   </MessageBox>
+  null
 ) : (
   <>
     <ListGroup>

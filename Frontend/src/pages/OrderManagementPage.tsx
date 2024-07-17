@@ -103,6 +103,7 @@ export default function OrderManagementPage() {
                 {userInfo.isAdmin ? (
                   <>
                   <Button
+                  variant="danger"
                   onClick={cancelOrderHandler}
                   className="mx-2"
                   disabled={order.status !== 1}
@@ -112,6 +113,7 @@ export default function OrderManagementPage() {
                 <FaArrowLeft />
                 <Button
                   onClick={updateStatusHandler}
+                  variant="success"
                   className="mx-2"
                   disabled={order.status !== 1}
                 >
@@ -120,6 +122,7 @@ export default function OrderManagementPage() {
                 <FaArrowRight />
                 {order.paymentMethod === "Cash On Delivery" ? (
                   <Button
+                    variant="primary"
                     onClick={updateStatusHandler}
                     className="mx-2"
                     disabled={order.status !== 2}
@@ -128,6 +131,7 @@ export default function OrderManagementPage() {
                   </Button>
                 ) : (
                   <Button
+                    variant="primary"
                     onClick={updateStatusHandler}
                     className="mx-2"
                     disabled={order.status !== 2 || !order.isPaid}
@@ -144,6 +148,7 @@ export default function OrderManagementPage() {
 
                 <FaArrowRight />
                 <Button
+                  variant="warning"
                   onClick={updateStatusHandler}
                   className="mx-2"
                   disabled={order.status !== 3}
@@ -159,6 +164,7 @@ export default function OrderManagementPage() {
                 
                 {order.paymentMethod === "Cash On Delivery" ? (
                   <Button
+                    variant="success"
                     onClick={completeOrderHandler}
                     className="mx-2"
                     disabled={order.status !== 4}
@@ -167,6 +173,7 @@ export default function OrderManagementPage() {
                   </Button>
                 ) : (
                   <Button
+                    variant="success"
                     onClick={completeOrderHandler}
                     className="mx-2"
                     disabled={order.status !== 4}
@@ -178,7 +185,7 @@ export default function OrderManagementPage() {
               {order.status === -1 ? (
                 <div className="mt-3 mb-0">
                 <MessageBox variant="danger">
-                  Order has been Canceled By The Admin
+                  Order has been Canceled By [Manager] {userInfo.name}
                 </MessageBox>
                 </div>
               ) : order.status === 5 ? (
@@ -200,7 +207,7 @@ export default function OrderManagementPage() {
               </Card.Text>
               {order.status === -1 ? (
                 <MessageBox variant="danger">
-                  Order has been Canceled By The Admin
+                  Order has been Canceled By [Manager] {userInfo.name}
                 </MessageBox>
               ) : order.isPaid ? (
                 <MessageBox variant="success">

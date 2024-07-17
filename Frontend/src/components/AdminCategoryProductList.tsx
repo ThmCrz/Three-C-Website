@@ -12,7 +12,7 @@ const CategoryProductList: React.FC<CategoryProductListProps> = ({ products, cat
 
   return (
     <div>
-      <h2 className="Category" id={category}>{category}</h2>
+      <h3 className="Category" id={category}>{category}</h3>
       <AdminProductCardList products={filteredProducts} />
     </div>
   );

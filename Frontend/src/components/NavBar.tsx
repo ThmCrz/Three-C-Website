@@ -115,32 +115,41 @@ function CustomNavBar() {
               <Nav.Item className="d-flex align-items-center">
                 {products && (
                   <Select
-                  className="yourSelectClass"
-  options={products.map((product) => ({
-    value: product.name,
-    label: (
-      <div>
-        <img src={product.image} alt={product.name} width="50px" height="50px" />
-        <span>{product.name}</span>
-      </div>
-    ),
-  }))}
-  placeholder="Search"
-  onChange={(selected) => {
-    if (selected) {
-      const selectedProduct = products.find(
-        (product) => product.name === selected.value
-      );
-      if (selectedProduct) {
-        if(location.pathname === "/InventoryManagementPage"){
-          navigate(`/product/${selectedProduct.slug}/AdminProductPage`);
-        }else{
-          navigate(`/product/${selectedProduct.slug}`);
-        }
-      }
-    }
-  }}
-/>
+                    className="yourSelectClass"
+                    options={products.map((product) => ({
+                      value: product.name,
+                      label: (
+                        <div>
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            width="50px"
+                            height="50px"
+                          />
+                          <span>{product.name}</span>
+                        </div>
+                      ),
+                    }))}
+                    placeholder="Search"
+                    onChange={(selected) => {
+                      if (selected) {
+                        const selectedProduct = products.find(
+                          (product) => product.name === selected.value
+                        );
+                        if (selectedProduct) {
+                          if (
+                            location.pathname === "/InventoryManagementPage"
+                          ) {
+                            navigate(
+                              `/product/${selectedProduct.slug}/AdminProductPage`
+                            );
+                          } else {
+                            navigate(`/product/${selectedProduct.slug}`);
+                          }
+                        }
+                      }
+                    }}
+                  />
                 )}
               </Nav.Item>
             </Nav>
@@ -181,7 +190,7 @@ function CustomNavBar() {
                     <Link className="dropdown-item" to="/OrdersDeliveryPage">
                       Delivery Dashboard
                     </Link>
-                  ):(
+                  ) : (
                     <Link className="dropdown-item" to="/dashboard">
                       User Dashboard
                     </Link>

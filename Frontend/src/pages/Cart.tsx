@@ -97,12 +97,12 @@ export default function CartPage() {
                     <Col md={2}>
                       <Link to={`/Product/${item.slug}`}>{item.name}</Link>
                     </Col>
-                    <Col md={3}>
+                    <Col md={3} className="cartButtons">
                       <Button
                         onClick={() =>
                           updateCartHandler(item, item.quantity - 1)
                         }
-                        variant="light"
+                        variant="warning"
                         disabled={item.quantity === 1}
                       >
                         <i className="fas fa-minus-circle"></i>
@@ -165,7 +165,7 @@ export default function CartPage() {
                         onClick={() =>
                           updateCartHandler(item, item.quantity + 1)
                         }
-                        variant="light"
+                        variant="success"
                         disabled={item.quantity === item.countInStock}
                       >
                         <i className="fas fa-plus-circle"></i>
@@ -174,7 +174,7 @@ export default function CartPage() {
                     <Col>₱{item.price}</Col>
                     <Col>
                       <Button
-                        variant="light"
+                        variant="danger"
                         onClick={() => removeItemHandler(item)}
                       >
                         <i className="fas fa-trash"></i>

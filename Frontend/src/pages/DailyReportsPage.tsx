@@ -92,11 +92,9 @@ export default function DailyReportsPage() {
         <title>Reports Page</title>
       </Helmet>
       <Row>
-      <Col className="hide-on-print" md={2}>
           <AdminSidebar/>
-        </Col>
         <Col>
-        <h1 className="hide-on-print">Date to Reports</h1>
+        <h2 className="hide-on-print">Date to Reports</h2>
       <div className="hide-on-print">
         <DatePicker
           selected={startDate}

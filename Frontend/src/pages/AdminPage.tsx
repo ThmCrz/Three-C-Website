@@ -185,13 +185,9 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
         <title>Admin Dashboard</title>
       </Helmet>
       <Row>
-        {/* Sidebar */}
-        <Col md={2}>
           <AdminSidebar />
-        </Col>
-
         <Col fluid className="mt-3">
-          <h1>Store Management Admin Dashboard</h1>
+          <h2>Store Management Admin Dashboard</h2>
 
           <Row className="mt-5">
             <Nav variant="tabs" className="mt-3">
@@ -216,7 +212,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
               
             </Nav>
             {activeChart === "lineChart" && (
-              <Col md={12} className="border-0 equal-height-column">
+              <Col className="border-0 equal-height-column">
                 <Card>
                   <Card.Body>
                     <Card.Title>Revenue Overview</Card.Title>
@@ -261,7 +257,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
             )}
 
             {activeChart === "barChart" && (
-              <Col md={12} className="border-0 equal-height-column">
+              <Col className="border-0 equal-height-column">
                 <Card>
                   <Card.Body>
                     <Card.Title>Sales Overview</Card.Title>
@@ -302,10 +298,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
                 </Card>
               </Col>
             )}
-            
-          </Row>
-
-          <Row className="mt-3">
+            <Col>
             <Card>
               <Card.Body>
                 <Card.Title>Weekly Orders History</Card.Title>
@@ -459,6 +452,7 @@ const currentWeekSetStates = (filteredWeekOrders: Order[]) => {
                 </Card.Text>
               </Card.Body>
             </Card>
+          </Col>
           </Row>
         </Col>
       </Row>

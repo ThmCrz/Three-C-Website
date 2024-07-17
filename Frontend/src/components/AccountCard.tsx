@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { UserInfo } from '../types/User';
-import Card from 'react-bootstrap/Card'; // Import Card from react-bootstrap
-import { Button, Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import { ApiError } from '../types/ApiError';
-import { getError } from '../types/Utils';
-import { useEmployeeAccountDetailsMutation } from '../hooks/UserHooks';
-import LoadingBox from './LoadingBox';
-import MessageBox from './MessageBox';
+import React, { useState } from "react";
+import { UserInfo } from "../types/User";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { ApiError } from "../types/ApiError";
+import { getError } from "../types/Utils";
+import { useEmployeeAccountDetailsMutation } from "../hooks/UserHooks";
+import LoadingBox from "./LoadingBox";
+import MessageBox from "./MessageBox";
 
 type AccountDisplayProps = {
   accountData: UserInfo;
-  onUpdateSuccess: () => void; 
+  onUpdateSuccess: () => void;
 };
 
-
-const AccountCard: React.FC<AccountDisplayProps> = ({ accountData, onUpdateSuccess }) => {
-  
-  const [isEditingEmployeeDetails, setisEditingEmployeeDetails] = useState(false);
+const AccountCard: React.FC<AccountDisplayProps> = ({
+  accountData,
+  onUpdateSuccess,
+}) => {
+  const [isEditingEmployeeDetails, setIsEditingEmployeeDetails] = useState(false);
   const [name, setName] = useState(accountData.name);
   const [email, setEmail] = useState(accountData.email);
   const [phone, setPhone] = useState(accountData.phone);
@@ -31,52 +31,63 @@ const AccountCard: React.FC<AccountDisplayProps> = ({ accountData, onUpdateSucce
   } = useEmployeeAccountDetailsMutation();
 
   const submitHandler = async (e: React.SyntheticEvent) => {
-  e.preventDefault();
-  
-  try {
-    await UpdateAccountDetails({
-      _id,
-      name,
-      email,
-      phone,
-      role,
-    });
-    toast.success("User Details Updated");
-    setisEditingEmployeeDetails(false);
-    onUpdateSuccess(); // Call the function passed from the parent component
-  } catch (err) {
-    toast.error(getError(err as ApiError));
-  }
-};
-  
+    e.preventDefault();
+
+    try {
+      await UpdateAccountDetails({
+        _id,
+        name,
+        email,
+        phone,
+        role,
+      });
+      toast.success("User Details Updated");
+      setIsEditingEmployeeDetails(false);
+      onUpdateSuccess(); // Call the function passed from the parent component
+    } catch (err) {
+      toast.error(getError(err as ApiError));
+    }
+  };
+
   return (
     <>
-    {isAccountDetailsLoading ? (
-      <LoadingBox />
-    ) : updateAccountDetailsError ? (
-      <MessageBox variant="danger">{getError(updateAccountDetailsError as ApiError)}</MessageBox>
-    ):(
-<Card className="Card AccountCard">
-        <Card.Body>
-          <Card.Title>{accountData.name}</Card.Title>
-          <Card.Text>
-            Email: <br /> {accountData.email}
-          </Card.Text>
-          <Card.Text>
-            Phone: <br /> {accountData.phone}
-          </Card.Text>
-          <Card.Text>
-            Role: <br />
-            {accountData.role}
-          </Card.Text>
-          {!isEditingEmployeeDetails ? (
-            <Button
-              className="NewUserButton"
-              onClick={() => setisEditingEmployeeDetails(true)}
-            >
+      {isAccountDetailsLoading ? (
+        <LoadingBox />
+      ) : updateAccountDetailsError ? (
+        <MessageBox variant="danger">
+          {getError(updateAccountDetailsError as ApiError)}
+        </MessageBox>
+      ) : (
+        <tr>
+        <td>{accountData._id}</td>
+        <td>{accountData.name}</td>
+        <td>{accountData.email}</td>
+        <td>{accountData.phone}</td>
+        <td>{accountData.role}</td>
+        <td>{!isEditingEmployeeDetails ? (
+          <>
+          <Button
+          className=""
+          variant="success"
+          onClick={() => setIsEditingEmployeeDetails(true)}
+          >
               Edit
             </Button>
+            <span> || </span>
+          <Button
+          className=""
+          variant="danger"
+          onClick={() => setIsEditingEmployeeDetails(true)}
+          >
+              Delete
+            </Button>
+            </>
           ) : (
+            <Modal show={isEditingEmployeeDetails} onHide={() => setIsEditingEmployeeDetails(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Employee Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <Form onSubmit={submitHandler}>
               <Form.Group className="mt-2" controlId="formUsername">
                 <Form.Label>Username</Form.Label>
@@ -84,7 +95,6 @@ const AccountCard: React.FC<AccountDisplayProps> = ({ accountData, onUpdateSucce
                   type="text"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
-                  
                 />
               </Form.Group>
 
@@ -94,7 +104,6 @@ const AccountCard: React.FC<AccountDisplayProps> = ({ accountData, onUpdateSucce
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
-                  
                 />
               </Form.Group>
 
@@ -104,14 +113,12 @@ const AccountCard: React.FC<AccountDisplayProps> = ({ accountData, onUpdateSucce
                   type="tel"
                   onChange={(e) => setPhone(e.target.value)}
                   value={phone}
-                  
                 />
               </Form.Group>
 
               <Form.Group className="mt-2 mb-2" controlId="formRole">
                 <Form.Label>Role</Form.Label>
                 <Form.Select
-                  
                   onChange={(e) => setRole(e.target.value)}
                   value={role}
                 >
@@ -123,24 +130,19 @@ const AccountCard: React.FC<AccountDisplayProps> = ({ accountData, onUpdateSucce
                 </Form.Select>
               </Form.Group>
 
-              <Button  className="NewUserButton" variant="primary" type="submit">
+              <Button variant="success" type="submit">
                 Submit
               </Button>
-              <Button
-               className="NewUserButton"
-                variant="primary"
-                onClick={() => setisEditingEmployeeDetails(false)}
-              >
+              <span> || </span>
+              <Button variant="danger" onClick={() => setIsEditingEmployeeDetails(false)}>
                 Cancel
               </Button>
             </Form>
-          )}
-          {/* <Button className="NewUserButton" onClick={deleteHandler} disabled={isDeleting}>{isDeleting? ("Removing..."):("Remove Product")}</Button> */}
-        </Card.Body>
-      </Card>
-    )
-    }
-      
+          </Modal.Body>
+        </Modal>
+          )}</td>
+          </tr>
+      )}
     </>
   );
 };

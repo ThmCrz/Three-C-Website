@@ -1,4 +1,4 @@
-import { Button, Form } from "react-bootstrap";
+import { Card, Button, Form } from "react-bootstrap";
 import { redirect, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useEmail from "../hooks/NodeMailerHook";
@@ -94,7 +94,7 @@ if (password === ConfirmPassword) {
 
   // Render
   return (
-    <div>
+    <Card className="small-container resetPassword">
       <h1>Reset Password</h1>
 
       <div>
@@ -111,11 +111,12 @@ if (password === ConfirmPassword) {
             required />
           </Form.Group>
           <Button
-            className="NewUserButton"
-            variant="primary"
+            className="bt"
+            id="bt"
             onClick={() => {handleSendButtonPress()}}
             disabled={loadingEmail}
           >
+            <span className="msg"></span>
             Send Code {loadingEmail ? (<LoadingBox/>) : null}
           </Button>
         </Form>
@@ -135,8 +136,7 @@ if (password === ConfirmPassword) {
               />
             </Form.Group>
             <Button 
-            className="NewUserButton"
-            variant="primary" 
+            className="bt"
             onClick={() => checkConfirmationCode()}
             >
               Submit
@@ -157,18 +157,23 @@ if (password === ConfirmPassword) {
             required />
             </Form.Group>
             
-            <Button className="NewUserButton" variant="primary" disabled={isLoading} onClick={() => {handlePasswordResetSubmit()}}>
+            <Button className="bt" disabled={isLoading} onClick={() => {handlePasswordResetSubmit()}}>
               Reset Password {isLoading ? (<LoadingBox/>): null}
             </Button>
           </Form>
         ) : null}
       </div>   
-      <div className="mb-3 mt-3">
+      <div className="mb-1 mt-3">
         New customer?{" "}
-        <Button onClick={() => navigate(`/signup?redirect=${redirect}`)}>Create your account</Button>
+        <Button className="button mt-2" onClick={() => navigate(`/signup?redirect=${redirect}`)}>Create your account
+          <svg fill="currentColor" viewBox="0 0 24 24" className="icon">
+    <path
+      clip-rule="evenodd"
+      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+      fill-rule="evenodd"
+    ></path>
+  </svg></Button>
       </div>
-
-
-    </div>
+    </Card>
   );
 }

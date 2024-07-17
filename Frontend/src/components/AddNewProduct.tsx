@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { ApiError } from '../types/ApiError';
 import { useCreateProductMutation } from '../hooks/ProductHooks';
@@ -69,6 +69,11 @@ const [product, setProduct] = useState({
   };
 
   return isProductFormEnabled ? (
+    <Modal show={isProductFormEnabled} onHide={() => setisProductFormEnabled(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Product Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="formProductName">
         <Form.Label>Name</Form.Label>
@@ -177,30 +182,31 @@ const [product, setProduct] = useState({
         />
       </Form.Group>
 
-      <Button
-        className="NewUserButton"
-        variant="primary"
-        type="submit"
-        disabled={isLoading}
-      >
-        {isLoading ? "Creating..." : "Submit"}
-      </Button>
-      {" | "}
-      <Button
-        className="NewUserButton"
-        variant="primary"
-        disabled={isLoading}
-        onClick={() => {
-          setisProductFormEnabled(false);
-        }}
-      >
-        Cancel
-      </Button>
+      <div className='mt-3'>
+        <Button
+          variant="success"
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? "Creating..." : "Submit"}
+        </Button>
+        {" | "}
+        <Button
+          variant="danger"
+          disabled={isLoading}
+          onClick={() => {
+            setisProductFormEnabled(false);
+          }}
+        >
+          Cancel
+        </Button>
+      </div>
     </Form>
+    </Modal.Body>
+    </Modal>
   ) : (
     <Button
-      className="NewUserButton"
-      variant="primary"
+      variant="success"
       onClick={() => {
         setisProductFormEnabled(true);
       }}

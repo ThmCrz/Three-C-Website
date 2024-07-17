@@ -10,16 +10,47 @@ import NewProductForm from '../components/AddNewProduct';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from '../components/AdminSidebar';
-
-
+import { useState } from 'react';
 
 export default function InventoryManagementPage() {
   const { data: products, isLoading, error } = useGetProductsQuery();
   const navigate = useNavigate();
+  const [SearchProductTerm, setSearchProductTerm] = useState('');
+const [selectedCategory, setSelectedCategory] = useState('');
+
+const filteredProducts = products?.filter((product) => {
+  const SearchProductTermLower = SearchProductTerm.toLowerCase();
+  const SelectedCategoryTermLower = selectedCategory.toLowerCase();
+
+  // Check if at least one search term or category is provided
+  const hasSearchTermOrCategory = SearchProductTermLower || SelectedCategoryTermLower;
+
+  // If no search terms or category selected, show all products
+  if (!hasSearchTermOrCategory) return true;
+
+  return [
+    // Search terms (include checks for product fields)
+    product._id.toLowerCase().includes(SearchProductTermLower),
+    product.brand.toLowerCase().includes(SearchProductTermLower),
+    product.category.toLowerCase().includes(SearchProductTermLower),
+    product.slug.toLowerCase().includes(SearchProductTermLower),
+  ].some((match) => match) && ( // Combine search and category filtering (if category selected)
+    !selectedCategory || // Show all categories if none selected
+    product.category.toLowerCase() === SelectedCategoryTermLower
+  );
+});
+
+  
 
   const uniqueCategories = products
-  ? Array.from(new Set(products.map(product => product.category)))
+  ? Array.from(new Set(filteredProducts?.map(product => product.category)))
   : [];
+
+  const uniqueCategoriesForDropDown = products
+  ? Array.from(new Set(products?.map(product => product.category)))
+  : [];
+
+  
 
   return isLoading ? (
     <LoadingBox />
@@ -27,35 +58,136 @@ export default function InventoryManagementPage() {
     <MessageBox variant="danger">{getError(error as ApiError)}</MessageBox>
   ) : (
     <Container fluid className="admin-page-container">
-    <div>
-      <Row>
-      <Col md={2}>
+      <div>
+        <Row>
           <AdminSidebar />
-        </Col>
-        <Col>
-        <Helmet>
-        <title>Inventory Management</title>
-      </Helmet>
-      <h1>Product Management</h1>
-      
-          <NewProductForm uniqueCategories={uniqueCategories} />
-          <div>  ||  </div>
-          <Button className="NewUserButton" onClick={() => {navigate("/SupplierOrderPage")}}>View Suggested Purchase Order</Button>
-          {products && (
-            <div>
-              {uniqueCategories.map((category) => (
-                <AdminCategoryProductList
-                  key={category}
-                  products={products as Product[]}
-                  category={category}
+          <Col>
+            <Helmet>
+              <title>Inventory Management</title>
+            </Helmet>
+            <h2>Product Management</h2>
+            <div className="Product-Management-Buttons">
+              {/* Add a drop down containing mapping the uniqueCategories */}
+
+              <div className="select">
+                {" "}
+                {/* New container for dropdown */}
+                <select
+                  className="selected"
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setSearchProductTerm("");
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    viewBox="0 0 512 512"
+                    className="arrow"
+                  >
+                    <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                  </svg>{" "}
+                  {/* Update state on change */}
+                  <option className="option" value="">
+                    All Categories
+                  </option>{" "}
+                  {/* Default option */}
+                  {uniqueCategoriesForDropDown.map((category) => (
+                    <option className="option" key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+                {/* Additional dropdown styling if needed */}
+              </div>
+
+              <div className="input-container">
+                <input
+                  className="input"
+                  id="SearchTableInput"
+                  type="text"
+                  placeholder="Search..."
+                  value={SearchProductTerm}
+                  onChange={(e) => setSearchProductTerm(e.target.value)}
                 />
-              ))}
+                <span className="icon2">
+                  <svg
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 25 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      {" "}
+                      <path
+                        opacity="1"
+                        d="M14 5H20"
+                        stroke="#000"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>{" "}
+                      <path
+                        opacity="1"
+                        d="M14 8H17"
+                        stroke="#000"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>{" "}
+                      <path
+                        d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                        stroke="#000"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>{" "}
+                      <path
+                        opacity="1"
+                        d="M22 22L20 20"
+                        stroke="#000"
+                        stroke-width="3.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>{" "}
+                    </g>
+                  </svg>
+                </span>
+              </div>
+              <div className="m-1"></div>
+              <NewProductForm uniqueCategories={uniqueCategories} />
+              <div className="m-1"></div>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  navigate("/SupplierOrderPage");
+                }}
+              >
+                View Suggested Purchase Order
+              </Button>
             </div>
-          )}
-        
-        </Col>
-      </Row>
-    </div>
+            {products && (
+              <div>
+                {uniqueCategories.map((category) => (
+                  <AdminCategoryProductList
+                    key={category}
+                    products={filteredProducts as Product[]}
+                    category={category}
+                  />
+                ))}
+              </div>
+            )}
+          </Col>
+        </Row>
+      </div>
     </Container>
   );
 }

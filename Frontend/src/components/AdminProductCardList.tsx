@@ -1,7 +1,7 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Table } from "react-bootstrap";
 import { Product } from "../types/Products";
-import AdminProductCard from "./AdminProductCard";
+import AdminProductTableRows from "./AdminProductTable";
 
 type ProductListProps = {
   products: Product[];
@@ -10,12 +10,27 @@ type ProductListProps = {
 const AdminProductCardList: React.FC<ProductListProps> = ({ products }) => {
   return (
     
-      <Row>
+      <Row className='m-5'>
+            <Table className="text-center" striped bordered hover size="sm">
+        <thead>
+          <th>ID</th>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Brand</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Suggestions</th>
+          <th>Action</th>
+        </thead>
+        <tbody>
         {products.map((product) => (
-          <Col key={product.slug} sm={6} md={4} lg={3}>
-            <AdminProductCard product={product} />
-          </Col>
+          
+            <AdminProductTableRows product={product}/>
         ))}
+        </tbody>
+      </Table>
       </Row>
    
   );

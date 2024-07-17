@@ -14,7 +14,7 @@ function App() {
         <CustomNavBar />
       </header>
       <main>
-        <Container className="mt-3">
+        <Container className="">
           <Outlet />
         </Container>
       </main>
