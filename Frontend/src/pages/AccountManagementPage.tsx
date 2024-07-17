@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
 import { useGetEmployeeAccountsQuery } from "../hooks/UserHooks";
 import AdminSidebar from "../components/AdminSidebar";
 import LoadingBox from "../components/LoadingBox";
@@ -95,7 +95,12 @@ const filteredAccounts = AccountsInfo?.filter((account) => {
           <Row>
             <h2>Account Management</h2>
             
-            {showForm && (
+           
+            <Modal show={showForm} onHide={() => setShowForm(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Edit Employee Details</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
               <Form onSubmit={submitHandler}>
                 <Form.Group className="mt-2" controlId="formUsername">
                   <Form.Label>Username</Form.Label>
@@ -167,18 +172,20 @@ const filteredAccounts = AccountsInfo?.filter((account) => {
                 </Form.Group>
 
                 <Button
-                  variant="primary"
+                  variant="success"
                   type="submit"
                   disabled={passwordError !== ""}
                 >
                   Submit
                 </Button>
                 <span> |{passwordError ? passwordError : null}| </span>
-                <Button variant="primary" onClick={toggleForm}>
+                <Button variant="danger" onClick={toggleForm}>
                   Cancel
                 </Button>
               </Form>
-            )}
+              </Modal.Body>
+        </Modal>
+           
             {/* Ensure AccountCard is updated to accept UserInfo if necessary */}
           </Row>
           <Row className="mt-3">

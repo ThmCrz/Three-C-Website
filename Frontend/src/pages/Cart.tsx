@@ -206,9 +206,8 @@ export default function CartPage() {
                 <ListGroup.Item>
                   <div className="d-grid">
                     <Button
-                      className="NewUserButton"
                       type="button"
-                      variant="primary"
+                      variant="success"
                       onClick={CheckoutHandler}
                       disabled={memoizedCartItems.length === 0}
                     >
