@@ -94,8 +94,8 @@ if (password === ConfirmPassword) {
 
   // Render
   return (
-    <Card className="small-container resetPassword">
-      <h1>Reset Password</h1>
+    <Card className="small-container resetPassword mt-4">
+      <h2>Reset Password</h2>
 
       <div>
         {PasswordResetStep === 1 ? (

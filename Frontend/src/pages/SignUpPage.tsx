@@ -96,7 +96,7 @@ export default function SignupPage() {
   }, [navigate, redirect, userInfo]);
 
   return (
-    <Container className="small-container">
+    <Container className="small-container mt-4">
       <Helmet>
         <title>Sign Up</title>
       </Helmet>

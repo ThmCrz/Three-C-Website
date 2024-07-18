@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Row, Col, Card, ListGroup, Button } from "react-bootstrap";
+import { Row, Col, Card, ListGroup, Button, Table } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
@@ -84,7 +84,7 @@ export default function OrderManagementPage() {
       <Helmet>
         <title>Order {orderId}</title>
       </Helmet>
-      <h1 className="my-3">Order {orderId}</h1>
+      <h2 className="mt-5">Order {orderId}</h2>
       <Row>
         <Col md={8}>
           <Card className="mb-3">
@@ -105,26 +105,26 @@ export default function OrderManagementPage() {
                   <Button
                   variant="danger"
                   onClick={cancelOrderHandler}
-                  className="mx-2"
+                  className="mx-2 hide-on-print"
                   disabled={order.status !== 1}
                 >
                   Cancel Order
                 </Button>
-                <FaArrowLeft />
+                <FaArrowLeft className="hide-on-print"/>
                 <Button
                   onClick={updateStatusHandler}
                   variant="success"
-                  className="mx-2"
+                  className="mx-2 hide-on-print"
                   disabled={order.status !== 1}
                 >
                   Confirm Order
                 </Button>
-                <FaArrowRight />
+                <FaArrowRight className="hide-on-print"/>
                 {order.paymentMethod === "Cash On Delivery" ? (
                   <Button
                     variant="primary"
                     onClick={updateStatusHandler}
-                    className="mx-2"
+                    className="mx-2 hide-on-print"
                     disabled={order.status !== 2}
                   >
                     Order Prepared
@@ -133,7 +133,7 @@ export default function OrderManagementPage() {
                   <Button
                     variant="primary"
                     onClick={updateStatusHandler}
-                    className="mx-2"
+                    className="mx-2 hide-on-print"
                     disabled={order.status !== 2 || !order.isPaid}
                   >
                     {!order.isPaid ? (
@@ -146,16 +146,16 @@ export default function OrderManagementPage() {
                   </Button>
                 )}
 
-                <FaArrowRight />
+                <FaArrowRight className="hide-on-print"/>
                 <Button
                   variant="warning"
                   onClick={updateStatusHandler}
-                  className="mx-2"
+                  className="mx-2 hide-on-print"
                   disabled={order.status !== 3}
                 >
                   Order out for Delivery
                 </Button>
-                <FaArrowRight />
+                <FaArrowRight className="hide-on-print" />
                 </>
                 ):(
 <></>
@@ -166,7 +166,7 @@ export default function OrderManagementPage() {
                   <Button
                     variant="success"
                     onClick={completeOrderHandler}
-                    className="mx-2"
+                    className="mx-2 hide-on-print"
                     disabled={order.status !== 4}
                   >
                     Order Delivered And Paid
@@ -175,7 +175,7 @@ export default function OrderManagementPage() {
                   <Button
                     variant="success"
                     onClick={completeOrderHandler}
-                    className="mx-2"
+                    className="mx-2 hide-on-print"
                     disabled={order.status !== 4}
                   >
                     Order Delivered
@@ -183,13 +183,13 @@ export default function OrderManagementPage() {
                 )}
               </div>
               {order.status === -1 ? (
-                <div className="mt-3 mb-0">
+                <div className="mt-3 mb-0 hide-on-print">
                 <MessageBox variant="danger">
                   Order has been Canceled By [Manager] {userInfo.name}
                 </MessageBox>
                 </div>
               ) : order.status === 5 ? (
-                <div className="mt-3 mb-0">
+                <div className="mt-3 mb-0 hide-on-print">
                   <MessageBox variant="success">
                     Order has been Delivered, Delivered At: {order.deliveredAt}
                   </MessageBox>
@@ -206,20 +206,47 @@ export default function OrderManagementPage() {
                 <strong>Method:</strong> {order.paymentMethod}
               </Card.Text>
               {order.status === -1 ? (
-                <MessageBox variant="danger">
+                <MessageBox className="hide-on-print" variant="danger">
                   Order has been Canceled By [Manager] {userInfo.name}
                 </MessageBox>
               ) : order.isPaid ? (
-                <MessageBox variant="success">
+                <MessageBox className="hide-on-print" variant="success">
                   Paid at {order.paidAt}
                 </MessageBox>
               ) : (
-                <MessageBox variant="warning">Not Paid</MessageBox>
+                <MessageBox className="hide-on-print" variant="warning">Not Paid</MessageBox>
               )}
             </Card.Body>
           </Card>
 
-          <Card className="mb-3">
+          <Table className="text-center show-on-print" striped bordered hover size="sm">
+          <thead>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+        </thead>
+        <tbody>
+        {order.orderItems.map((item) => (
+          <tr>
+            <td>{item._id}</td>
+            <td>{item.name}</td>
+            <td>{item.quantity}</td>
+            <td>₱{item.price}</td>
+            <td>₱{item.quantity * item.price}</td>
+          </tr>      
+                ))}
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colSpan={4}>Grand Total</td>
+          <td>₱{order.itemsPrice.toFixed(2)}</td>
+        </tr>
+        </tfoot>
+          </Table>
+          
+          <Card className="mb-3 hide-on-print" >
             <Card.Body>
               <Card.Title>Items</Card.Title>
               <ListGroup variant="flush">
@@ -285,6 +312,7 @@ export default function OrderManagementPage() {
                   </Row>
                 </ListGroup.Item>
               </ListGroup>
+              <Button className="hide-on-print" variant="primary" onClick={print}>Print Reciept</Button>
             </Card.Body>
           </Card>
         </Col>

@@ -264,9 +264,16 @@ margin: 1%
   color: black;
 }
 
+.show-on-print {
+  display: none;
+}
+
 @media print {
   .hide-on-print {
     display: none;
+  }
+  .show-on-print {
+    display: inline-block;
   }
 }
 
@@ -773,9 +780,11 @@ margin: 1%
   background-color: #2a2f3b;
   width: 150px;
   font-size: 15px;
+  color: white;
 }
 .option:hover {
   background-color: #323741;
+  color: white;
 }
 
 .dropdown-menu {
@@ -792,4 +801,9 @@ margin: 1%
   display:flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.text-black{
+  color: black;
+  background-color: white;
 }

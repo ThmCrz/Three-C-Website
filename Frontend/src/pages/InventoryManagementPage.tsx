@@ -99,7 +99,6 @@ const filteredProducts = products?.filter((product) => {
                     </option>
                   ))}
                 </select>
-                {/* Additional dropdown styling if needed */}
               </div>
 
               <div className="input-container">

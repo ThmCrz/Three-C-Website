@@ -62,7 +62,7 @@ export default function SigninPage() {
   }, [navigate, redirect, userInfo]);
 
   return (
-    <Card className="small-container">
+    <Card className="small-container mt-4">
       <Helmet>
         <title>Sign In</title>
       </Helmet>
@@ -86,9 +86,8 @@ export default function SigninPage() {
         </Form.Group>
         <div className="main_div">
           <Button className="signUpButton" disabled={isLoading} type="submit">
-            Sign In
+          {isLoading ? (<LoadingBox />):("Sign In")}
           </Button>
-          {isLoading && <LoadingBox />}
         </div>
       </Form>
       <div className="OthersigninButtons mt-4">
