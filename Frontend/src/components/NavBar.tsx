@@ -47,7 +47,7 @@ function CustomNavBar() {
   const navigate = useNavigate();
 
 
-  const shouldHideNav = location.pathname !== "/" && location.pathname !== "/InventoryManagementPage";
+  const shouldHideNav = location.pathname !== "/" && location.pathname !== "/InventoryManagementPage" || userInfo.role === "Employee";
 
   return (
     <>
@@ -189,6 +189,10 @@ function CustomNavBar() {
                   ) : userInfo.role === "Delivery" ? (
                     <Link className="dropdown-item" to="/OrdersDeliveryPage">
                       Delivery Dashboard
+                    </Link>
+                  ) : userInfo.role === "Employee" ? (
+                    <Link className="dropdown-item" to="/OrdersDeliveryPage">
+                      Employee Dashboard
                     </Link>
                   ) : (
                     <Link className="dropdown-item" to="/dashboard">
