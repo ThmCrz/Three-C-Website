@@ -241,7 +241,7 @@ export default function OrderManagementPage() {
         <tfoot>
         <tr>
           <td colSpan={4}>Grand Total</td>
-          <td>₱{order.itemsPrice.toFixed(2)}</td>
+          <td>₱{order.totalPrice.toFixed(2)}</td>
         </tr>
         </tfoot>
           </Table>
