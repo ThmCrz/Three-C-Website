@@ -43,19 +43,19 @@ export const usePayOrderMutation = () =>
 
 export const useOrderStatusMutation = () =>
    useMutation({
-     mutationFn: async ( Id: string ) =>
+     mutationFn: async ( id: string ) =>
        (
          await apiClient.put<{ message: string; order: Order }>(
-           `api/orders/${Id}/status`,
+           `api/orders/${id}/status`,
          )
        ).data,
    })
 export const useCancelOrderStatusMutation = () =>
    useMutation({
-     mutationFn: async ( Id: string ) =>
+     mutationFn: async ( id: string ) =>
        (
          await apiClient.put<{ message: string; order: Order }>(
-           `api/orders/${Id}/cancel`,
+           `api/orders/${id}/cancel`,
          )
        ).data,
    })
@@ -63,10 +63,10 @@ export const useCancelOrderStatusMutation = () =>
 
 export const useOrderDeliveredMutation = () =>
    useMutation({
-     mutationFn: async ( Id: string ) =>
+     mutationFn: async ( id: string ) =>
        (
          await apiClient.put<{ message: string; order: Order }>(
-           `api/orders/${Id}/completed`,
+           `api/orders/${id}/completed`,
          )
        ).data,
    })
@@ -90,5 +90,21 @@ useMutation({
       )
     ).data,
 })
+
+export const useOrderOfficialReceiptNumberMutation = () =>
+  useMutation({
+    mutationFn: async ({ 
+      id, 
+      officialReceiptNumber,
+    }: { 
+      id: string; 
+      officialReceiptNumber: string; 
+    }) =>
+        (
+          await apiClient.put<{ message: string; order: Order }>(`api/orders/${id}/saveOfficialRecieptNumber`,{ 
+            officialReceiptNumber, 
+          })
+        ).data
+      });
 
 

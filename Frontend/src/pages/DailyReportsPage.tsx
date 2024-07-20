@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Order } from '../types/Order';
 import { useGetOrdersQuery } from "../hooks/OrderHooks";
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 // import LoadingBox from '../components/LoadingBox';
 // import MessageBox from '../components/MessageBox';
@@ -21,6 +21,7 @@ export default function DailyReportsPage() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [uniqueItems, setUniqueItems] = useState<cartItem[]>([]);
+
 
  const handleDateChange = (dates: [Date | null, Date | null]) => {
   const [start, end] = dates;
@@ -117,11 +118,57 @@ export default function DailyReportsPage() {
         </tr>
       </tbody>
       <br />
-      <h3>Items Ordered By Customers</h3>
     </Table>
-    {/* ... */}
-    {uniqueItems.length > 0 ? (
-      <Table striped bordered>
+    {filteredOrders.length > 0 && (
+      <>
+      <h3>Customer Orders</h3>
+      <Table className="mt-3" striped bordered hover size="sm">
+        <thead>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Payment Method</th>
+          <th>Total</th>
+          <th>Paid</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>
+          {filteredOrders.map((order => (
+            <tr>
+            <td>{order._id}</td>
+            <td>{order.createdAt.substring(0, 10)}</td>
+            <td>{order.paymentMethod}</td>
+            <td>₱{order.itemsPrice}</td>
+            <td>{order.isPaid ? ("Yes"):("no")}</td>
+            <td><Button
+                            type="button"
+                            variant="light"
+                            onClick={() => {
+                              window.open(`/OrderManagementPage/${order._id}`);
+                            }}
+                          >
+                            Details
+                          </Button></td>
+          </tr>
+      )))}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colSpan={3}></td>
+            <td>₱{filteredOrders.reduce((acc, order) => acc + order.itemsPrice, 0)}</td>
+            <td colSpan={2}>Grand Total</td>
+            </tr>
+            <tr>
+            <td colSpan={3}></td>
+            <td>₱{filteredOrders.filter(order => order.isPaid).reduce((acc, order) => acc + order.itemsPrice, 0)}</td>  
+            <td colSpan={2}>Paid Total</td>  
+        </tr>
+        </tfoot>
+      </Table>
+      </>
+    )}
+    {uniqueItems.length > 0 ? (<>
+        <h3>Items Ordered By Customers</h3>
+      <Table className="mt-3" striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Item ID</th>
@@ -139,6 +186,7 @@ export default function DailyReportsPage() {
           ))}
         </tbody>
       </Table>
+          </>
     ) : (
       <p>No orders found.</p>
     )}

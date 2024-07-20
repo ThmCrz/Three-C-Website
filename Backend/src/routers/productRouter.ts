@@ -2,6 +2,8 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import { productModel } from "./productModel";
 import { isAuth } from "../Utils";
+import { Types } from "mongoose";
+
 
 export const productRouter = express.Router();
 
@@ -11,23 +13,44 @@ productRouter.post(
   isAuth,
   asyncHandler(async (req, res) => {
     try {
-      const newProduct = await productModel.create({
+      // Define the base product data
+      const productData: {
+        name: string;
+        slug: string;
+        image: string;
+        category: string;
+        brand: string;
+        price: number;
+        countInStock: number;
+        description: string;
+        _id?: string; // Optional _id field
+      } = {
         name: req.body.name,
-        slug: req.body.name.replace(/\s+/g, "-").toLowerCase(),
-        image: req.body.image || "No Image Provided",
-        category: req.body.category || "No Category",
-        brand: req.body.brand || "No brand Provided",
+        slug: req.body.name.replace(/\s+/g, '-').toLowerCase(),
+        image: req.body.image || 'No Image Provided',
+        category: req.body.category || 'No Category',
+        brand: req.body.brand || 'No brand Provided',
         price: req.body.price,
         countInStock: req.body.countInStock || 0,
-        description: req.body.description || "No description Provided",
-      });
+        description: req.body.description || 'No description Provided',
+      };
+
+      // Conditionally add _id if it is not an empty string
+      if (req.body._id && req.body._id.trim() !== '') {
+        productData._id = req.body._id;
+      }
+
+      const newProduct = await productModel.create(productData);
 
       res.json(newProduct);
     } catch (error) {
-      res.status(500).json({ message: "Internal Server Error" });
+      console.error('Error creating new product:', error);
+      res.status(500).json({ message: 'Internal Server Error'});
     }
   })
 );
+
+
 
 productRouter.get(
   "/",
@@ -101,50 +124,79 @@ productRouter.get(
   );
 
   productRouter.put(
-  "/DeductQuantityFromOrder",
-  isAuth,
-  asyncHandler(async (req, res) => {
-    if (req.body.orderItems.length === 0) {
-      res.status(400).send({ message: 'Cart is empty' });
-    } else {
-      try {
-        const orderItems = req.body.orderItems;
-        for (const cartItem of orderItems) {
-          const product = await productModel.findById(cartItem._id);
-          if (product) {
-            product.countInStock -= cartItem.quantity;
-            await product.save();
+    "/DeductQuantityFromOrder",
+    isAuth,
+    asyncHandler(async (req, res) => {
+      if (req.body.orderItems.length === 0) {
+        res.status(400).send({ message: 'Cart is empty' });
+      } else {
+        try {
+          const orderItems = req.body.orderItems;
+          const productUpdates = [];
+  
+          for (const cartItem of orderItems) {
+            if (!cartItem._id) {
+              console.log(`Product ID is missing in cartItem: ${JSON.stringify(cartItem._id)}`);
+              continue; // Skip this cartItem if product ID is missing
+            }
+  
+            const productId = new Types.ObjectId(cartItem._id.toString());
+            console.log(`Searching for product ID: ${productId}`);
+            const product = await productModel.findById(productId);
+            if (product) {
+              console.log(`Deducting ${cartItem.quantity} from ${product.name}`);
+              product.countInStock -= cartItem.quantity;
+              productUpdates.push(product.save());
+            } else {
+              console.log(`Product not found: ${productId}`);
+            }
           }
+  
+          await Promise.all(productUpdates);
+          res.status(200).json({ message: "Quantity deducted successfully" });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: "Internal Server Error" });
         }
-        res.status(200).json({ message: "Quantity deducted successfully" });
-      } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
       }
-    }
-  })
-);
-
-productRouter.put(
-  "/AddQuantityFromCancelledOrder",
-  isAuth,
-  asyncHandler(async (req, res) => {
-    if (req.body.orderItems.length === 0) {
-      res.status(400).send({ message: 'Cart is empty' });
-    } else {
-      try {
-        const orderItems = req.body.orderItems;
-        for (const cartItem of orderItems) {
-          const product = await productModel.findById(cartItem._id);
-          if (product) {
-            product.countInStock += cartItem.quantity;
-            await product.save();
+    })
+  );
+  
+  productRouter.put(
+    "/AddQuantityFromCancelledOrder",
+    isAuth,
+    asyncHandler(async (req, res) => {
+      if (req.body.orderItems.length === 0) {
+        res.status(400).send({ message: 'Cart is empty' });
+      } else {
+        try {
+          const orderItems = req.body.orderItems;
+          const productUpdates = [];
+  
+          for (const cartItem of orderItems) {
+            if (!cartItem._id) {
+              console.log(`Product ID is missing in cartItem: ${JSON.stringify(cartItem._id)}`);
+              continue; // Skip this cartItem if product ID is missing
+            }
+  
+            const productId = new Types.ObjectId(cartItem._id.toString());
+            console.log(`Searching for product ID: ${productId}`);
+            const product = await productModel.findById(productId);
+            if (product) {
+              console.log(`Adding ${cartItem.quantity} to ${product.name}`);
+              product.countInStock += cartItem.quantity;
+              productUpdates.push(product.save());
+            } else {
+              console.log(`Product not found: ${productId}`);
+            }
           }
+  
+          await Promise.all(productUpdates);
+          res.status(200).json({ message: "Quantity added successfully" });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: "Internal Server Error" });
         }
-        res.status(200).json({ message: "Quantity deducted successfully" });
-      } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
       }
-    }
-  })
-);
-
+    })
+  );

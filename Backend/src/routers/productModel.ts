@@ -1,8 +1,10 @@
 import { modelOptions, prop, getModelForClass } from "@typegoose/typegoose";
+import { Types } from "mongoose";
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class Product {
-  public _id?: string;
+  @prop({ default: () => new Types.ObjectId(), type: Types.ObjectId })
+  public _id?: Types.ObjectId;
 
   @prop({ required: true })
   public name!: string;

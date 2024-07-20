@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient from "../apiClient";
 import { Product } from "../types/Products"
-import { Order } from "../types/Order";
 import { cartItem } from "../types/Cart";
 
 export const  useGetProductsQuery = () =>
@@ -20,7 +19,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
       const productData = response.data;
       const updatedProduct = {
         ...productData,
-        image: `https://three-c-website.onrender.com/${productData.image}`,
+        image: `${productData.image}`,
       };
 
       return updatedProduct;
@@ -42,7 +41,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
           const productData = response.data;
           const updatedProduct = {
             ...productData,
-            image: `https://three-c-website.onrender.com/${productData.image}`,
+            image: `${productData.image}`,
           };
 
           updatedProducts.push(updatedProduct);
@@ -93,6 +92,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
     export const useCreateProductMutation = () =>
       useMutation({
         mutationFn: async ({
+          _id,
           name,
           image,
           category,
@@ -101,6 +101,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
           countInStock,
           description,
         }: {
+          _id: string,
           name: string;
           image: string;
           category: string;
@@ -111,6 +112,7 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
         }) =>
           (
             await apiClient.post<Product>("api/products/newProduct", {
+              _id,
               name,
               image,
               category,
@@ -137,35 +139,24 @@ export const useGetProductDetailsBySlugQuery = (slug: string) =>
       });
 
       export const useDeductQuantityFromOrderMutation = () =>
-  useMutation({
-    mutationFn: async ({ 
-      orderItems
-     }: { 
-      orderItems: cartItem[] 
-    }) => {
-      return (
-        await apiClient.put<{ message: string; order: Order }>(
-          `api/products/DeductQuantityFromOrder`,
-          { orderItems }
-        )
-      ).data;
-    },
-  });
-      export const useReAddQuantityFromOrderMutation = () =>
-  useMutation({
-    mutationFn: async ({ 
-      orderItems
-     }: { 
-      orderItems: cartItem[] 
-    }) => {
-      return (
-        await apiClient.put<{ message: string; order: Order }>(
-          `api/products/AddQuantityFromCancelledOrder`,
-          { orderItems }
-        )
-      ).data;
-    },
-  });
+        useMutation({
+          mutationFn: async ({ orderItems }: { orderItems: cartItem[] }) => (
+              await apiClient.put<{ message: string }>(
+                `api/products/DeductQuantityFromOrder`,
+                { orderItems }
+              )
+            ).data,  
+        });
+
+        export const useReAddQuantityFromOrderMutation = () =>
+          useMutation({
+            mutationFn: async ({ orderItems }: { orderItems: cartItem[] }) => (
+                await apiClient.put<{ message: string }>(
+                  `api/products/AddQuantityFromCancelledOrder`,
+                  { orderItems }
+                )
+              ).data,
+          });
       
 
   

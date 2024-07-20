@@ -11,7 +11,7 @@ export class User {
   public role!: string;
   @prop({ required: true, unique: true })
   public email!: string;
-  @prop({ required: true, default: false })
+  @prop({ required: true, default: true })
   public isEmailConfirmed!: boolean;
   @prop({ required: true })
   public password!: string;

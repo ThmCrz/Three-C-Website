@@ -212,15 +212,15 @@ cart.totalPrice = totalPrices
                   <ListGroup.Item>
                     <div className="d-grid">
                       <Button
-                        className="NewUserButton"
+                        variant="success"
                         type="button"
                         onClick={placeOrderHandler}
                         disabled={cart.cartItems.length === 0 || isLoading}
                       >
+                        {isLoading && <LoadingBox></LoadingBox>}
                         Place Order
                       </Button>
                     </div>
-                    {isLoading && <LoadingBox></LoadingBox>}
                   </ListGroup.Item>
                 </ListGroup>
               </Card.Body>

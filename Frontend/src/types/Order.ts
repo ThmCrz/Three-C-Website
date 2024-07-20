@@ -10,6 +10,7 @@ export type Order = {
     isPaid: boolean
     paidAt: string
     isDelivered: boolean
+    officialReceiptNumber: string
     deliveredAt: string
     itemsPrice: number
     shippingPrice: number

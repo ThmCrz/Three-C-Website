@@ -57,7 +57,7 @@ orderRouter.post(
               totalPrice: req.body.totalPrice,
               user: req.user._id,
               phone: req.body.phone,
-              status: 1
+              status: 1,
             })
             res
               .status(201)
@@ -139,6 +139,23 @@ orderRouter.put(
       const updatedOrder = await order.save();
 
       res.send({ order: updatedOrder, message: "Order Completed" })
+    } else {
+      res.status(404).send({ message: 'Order Not Found' })
+    }
+  })
+)
+
+orderRouter.put(
+  '/:id/saveOfficialRecieptNumber',
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const order = await OrderModel.findById(req.params.id)
+
+    if (order) {
+      order.officialReceiptNumber = req.body.officialReceiptNumber
+      const updatedOrder = await order.save();
+
+      res.send({ order: updatedOrder, message: "Order Official Reciept number Saved" })
     } else {
       res.status(404).send({ message: 'Order Not Found' })
     }

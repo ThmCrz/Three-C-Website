@@ -46,9 +46,7 @@ type Action =
   | { type: "SAVE_USER_DETAILS"; payload: UserDetails }
   | { type: "USER_SIGNOUT" }
   | { type: "SAVE_SHIPPING_ADDRESS"; payload: shippingAddress }
-  | { type: "SAVE_PAYMENT_METHOD"; payload: string }
-  | { type: "SAVE_USER_DETAILS_EMAIL_CONFIRM"; payload: {isEmailConfirmed: boolean;} }  
-  ;
+  | { type: "SAVE_PAYMENT_METHOD"; payload: string };
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -95,16 +93,6 @@ function reducer(state: AppState, action: Action): AppState {
         };
         return { ...state, userInfo: updatedUserInfo };
       }
-
-      case "SAVE_USER_DETAILS_EMAIL_CONFIRM": {
-  const updatedUserInfo = {
-    ...state.userInfo,
-    isEmailConfirmed: true,
-  };
-  return { ...state, userInfo: updatedUserInfo };
-}
-      
-
     case "USER_SIGNOUT":
       return {
         ...state,

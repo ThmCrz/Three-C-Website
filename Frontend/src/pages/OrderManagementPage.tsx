@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Row, Col, Card, ListGroup, Button, Table } from "react-bootstrap";
+import { Row, Col, Card, ListGroup, Button, Table, Modal, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
@@ -12,12 +12,13 @@ import {
   useGetOrderDetailsQuery,
   useOrderStatusMutation,
   useCancelOrderStatusMutation,
+  useOrderOfficialReceiptNumberMutation,
 } from "../hooks/OrderHooks";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useReAddQuantityFromOrderMutation } from "../hooks/ProductHooks";
 import { Store } from "../Store";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 export default function OrderManagementPage() {
   const {
@@ -36,11 +37,15 @@ export default function OrderManagementPage() {
     refetch,
   } = useGetOrderDetailsQuery(orderId!);
 
-  const { mutateAsync: cancelOrderStatus } = useCancelOrderStatusMutation();
+  const [ orderOfficialReceiptNumber, setOrderOfficialReceiptNumber] = useState(order?.officialReceiptNumber);
+  const [ showPrintOfficialReceiptInputModal, setShowPrintOfficialReceiptInputModal] = useState(false);
+  const [ showPrintOfficialReceiptCheckModal, setShowPrintOfficialReceiptCheckModal] = useState(false);
+
+  const { mutateAsync: cancelOrderStatus, isLoading: cancellingOrder } = useCancelOrderStatusMutation();
   const { mutateAsync: updateStatus } = useOrderStatusMutation();
   const { mutateAsync: completeOrder } = useOrderDeliveredMutation();
-  const { mutateAsync: updateProductCountInStock } =
-    useReAddQuantityFromOrderMutation();
+  const { mutateAsync: updateProductCountInStock } = useReAddQuantityFromOrderMutation();
+  const { mutateAsync: updateOrderOfficialReceiptNumber, isLoading: SavingOfficialRecieptNumber } = useOrderOfficialReceiptNumberMutation();
 
   const cancelOrderHandler = async () => {
     try {
@@ -73,6 +78,32 @@ export default function OrderManagementPage() {
     }
   };
 
+  const printOfficialReceipt = async () => {
+    if (!orderId){ 
+      toast.error("Order Id not found");
+      return;
+    }else if (!orderOfficialReceiptNumber){
+      toast.error("Official receipt Code or Number Not Found");
+      return;
+    }else if(orderOfficialReceiptNumber === ''){      
+      toast.error("Please Enter an Official receipt Code or Number");
+      return;
+    }else{
+      try {
+        await updateOrderOfficialReceiptNumber({id: orderId, officialReceiptNumber: orderOfficialReceiptNumber});
+        toast.success('Update Official Receipt Number Successful');
+        setShowPrintOfficialReceiptCheckModal(false);
+        refetch();
+        setTimeout(() => {
+          print();
+        }, 1000);
+      } catch (error) {
+        toast.error(`${error as ApiError}`);
+      }
+    }
+    } 
+  
+
   return isLoading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -99,69 +130,66 @@ export default function OrderManagementPage() {
                 {order.shippingAddress.country}
               </Card.Text>
               <div className="mx-auto d-flex justify-content-center align-items-center">
-                
                 {userInfo.isAdmin ? (
                   <>
-                  <Button
-                  variant="danger"
-                  onClick={cancelOrderHandler}
-                  className="mx-2 hide-on-print"
-                  disabled={order.status !== 1}
-                >
-                  Cancel Order
-                </Button>
-                <FaArrowLeft className="hide-on-print"/>
-                <Button
-                  onClick={updateStatusHandler}
-                  variant="success"
-                  className="mx-2 hide-on-print"
-                  disabled={order.status !== 1}
-                >
-                  Confirm Order
-                </Button>
-                <FaArrowRight className="hide-on-print"/>
-                {order.paymentMethod === "Cash On Delivery" ? (
-                  <Button
-                    variant="primary"
-                    onClick={updateStatusHandler}
-                    className="mx-2 hide-on-print"
-                    disabled={order.status !== 2}
-                  >
-                    Order Prepared
-                  </Button>
-                ) : (
-                  <Button
-                    variant="primary"
-                    onClick={updateStatusHandler}
-                    className="mx-2 hide-on-print"
-                    disabled={order.status !== 2 || !order.isPaid}
-                  >
-                    {!order.isPaid ? (
-                      <div>
-                        Order Prepared <br /> (waiting for payment)
-                      </div>
+                    <Button
+                      variant="danger"
+                      onClick={cancelOrderHandler}
+                      className="mx-2 hide-on-print display-flex-column"
+                      disabled={order.status !== 1 || cancellingOrder}
+                    >
+                      Cancel Order
+                      {cancellingOrder ? <LoadingBox/>:null}
+                    </Button>
+                    <FaArrowLeft className="hide-on-print" />
+                    <Button
+                      onClick={updateStatusHandler}
+                      variant="success"
+                      className="mx-2 hide-on-print"
+                      disabled={order.status !== 1}
+                    >
+                      Confirm Order
+                    </Button>
+                    <FaArrowRight className="hide-on-print" />
+                    {order.paymentMethod === "Cash On Delivery" ? (
+                      <Button
+                        variant="primary"
+                        onClick={updateStatusHandler}
+                        className="mx-2 hide-on-print"
+                        disabled={order.status !== 2}
+                      >
+                        Order Prepared
+                      </Button>
                     ) : (
-                      "Order Prepared"
+                      <Button
+                        variant="primary"
+                        onClick={updateStatusHandler}
+                        className="mx-2 hide-on-print"
+                        disabled={order.status !== 2 || !order.isPaid}
+                      >
+                        {!order.isPaid ? (
+                          <div>
+                            Order Prepared <br /> (waiting for payment)
+                          </div>
+                        ) : (
+                          "Order Prepared"
+                        )}
+                      </Button>
                     )}
-                  </Button>
-                )}
 
-                <FaArrowRight className="hide-on-print"/>
-                <Button
-                  variant="warning"
-                  onClick={updateStatusHandler}
-                  className="mx-2 hide-on-print"
-                  disabled={order.status !== 3}
-                >
-                  Order out for Delivery
-                </Button>
-                <FaArrowRight className="hide-on-print" />
-                </>
-                ):(
-<></>
-                )}
-                
-                
+                    <FaArrowRight className="hide-on-print" />
+                    <Button
+                      variant="warning"
+                      onClick={updateStatusHandler}
+                      className="mx-2 hide-on-print"
+                      disabled={order.status !== 3}
+                    >
+                      Order out for Delivery
+                    </Button>
+                    <FaArrowRight className="hide-on-print" />
+                  </>
+                ) : null}
+
                 {order.paymentMethod === "Cash On Delivery" ? (
                   <Button
                     variant="success"
@@ -184,9 +212,9 @@ export default function OrderManagementPage() {
               </div>
               {order.status === -1 ? (
                 <div className="mt-3 mb-0 hide-on-print">
-                <MessageBox variant="danger">
-                  Order has been Canceled By [Manager] {userInfo.name}
-                </MessageBox>
+                  <MessageBox variant="danger">
+                    Order has been Canceled By [Manager] {userInfo.name}
+                  </MessageBox>
                 </div>
               ) : order.status === 5 ? (
                 <div className="mt-3 mb-0 hide-on-print">
@@ -214,39 +242,49 @@ export default function OrderManagementPage() {
                   Paid at {order.paidAt}
                 </MessageBox>
               ) : (
-                <MessageBox className="hide-on-print" variant="warning">Not Paid</MessageBox>
+                <MessageBox className="hide-on-print" variant="warning">
+                  Not Paid
+                </MessageBox>
               )}
             </Card.Body>
           </Card>
 
-          <Table className="text-center show-on-print" striped bordered hover size="sm">
-          <thead>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Total</th>
-        </thead>
-        <tbody>
-        {order.orderItems.map((item) => (
-          <tr>
-            <td>{item._id}</td>
-            <td>{item.name}</td>
-            <td>{item.quantity}</td>
-            <td>₱{item.price}</td>
-            <td>₱{item.quantity * item.price}</td>
-          </tr>      
-                ))}
-        </tbody>
-        <tfoot>
-        <tr>
-          <td colSpan={4}>Grand Total</td>
-          <td>₱{order.totalPrice.toFixed(2)}</td>
-        </tr>
-        </tfoot>
+          <Table
+            className="text-center show-on-print"
+            striped
+            bordered
+            hover
+            size="sm"
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {order.orderItems.map((item) => (
+                <tr key={item._id}>
+                  <td>{item._id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.quantity}</td>
+                  <td>₱{item.price}</td>
+                  <td>₱{item.quantity * item.price}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={4}>Grand Total</td>
+                <td>₱{order.totalPrice.toFixed(2)}</td>
+              </tr>
+            </tfoot>
           </Table>
-          
-          <Card className="mb-3 hide-on-print" >
+
+          <Card className="mb-3 hide-on-print">
             <Card.Body>
               <Card.Title>Items</Card.Title>
               <ListGroup variant="flush">
@@ -277,7 +315,16 @@ export default function OrderManagementPage() {
         <Col md={4}>
           <Card className="mb-3 white-BG">
             <Card.Body>
-              <Card.Title>Order Summary</Card.Title>
+              <Card.Title>
+                <div className="hide-on-print">
+                  {order.officialReceiptNumber !== "" ? (
+                    <p>ORN: {order.officialReceiptNumber}</p>
+                  ) : (
+                    <p className="red">Official Receipt not Found</p>
+                  )}
+                </div>{" "}
+                Order Summary
+              </Card.Title>
               <ListGroup variant="flush">
                 <ListGroup.Item className="white-BG">
                   <Row className="white-BG">
@@ -312,11 +359,139 @@ export default function OrderManagementPage() {
                   </Row>
                 </ListGroup.Item>
               </ListGroup>
-              <Button className="hide-on-print" variant="primary" onClick={print}>Print Reciept</Button>
+            {order.paymentMethod === "PayPal" ? (
+              <div className="print-order-buttons">
+              <Button
+                className="hide-on-print"
+                variant="primary"
+                onClick={print}
+                disabled={order.isPaid}
+              >
+                Print Invoice
+              </Button>
+              {order.status >= 2 ? (
+                <Button
+                  className="hide-on-print"
+                  variant="primary"
+                  onClick={() => {
+                    setOrderOfficialReceiptNumber(
+                      order.officialReceiptNumber
+                    );
+                    setShowPrintOfficialReceiptInputModal(true);
+                  }}
+                  disabled={!order.isPaid} 
+                >
+                  Print Official Receipt
+                </Button>
+              ) : null}
+            </div>
+            ):(
+              <div className="print-order-buttons">
+                <Button
+                  className="hide-on-print"
+                  variant="primary"
+                  onClick={print}
+                >
+                  Print Invoice
+                </Button>
+                {order.status >= 5 ? (
+                  <Button
+                    className="hide-on-print"
+                    variant="primary"
+                    onClick={() => {
+                      setOrderOfficialReceiptNumber(
+                        order.officialReceiptNumber
+                      );
+                      setShowPrintOfficialReceiptInputModal(true);
+                    }}
+                  >
+                    Print Official Receipt
+                  </Button>
+                ) : null}
+              </div>
+            )}
             </Card.Body>
           </Card>
         </Col>
       </Row>
+
+      <Modal
+        show={showPrintOfficialReceiptInputModal}
+        onHide={() => setShowPrintOfficialReceiptInputModal(false)}
+      >
+        <Modal.Header>
+          <Modal.Title>Input Official Receipt Number</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mt-2 mb-3" controlId="formUsername">
+              <Form.Label>Official Reciept Number:</Form.Label>
+              <Form.Control
+                type="text"
+                defaultValue={orderOfficialReceiptNumber}
+                onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                  const target = e.target as HTMLInputElement;
+                  setOrderOfficialReceiptNumber(target.value);
+                }}
+                required
+                disabled={order.officialReceiptNumber !== ""}
+              />
+            </Form.Group>
+            <Button
+              variant="success"
+              onClick={() => {
+                setShowPrintOfficialReceiptCheckModal(true);
+                setShowPrintOfficialReceiptInputModal(false);
+              }}
+            >
+              Submit
+            </Button>
+            <span> || </span>
+            <Button
+              variant="danger"
+              onClick={() => setShowPrintOfficialReceiptInputModal(false)}
+            >
+              Cancel
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={showPrintOfficialReceiptCheckModal}
+        onHide={() => setShowPrintOfficialReceiptCheckModal(false)}
+      >
+        <Modal.Header>
+          <Modal.Title>
+            Are you Sure with the Official Receipt Number
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mt-2 mb-3" controlId="formUsername">
+              <Form.Label>Official Reciept Number:</Form.Label>
+              <Form.Control
+                type="text"
+                value={orderOfficialReceiptNumber}
+                disabled
+              />
+            </Form.Group>
+            <Button variant="success" onClick={printOfficialReceipt}>
+              {SavingOfficialRecieptNumber ? "Submitting..." : "submit"}
+            </Button>
+            <span> || </span>
+            <Button
+              variant="danger"
+              onClick={() => {
+                setShowPrintOfficialReceiptCheckModal(false);
+                setOrderOfficialReceiptNumber(order.officialReceiptNumber);
+              }}
+            >
+              Cancel
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

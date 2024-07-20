@@ -145,7 +145,7 @@ export default function ShippingAddressPage() {
           </Form.Group>
 
           <div className="mb-3">
-            <Button className="NewUserButton" variant="primary" type="submit" disabled={isLoading}>
+            <Button variant="success" type="submit" disabled={isLoading}>
               {isLoading ? "Updating..." : "Continue"}
             </Button>
           </div>

@@ -7,48 +7,45 @@ import { productRouter } from "./routers/productRouter";
 import { userRouter } from "./routers/userRouter";
 import { orderRouter } from "./routers/orderRouter";
 import { keyRouter } from "./routers/keyRouter";
-import mailRouter from "./routers/nodeMailerRouter"
-// import { seedRouter } from "./routers/seedRouter";
-
+import mailRouter from "./routers/nodeMailerRouter";
+import saveImageRouter from "./routers/cloudinaryRouter";
 
 dotenv.config();
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb+srv://Three-C-User:fG0SW4bh9InRrhHM@three-c-cluster.bxk8fom.mongodb.net/Three-C-DataBase?retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://..."; // Your MongoDB URI
 mongoose.set("strictQuery", true);
 mongoose
   .connect(MONGODB_URI)
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch(() => {
-    console.log("failed to connect to MongoDB");
-  });
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(() => console.log("Failed to connect to MongoDB"));
 
 const app = express();
+
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "http://localhost:4000", "https://three-c-website.onrender.com/"],
+    origin: ["http://localhost:5173", "http://localhost:4000", "https://three-c-website.onrender.com"],
   })
 );
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use('/api/mail', mailRouter )
-app.use('/api/products', productRouter)
-// app.use('/api/seed', seedRouter)
-app.use('/api/users', userRouter)
-app.use('/api/orders', orderRouter)
-app.use('/api/keys', keyRouter)
+// Configure body-parser to handle larger payloads
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(express.static(path.join(__dirname, '../../Frontend/dist')))
+app.use('/api/mail', mailRouter);
+app.use('/api/image', saveImageRouter);
+app.use('/api/products', productRouter);
+app.use('/api/users', userRouter);
+app.use('/api/orders', orderRouter);
+app.use('/api/keys', keyRouter);
+
+app.use(express.static(path.join(__dirname, '../../Frontend/dist')));
 app.get('*', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../../Frontend/dist/index.html'))
-})
+  res.sendFile(path.join(__dirname, '../../Frontend/dist/index.html'));
+});
 
-const PORT: number = parseInt((process.env.PORT || '4000') as string, 10);
+const PORT: number = parseInt(process.env.PORT || '4000', 10);
 
 app.listen(PORT, () => {
-  console.log(`server started at http://localhost:${PORT}`);
+  console.log(`Server started at http://localhost:${PORT}`);
 });

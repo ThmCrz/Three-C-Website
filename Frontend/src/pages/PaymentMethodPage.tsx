@@ -66,7 +66,7 @@ export default function PaymentMethodPage() {
               />
             </div>
             <div className="mb-4">
-              <Button className="mt-4 NewUserButton" type="submit" disabled={!isRadioButtonSelected}>Continue</Button>
+              <Button className="mt-4" variant="success" type="submit" disabled={!isRadioButtonSelected}>Continue</Button>
             </div>
           </Form>
         </div>

@@ -54,6 +54,8 @@ export class Order {
   public isPaid!: boolean;
   @prop()
   public paidAt!: string;
+  @prop({ default: ''})
+  public officialReceiptNumber?: string;
   @prop({ required: true, default: false })
   public isDelivered!: boolean;
   @prop()

@@ -21,6 +21,7 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
   const { mutateAsync: removeProduct, isLoading: isDeleting} = useDeleteProductMutation();
   const { data: orders, isLoading: ordersLoading} = useGetOrdersQuery();
     const [isEditingProductDetails, setIsEditingProductDetails] = useState(false);
+    const [isDeletingProductDetails, setIsDeletingProductDetails] = useState(false);
     const [_id, setId] = useState(product._id);
     const [name, setName] = useState(product.name);
     const [description, setDescription] = useState(product.description);
@@ -33,9 +34,8 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
 
 
     const deleteHandler = async () => {
-    
     try {
-      await removeProduct({id: _id});
+      await removeProduct({id: product._id});
       toast.success("Product deleted");
       window.location.reload()
     } catch (error) {
@@ -45,7 +45,6 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
     }
 
     const submitHandler = async () =>{
-        console.log("submit")
         
         try {
             await updateProductDetails({
@@ -71,17 +70,19 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
       // Calculate the total quantity sold for the single product
       const soldQuantities: { [productId: string]: number } = {};
       orders.forEach((order) => {
-        order.orderItems.forEach((orderItem) => {
-          const productId = orderItem._id;
-          const quantity = orderItem.quantity;
-          if (productId === product._id) {
-            if (soldQuantities[productId]) {
-              soldQuantities[productId] += quantity;
-            } else {
-              soldQuantities[productId] = quantity;
+        if (order.status >= 2) { // Only include orders with status >= 2
+          order.orderItems.forEach((orderItem) => {
+            const productId = orderItem._id;
+            const quantity = orderItem.quantity;
+            if (productId === product._id) {
+              if (soldQuantities[productId]) {
+                soldQuantities[productId] += quantity;
+              } else {
+                soldQuantities[productId] = quantity;
+              }
             }
-          }
-        });
+          });
+        }
       });
     
       // Calculate the minimum, optimal, and maximum stock levels for the single product
@@ -132,7 +133,7 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
           ) : stockLevels.some(
               (stockLevel) => stockLevel.minimumStockLevel === countInStock
             ) ? (
-            <MessageBox variant="warning">Minimum Stock Reached</MessageBox>
+            <MessageBox variant="warning">Minimum Stock Limit Reached</MessageBox>
           ) : stockLevels.some(
               (stockLevel) => stockLevel.minimumStockLevel > countInStock
             ) ? (
@@ -140,11 +141,11 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
           ) : stockLevels.some(
               (stockLevel) => stockLevel.maximumStockLevel < countInStock
             ) ? (
-            <MessageBox variant="danger">Over Stocked</MessageBox>
+            <MessageBox variant="warning">Over Stocked</MessageBox>
           ) : stockLevels.some(
               (stockLevel) => stockLevel.maximumStockLevel === countInStock
             ) ? (
-            <MessageBox variant="warning">Maximum Stock Reached</MessageBox>
+            <MessageBox variant="warning">Over Stock Limit Reached</MessageBox>
           ) : stockLevels.some(
               (stockLevel) =>
                 stockLevel.optimalStockLevel > countInStock ||
@@ -189,7 +190,6 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
         )}
         </td>
         <td>
-          {!isEditingProductDetails ? (
             <div className="actionButtonContainer">
             <Button
             variant="primary"
@@ -200,14 +200,15 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
           <span className="m-2">{" || "}</span>
         <Button
           variant="danger"
-          onClick={deleteHandler}
+          onClick={() => setIsDeletingProductDetails(true)}
           disabled={isDeleting}
           >
           {isDeleting ? "Deleting..." : "Delete"}
         </Button>
             </div>
-          ) : (
-            <Modal show={isEditingProductDetails} onHide={() => setIsEditingProductDetails(false)}>
+        </td>
+      </tr>
+      <Modal show={isEditingProductDetails} onHide={() => setIsEditingProductDetails(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Edit Product Details</Modal.Title>
           </Modal.Header>
@@ -321,11 +322,42 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
             </Form>
             </Modal.Body>
         </Modal>
-          )}
-            
-        </td>
-        
-      </tr>
+        <Modal show={isDeletingProductDetails} onHide={() => setIsDeletingProductDetails(false)}>
+          <Modal.Header>
+            <Modal.Title>Deleting Product</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h3>Are you sure you want to delete product</h3> 
+            <p>ID: {product._id}</p>
+            <img
+              src={product.image}
+              alt={product.name}
+              className="mx-auto d-flex align-items-center"
+              style={{ width: "100px", height: "100px", objectFit: "contain" }}
+            />
+            <p>Name: {product.name}</p>
+            <p>Brand: {product.brand}</p>
+            <p>Description: {product.description}</p>
+            <p></p>
+            <div className="mb-3">
+                <Button
+                  variant="danger"
+                  disabled={isProductUpdateLoading}
+                  onClick={deleteHandler}
+                >
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </Button>
+                {" | "}
+                <Button
+                  variant="success"
+                  onClick={() => setIsDeletingProductDetails(false)}
+                  disabled={isProductUpdateLoading}
+                >
+                  Cancel
+                </Button>
+              </div>
+          </Modal.Body>
+        </Modal>
     </>
   );
 };
