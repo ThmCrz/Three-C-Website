@@ -45,9 +45,7 @@ function CustomNavBar() {
 
   const location = useLocation();
   const navigate = useNavigate();
-
-
-  const shouldHideNav = location.pathname !== "/" && location.pathname !== "/InventoryManagementPage" || userInfo.role === "Employee";
+  const shouldHideNav = location.pathname !== "/" && location.pathname !== "/InventoryManagementPage" || userInfo?.role === "Employee";
 
   return (
     <>
@@ -178,7 +176,7 @@ function CustomNavBar() {
               </Link>
             </Nav.Item>
 
-            <Nav.Item>
+            <Nav.Item  className="hide-on-print">
               {/* User info or sign-in link */}
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
