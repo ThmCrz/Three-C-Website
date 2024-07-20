@@ -170,7 +170,7 @@ export default function OrderPage() {
                       <Row className="align-items-center">
                         <Col md={4}>
                           <img
-                            src={`../${item.image}`}
+                            src={item.image}
                             alt={item.name}
                             className="mx-auto d-flex align-items-center order-image"
                           ></img>{" "}
