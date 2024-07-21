@@ -135,7 +135,7 @@ export default function OrderManagementPage() {
                     <Button
                       variant="danger"
                       onClick={cancelOrderHandler}
-                      className="mx-2 hide-on-print display-flex-column"
+                      className="mx-2 display-flex-column hide-on-print" 
                       disabled={order.status !== 1 || cancellingOrder}
                     >
                       Cancel Order

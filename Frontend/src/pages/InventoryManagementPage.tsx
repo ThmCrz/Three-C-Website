@@ -188,8 +188,10 @@ const uniqueCategories = products
     </Container>
   );
 }else{
- return (
-   <Container fluid className="admin-page-container">
+ return isLoading ? (
+    <MessageBox variant='warning'><LoadingBox /> Loading Products</MessageBox>
+   ):(
+    <Container fluid className="admin-page-container">
      <div>
        <Row>
          <AdminSidebar />
@@ -205,7 +207,5 @@ const uniqueCategories = products
          </Col>
        </Row>
      </div>
-   </Container>
- );
-}
+   </Container>)}
 }

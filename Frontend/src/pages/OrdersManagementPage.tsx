@@ -35,7 +35,19 @@ export default function OrdersManagementPage() {
         return null; // Render an empty element when orders is undefined
       }
 
-    return (
+    return isLoading ? (
+      <>
+      <LoadingBox></LoadingBox>
+        <Row>
+          <AdminSidebar />
+          <h2 className="hide-on-print">Orders Management</h2>
+        </Row>
+      </>
+    ) : error ? (
+      <MessageBox variant="danger">{getError(error as ApiError)}</MessageBox>
+    ) : !orders ? (
+      <MessageBox variant="danger">Order Not Found</MessageBox>
+    ) : (
       <Container fluid className="admin-page-container">
         <Col>
           <Row>

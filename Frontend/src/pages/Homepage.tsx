@@ -180,5 +180,7 @@ export default function Homepage() {
     )
 }
 else{
-  return <MessageBox variant='danger'>No Products Available</MessageBox>
+  return IsLoadingHomePage ? (
+    <MessageBox className='display-flex-center'><LoadingBox /> Loading Products</MessageBox>
+   ):(<MessageBox className='display-flex-center' variant='danger'>No Products Available</MessageBox>)
 }}
