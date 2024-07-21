@@ -137,7 +137,7 @@ export default function DailyReportsPage() {
             <td>{order._id}</td>
             <td>{order.createdAt.substring(0, 10)}</td>
             <td>{order.paymentMethod}</td>
-            <td>₱{order.itemsPrice}</td>
+            <td>₱{order.totalPrice}</td>
             <td>{order.isPaid ? ("Yes"):("no")}</td>
             <td><Button
                             type="button"
@@ -154,12 +154,12 @@ export default function DailyReportsPage() {
         <tfoot>
         <tr>
             <td colSpan={3}></td>
-            <td>₱{filteredOrders.reduce((acc, order) => acc + order.itemsPrice, 0)}</td>
+            <td>₱{filteredOrders.reduce((acc, order) => acc + order.totalPrice, 0)}</td>
             <td colSpan={2}>Grand Total</td>
             </tr>
             <tr>
             <td colSpan={3}></td>
-            <td>₱{filteredOrders.filter(order => order.isPaid).reduce((acc, order) => acc + order.itemsPrice, 0)}</td>  
+            <td>₱{filteredOrders.filter(order => order.isPaid).reduce((acc, order) => acc + order.totalPrice, 0)}</td>  
             <td colSpan={2}>Paid Total</td>  
         </tr>
         </tfoot>

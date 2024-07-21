@@ -37,6 +37,7 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
     try {
       await removeProduct({id: product._id});
       toast.success("Product deleted");
+      setIsDeletingProductDetails(false);
       window.location.reload()
     } catch (error) {
       toast.error(`${error as ApiError}`);
@@ -342,7 +343,7 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
             <div className="mb-3">
                 <Button
                   variant="danger"
-                  disabled={isProductUpdateLoading}
+                  disabled={isDeleting}
                   onClick={deleteHandler}
                 >
                   {isDeleting ? "Deleting..." : "Delete"}
@@ -351,7 +352,7 @@ const AdminProductTableRows: React.FC<ProductCardProps> = ({ product }) => {
                 <Button
                   variant="success"
                   onClick={() => setIsDeletingProductDetails(false)}
-                  disabled={isProductUpdateLoading}
+                  disabled={isDeleting}
                 >
                   Cancel
                 </Button>

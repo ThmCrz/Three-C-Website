@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { ApiError } from '../types/ApiError';
 import { useCreateProductMutation } from '../hooks/ProductHooks';
 import useSaveImageData from '../hooks/CloudinaryHook';
 
-export default function NewProductForm({ uniqueCategories }: { uniqueCategories: string[] }) {
+export default function NewProductFormIfProductIsEmpty() {
 
 const { mutateAsync: createProduct, isLoading} = useCreateProductMutation()
 const { saveImage, loading } = useSaveImageData()
-const [isProductFormEnabled, setisProductFormEnabled] = useState(false);
 const [isCategoryFormEnabled, setisCategoryFormEnabled] = useState(false);
 const [imageFile, setImageFile] = useState<File | null>(null);
 const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -103,7 +102,6 @@ const [product, setProduct] = useState({
               image: cloudinaryUrl,
             });
             toast.success(`Product ${product.name} successfully Created`);
-            setisProductFormEnabled(false);
             setisCategoryFormEnabled(false);
             window.location.reload();
           } catch (uploadError) {
@@ -116,7 +114,6 @@ const [product, setProduct] = useState({
         // If no image is uploaded, just create the product
         await createProduct(product);
         toast.success(`Product ${product.name} successfully Created`);
-        setisProductFormEnabled(false);
         setisCategoryFormEnabled(false);
       }
     } catch (error) {
@@ -127,12 +124,7 @@ const [product, setProduct] = useState({
   
   
 
-  return isProductFormEnabled ? (
-    <Modal show={isProductFormEnabled} onHide={() => setisProductFormEnabled(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add Product Details</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
+  return (
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="formProductName">
         <Form.Label>Product ID</Form.Label>
@@ -184,11 +176,6 @@ const [product, setProduct] = useState({
           <option value="" disabled>
             Select category
           </option>
-          {uniqueCategories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
           <option key="New Category" value="new">
             New Category...
           </option>
@@ -265,32 +252,9 @@ const [product, setProduct] = useState({
         >
           {loading ? "Uploading Image...": isLoading ? "Creating..." : "Submit"}
         </Button>
-        {" | "}
-        <Button
-          variant="danger"
-          disabled={isLoading || loading}
-          onClick={() => {
-            setisProductFormEnabled(false);
-          }}
-        >
-          Cancel
-        </Button>
       </div>
     </Form>
-    </Modal.Body>
-    </Modal>
-  ) : (
-    <Button
-      variant="success"
-      onClick={() => {
-        setisProductFormEnabled(true);
-      }}
-    >
-      Create New Product
-    </Button>
-  );
-    
- 
+ )
 }
 
 

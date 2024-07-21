@@ -3,8 +3,8 @@ import { Types } from "mongoose";
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class Product {
-  @prop({ default: () => new Types.ObjectId(), type: Types.ObjectId })
-  public _id?: Types.ObjectId;
+  @prop({ type: String, default: () => new Types.ObjectId().toString() })
+  public _id?: string;
 
   @prop({ required: true })
   public name!: string;

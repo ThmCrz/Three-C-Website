@@ -837,3 +837,8 @@ margin: 1%
   align-items: center;
   justify-content: center;
 }
+.first-product-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

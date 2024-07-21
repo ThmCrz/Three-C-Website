@@ -22,7 +22,7 @@ export default function Homepage() {
   const [SearchProductTerm, setSearchProductTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const filteredProducts = products?.filter((product) => {
+  if (products) {const filteredProducts = products?.filter((product) => {
     const SearchProductTermLower = SearchProductTerm.toLowerCase();
     const SelectedCategoryTermLower = selectedCategory.toLowerCase();
   
@@ -179,3 +179,6 @@ export default function Homepage() {
     </Container>
     )
 }
+else{
+  return <MessageBox variant='danger'>No Products Available</MessageBox>
+}}

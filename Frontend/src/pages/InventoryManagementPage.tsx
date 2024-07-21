@@ -11,13 +11,15 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from '../components/AdminSidebar';
 import { useState } from 'react';
+import NewProductFormIfProductIsEmpty from '../components/AddProduct';
 
 export default function InventoryManagementPage() {
   const { data: products, isLoading, error } = useGetProductsQuery();
   const navigate = useNavigate();
   const [SearchProductTerm, setSearchProductTerm] = useState('');
-const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
+if(products){
 const filteredProducts = products?.filter((product) => {
   const SearchProductTermLower = SearchProductTerm.toLowerCase();
   const SelectedCategoryTermLower = selectedCategory.toLowerCase();
@@ -40,17 +42,13 @@ const filteredProducts = products?.filter((product) => {
   );
 });
 
-  
-
-  const uniqueCategories = products
+const uniqueCategories = products
   ? Array.from(new Set(filteredProducts?.map(product => product.category)))
   : [];
 
   const uniqueCategoriesForDropDown = products
   ? Array.from(new Set(products?.map(product => product.category)))
   : [];
-
-  
 
   return isLoading ? (
     <LoadingBox />
@@ -189,4 +187,25 @@ const filteredProducts = products?.filter((product) => {
       </div>
     </Container>
   );
+}else{
+ return (
+   <Container fluid className="admin-page-container">
+     <div>
+       <Row>
+         <AdminSidebar />
+         <Col>
+           <Helmet>
+             <title>Inventory Management</title>
+           </Helmet>
+           <h2>Product Management</h2>
+           <MessageBox variant='warning'>There are no Products, Please insert One.</MessageBox>
+           <div className='first-product-container'>
+           <NewProductFormIfProductIsEmpty />
+           </div>
+         </Col>
+       </Row>
+     </div>
+   </Container>
+ );
+}
 }
